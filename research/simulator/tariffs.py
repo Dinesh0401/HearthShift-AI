@@ -19,6 +19,10 @@ class ConsumptionSlab:
     gross_rate_paise: int
 
 
+SlabRate = ConsumptionSlab
+
+
+
 @dataclass(frozen=True)
 class FreeUnitsSubsidy:
     free_units_count: int
@@ -240,3 +244,9 @@ def calculate_bill(kwh: float, tariff: TariffPlan) -> BillResult:
         electricity_duty_paise=duty_paise,
         net_payable_paise=net_payable_paise,
     )
+
+
+def create_tnpdcl_lt1a_may2026_tariff() -> TariffPlan:
+    """Helper returning the May 10, 2026 TNPDCL LT-1A tariff plan."""
+    return TNPDCL_LT1A_2026_MAY10
+
