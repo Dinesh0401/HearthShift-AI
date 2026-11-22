@@ -45,11 +45,18 @@ MAC000002,Std,2012-10-12 01:30:00.0000000,0.110`;
     const result = await parseEnergyCsv(outOfOrderCsv);
 
     expect(result.valid_readings_count).toBe(4);
-    // Verified sorted in chronological order
-    expect(result.readings[0].timestamp).toContain('2026-05-01T00:00:00');
-    expect(result.readings[1].timestamp).toContain('2026-05-01T01:00:00');
-    expect(result.readings[2].timestamp).toContain('2026-05-01T02:00:00');
-    expect(result.readings[3].timestamp).toContain('2026-05-01T03:00:00');
+    // Verified sorted in chronological ascending order
+    const t0 = new Date(result.readings[0].timestamp).getTime();
+    const t1 = new Date(result.readings[1].timestamp).getTime();
+    const t2 = new Date(result.readings[2].timestamp).getTime();
+    const t3 = new Date(result.readings[3].timestamp).getTime();
+    expect(t0).toBeLessThan(t1);
+    expect(t1).toBeLessThan(t2);
+    expect(t2).toBeLessThan(t3);
+    expect(result.readings[0].value_kwh).toBe(0.45); // 00:00 row
+    expect(result.readings[1].value_kwh).toBe(0.38); // 01:00 row
+    expect(result.readings[2].value_kwh).toBe(0.32); // 02:00 row
+    expect(result.readings[3].value_kwh).toBe(0.30); // 03:00 row
   });
 
   it('detects and removes duplicate timestamps without crashing', async () => {

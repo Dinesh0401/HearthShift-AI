@@ -308,7 +308,7 @@ export async function parseEnergyCsv(
     is_cumulative_detected: isCumulative,
     start_timestamp: startTs,
     end_timestamp: endTs,
-    total_consumption_kwh: Math.round(totalKwh * 100) / 100,
+    total_consumption_kwh: Math.round(totalKwh * 10000) / 10000,
     average_daily_kwh: averageDailyKwh,
     gaps,
     errors,
@@ -482,20 +482,22 @@ function analyzeIntervalsAndGaps(readings: EnergyReading[]): {
     }
   }
 
-  // Find median interval
+  // Find nominal interval: use minimum step if it matches standard metering intervals (1, 15, 30, 60 min), else median
   stepDiffs.sort((a, b) => a - b);
+  const minStep = stepDiffs.length > 0 ? stepDiffs[0] : 60;
   const medianMinutes = stepDiffs.length > 0 ? stepDiffs[Math.floor(stepDiffs.length / 2)] : 60;
+  const nominalMinutes = (minStep > 0 && minStep <= 60 && (60 % minStep === 0 || minStep === 1)) ? minStep : medianMinutes;
 
   let resolution: DataResolution = 'hourly';
-  if (medianMinutes <= 1) resolution = 'minute';
-  else if (medianMinutes <= 15) resolution = 'quarter-hourly';
-  else if (medianMinutes <= 30) resolution = 'half-hourly';
-  else if (medianMinutes <= 60) resolution = 'hourly';
+  if (nominalMinutes <= 1) resolution = 'minute';
+  else if (nominalMinutes <= 15) resolution = 'quarter-hourly';
+  else if (nominalMinutes <= 30) resolution = 'half-hourly';
+  else if (nominalMinutes <= 60) resolution = 'hourly';
   else resolution = 'daily';
 
   // Identify gaps exceeding 1.5x expected interval
   const gaps: CsvGapInfo[] = [];
-  const gapThreshold = medianMinutes * 1.5;
+  const gapThreshold = nominalMinutes * 1.5;
 
   for (let i = 1; i < readings.length; i++) {
     const tPrev = new Date(readings[i - 1].timestamp).getTime();
@@ -503,7 +505,7 @@ function analyzeIntervalsAndGaps(readings: EnergyReading[]): {
     const diffMinutes = (tCurr - tPrev) / (1000 * 60);
 
     if (diffMinutes > gapThreshold) {
-      const missingCount = Math.round(diffMinutes / medianMinutes) - 1;
+      const missingCount = Math.round(diffMinutes / nominalMinutes) - 1;
       gaps.push({
         gap_start: readings[i - 1].timestamp,
         gap_end: readings[i].timestamp,

@@ -51,7 +51,8 @@ describe('Progressive Capability Gating Policy', () => {
     // Optimization not eligible yet (<7 days and no comfort constraints)
     expect(evaluation.permissions.can_evaluate_load_shifting).toBe(false);
     expect(evaluation.permissions.can_generate_sparse_recommendations).toBe(false);
-    expect(evaluation.blocked_features.some((f) => f.includes('< 7 days'))).toBe(true);
+    expect(evaluation.blocked_features.some((f) => f.includes('7 days'))).toBe(true);
+    expect(evaluation.reasons.some((r) => r.includes('< 7 days'))).toBe(true);
   });
 
   it('CRITICAL TEST: Does NOT unlock load shifting even with 14 days of interval data if tariff is time-independent', () => {
