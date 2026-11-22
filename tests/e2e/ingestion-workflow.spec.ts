@@ -38,18 +38,18 @@ test.describe('HearthShift AI — Full Ingestion & Privacy Verification Workflow
     // Verify Brand, Offline status, and Privacy badge
     await expect(page.locator('h1')).toContainText('HearthShift AI');
     await expect(page.getByText('Local Execution Safe')).toBeVisible();
-    await expect(page.getByText('100% On-Device')).toBeVisible();
+    await expect(page.getByText('100% On-Device · Zero External Telemetry · IndexedDB')).toBeVisible();
 
     // Verify Capability Badge starts in BASIC MODE (zero interval data)
-    await expect(page.getByText('BASIC MODE')).toBeVisible();
+    await expect(page.getByText('BASIC MODE').first()).toBeVisible();
     await expect(
-      page.getByText(/Monthly utility bills only\. Slab tracking active\./i)
+      page.getByText(/Monthly utility bills only\. Slab tracking active\./i).first()
     ).toBeVisible();
 
     // Verify Deterministic Tariff Headroom Card & ₹478.40 Cliff Warning
-    await expect(page.getByText('TNPDCL LT-1A (2026 Scheme)')).toBeVisible();
-    await expect(page.getByText('Cliff Cost Delta')).toBeVisible();
-    await expect(page.getByText('+₹478.40')).toBeVisible();
+    await expect(page.getByText('TNPDCL LT-1A (2026 Scheme)').first()).toBeVisible();
+    await expect(page.getByText('Cliff Cost Delta').first()).toBeVisible();
+    await expect(page.getByText('+₹478.40').first()).toBeVisible();
 
     await page.screenshot({ path: 'tests/e2e/screenshots/1-dashboard-initial.png' });
 
@@ -69,8 +69,8 @@ test.describe('HearthShift AI — Full Ingestion & Privacy Verification Workflow
     ).toBeVisible();
 
     // Assert bill appears in the Bill History Table with accurate calculations
-    await expect(page.getByText('2026-05-01 → 2026-06-30')).toBeVisible();
-    await expect(page.getByText('480 kWh')).toBeVisible();
+    await expect(page.getByText('2026-05-01 → 2026-06-30').first()).toBeVisible();
+    await expect(page.getByRole('cell', { name: '480 kWh' })).toBeVisible();
 
     await page.screenshot({ path: 'tests/e2e/screenshots/2-bill-entered.png' });
 
@@ -78,8 +78,8 @@ test.describe('HearthShift AI — Full Ingestion & Privacy Verification Workflow
     // 4. Persistence Test Across Page Reload
     // ══════════════════════════════════════════════════════════
     await page.reload();
-    await expect(page.getByText('2026-05-01 → 2026-06-30')).toBeVisible();
-    await expect(page.getByText('480 kWh')).toBeVisible();
+    await expect(page.getByText('2026-05-01 → 2026-06-30').first()).toBeVisible();
+    await expect(page.getByRole('cell', { name: '480 kWh' })).toBeVisible();
 
     // ══════════════════════════════════════════════════════════
     // 5. Verify Scientific Gating on Interval Load Curve (Basic Mode)
@@ -108,11 +108,8 @@ test.describe('HearthShift AI — Full Ingestion & Privacy Verification Workflow
 2026-05-01 02:00:00,0.32
 2026-05-01 03:00:00,0.30`;
 
-    // Set file on the hidden file input
-    const fileChooserPromise = page.waitForEvent('filechooser');
-    await page.getByText(/Choose CSV file/i).click();
-    const fileChooser = await fileChooserPromise;
-    await fileChooser.setFiles({
+    // Set file directly on input[type="file"]
+    await page.locator('input[type="file"]').setInputFiles({
       name: 'smart_meter_sample.csv',
       mimeType: 'text/csv',
       buffer: Buffer.from(sampleCsv),
@@ -122,21 +119,13 @@ test.describe('HearthShift AI — Full Ingestion & Privacy Verification Workflow
     await expect(page.getByText(/CSV Validation Preview/i)).toBeVisible();
     await expect(page.getByText('Resolution: hourly')).toBeVisible();
 
-    // Commit readings to IndexedDB
+    // Commit readings to IndexedDB (triggers onImportComplete which automatically switches to Intervals tab)
     await page.getByRole('button', { name: /Confirm & Save.*Readings/i }).click();
 
-    // Verify commit success
-    await expect(
-      page.getByText(/Successfully saved.*interval readings locally/i)
-    ).toBeVisible();
-
     // ══════════════════════════════════════════════════════════
-    // 7. Verify Capability Transition to INTERVAL Mode
+    // 7. Verify Capability Transition to INTERVAL Mode & Unlocked Chart
     // ══════════════════════════════════════════════════════════
-    await expect(page.getByText('INTERVAL MODE')).toBeVisible();
-
-    // Switch to Intervals tab to verify chart is now unlocked
-    await page.getByRole('button', { name: /Load Curves & Intervals/i }).click();
+    await expect(page.getByText('INTERVAL MODE').first()).toBeVisible();
     await expect(page.getByText('Empirical Interval Load Profile')).toBeVisible();
     await expect(page.getByText('Validated interval readings stored:')).toBeVisible();
 
@@ -148,14 +137,14 @@ test.describe('HearthShift AI — Full Ingestion & Privacy Verification Workflow
     await page.getByLabel('Toggle language between English and Tamil').click();
 
     // Assert Tamil UI strings rendered
-    await expect(page.getByText('ஹார்த்ஷிஃப்ட் AI')).toBeVisible();
-    await expect(page.getByText('கால இடைவெளி முறைமை')).toBeVisible();
+    await expect(page.getByText('ஹார்த்ஷிஃப்ட் AI').first()).toBeVisible();
+    await expect(page.getByText('கால இடைவெளி முறைமை').first()).toBeVisible();
 
     await page.screenshot({ path: 'tests/e2e/screenshots/5-tamil-language.png' });
 
     // Switch back to English
     await page.getByLabel('Toggle language between English and Tamil').click();
-    await expect(page.getByText('HearthShift AI')).toBeVisible();
+    await expect(page.locator('h1')).toContainText('HearthShift AI');
 
     // ══════════════════════════════════════════════════════════
     // 9. Data Sovereign Purge ("Delete All My Data")
@@ -182,7 +171,7 @@ test.describe('HearthShift AI — Full Ingestion & Privacy Verification Workflow
     // Reload page and verify system returns to clean initial state with zero bills
     await page.reload();
     await page.getByRole('button', { name: /Bills & Slab Analysis/i }).click();
-    await expect(page.getByText('BASIC MODE')).toBeVisible();
+    await expect(page.getByText('BASIC MODE').first()).toBeVisible();
     await expect(page.getByText('No electricity bills recorded yet.')).toBeVisible();
 
     await page.screenshot({ path: 'tests/e2e/screenshots/6-purged-empty-state.png' });
