@@ -119,10 +119,10 @@ export const BillHistoryTable: React.FC<BillHistoryTableProps> = ({
                       {bill.total_units_kwh} kWh
                     </td>
                     <td className="py-3 px-3 text-right text-gray-600 dark:text-gray-400">
-                      ₹{(breakdown.gross_cost_paise / 100).toFixed(2)}
+                      ₹{(breakdown.gross_energy_charges_paise / 100).toFixed(2)}
                     </td>
                     <td className="py-3 px-3 text-right text-emerald-600 font-medium">
-                      -₹{(breakdown.subsidy_discount_paise / 100).toFixed(2)}
+                      -₹{(breakdown.total_subsidy_deductions_paise / 100).toFixed(2)}
                     </td>
                     <td className="py-3 px-3 text-right text-gray-600 dark:text-gray-400">
                       ₹{(breakdown.electricity_duty_paise / 100).toFixed(2)}

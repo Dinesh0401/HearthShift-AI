@@ -68,6 +68,8 @@ export async function rollbackImportBatch(batchId: string): Promise<number> {
   return ids.length;
 }
 
+export { rollbackImportBatch as rollbackBatch };
+
 /**
  * Retrieves total count of stored interval readings.
  */

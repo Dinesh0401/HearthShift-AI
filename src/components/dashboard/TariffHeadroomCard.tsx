@@ -4,7 +4,7 @@ import React from 'react';
 import { useLanguage } from '../../locales/i18n';
 import { calculateBill } from '../../core/tariff/calculator';
 import { TNPDCL_LT1A_2026_MAY10 } from '../../core/tariff/tariffs/tnpdcl-lt1a';
-import { AlertTriangle, CheckCircle2, Info, ArrowUpRight } from 'lucide-react';
+import { AlertTriangle, Info, ArrowUpRight } from 'lucide-react';
 
 interface TariffHeadroomCardProps {
   latestUnitsKwh?: number;
@@ -28,7 +28,6 @@ export const TariffHeadroomCard: React.FC<TariffHeadroomCardProps> = ({
   const isNearCliff = currentUnits > 420 && currentUnits <= 500;
   const hasExceededCliff = currentUnits > 500;
   const headroomUnits = Math.max(0, 500 - currentUnits);
-  const percentageOfLimit = Math.min(100, Math.round((currentUnits / 500) * 100));
 
   return (
     <div className={`rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm ${className}`}>

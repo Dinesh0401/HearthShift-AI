@@ -256,6 +256,9 @@ export const TNPDCL_LT1A_MAY_2026_SCHEME: TariffPlan = {
   },
 };
 
+/** Alias for TNPDCL May 10, 2026 Scheme */
+export const TNPDCL_LT1A_2026_MAY10 = TNPDCL_LT1A_MAY_2026_SCHEME;
+
 /**
  * Standard Flat Tariff for comparative testing and benchmarks.
  */
