@@ -207,9 +207,11 @@ describe('Deterministic Billing Calculator', () => {
       expect(bill500.net_payable).toBe(1570.0);
       expect(bill501.net_payable).toBe(2048.4);
 
-      // The cliff is a dramatic jump of ₹478.40 for just 1 single kWh!
+      // The cliff is a dramatic jump of ₹478.40 (47,840 paise) for just 1 single kWh!
+      const cliffDeltaPaise = bill501.net_payable_paise - bill500.net_payable_paise;
+      expect(cliffDeltaPaise).toBe(47840); // Exact integer paise: ₹478.40
       const cliffDelta = bill501.net_payable - bill500.net_payable;
-      expect(cliffDelta).toBe(478.4);
+      expect(cliffDelta).toBeCloseTo(478.4, 2);
 
       // Audit verifies disqualification was explicitly recorded
       const audit501 = bill501.subsidy_audit.find((a) => a.label.includes('200 Free Units'));

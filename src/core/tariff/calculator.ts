@@ -96,10 +96,6 @@ export function calculateBill(
     if (gross_tariff.is_telescopic) {
       // Telescopic: each slab fills up sequentially
       for (const slab of activeSlabs) {
-        if (consumptionKwh <= slab.min_kwh && slab.min_kwh > 0) {
-          continue;
-        }
-
         const slabMin = slab.min_kwh === 0 ? 0 : slab.min_kwh - 1; // 0-100 is 100 units, 101-200 is 100 units
         const slabMax = slab.max_kwh ?? Infinity;
 
@@ -255,15 +251,20 @@ export function calculateBill(
           for (const slabItem of slabBreakdown) {
             // Check if this slab corresponds to the discounted range (e.g. 101 to 200)
             const matchesRange = slabItem.slab_label.includes(`${rule.min_kwh}`);
-            if (matchesRange) {
-              const discountPaise = Math.round(slabItem.units_in_slab * rule.discount_paise_per_kwh);
-              slabItem.subsidy_discount_paise += discountPaise;
-              slabItem.net_cost_paise -= discountPaise;
-              slabItem.net_rate_paise = slabItem.units_in_slab > 0
-                ? Math.round(slabItem.net_cost_paise / slabItem.units_in_slab)
-                : 0;
+            if (matchesRange && slabItem.net_cost_paise > 0) {
+              const maxDiscountPossible = Math.max(0, slabItem.net_cost_paise);
+              const calculatedDiscount = Math.round(slabItem.units_in_slab * rule.discount_paise_per_kwh);
+              const discountPaise = Math.min(maxDiscountPossible, calculatedDiscount);
 
-              totalSubsidyDeductionsPaise += discountPaise;
+              if (discountPaise > 0) {
+                slabItem.subsidy_discount_paise += discountPaise;
+                slabItem.net_cost_paise -= discountPaise;
+                slabItem.net_rate_paise = slabItem.units_in_slab > 0
+                  ? Math.round(slabItem.net_cost_paise / slabItem.units_in_slab)
+                  : 0;
+
+                totalSubsidyDeductionsPaise += discountPaise;
+              }
             }
           }
         }
@@ -364,8 +365,14 @@ export function calculateBill(
   // 6. Marginal Cost & Cliff Analysis
   // ══════════════════════════════════════════════════════════
 
-  const marginalNextUnitBill = calculateBillInternal(consumptionKwh + 1, tariff, options);
-  const marginalRateNextUnitPaise = Math.max(0, marginalNextUnitBill - netPayablePaise);
+  let marginalRateNextUnitPaise = 0;
+  if (!options.skip_marginal) {
+    const marginalNextUnitBill = calculateBillInternal(consumptionKwh + 1, tariff, {
+      ...options,
+      skip_marginal: true,
+    });
+    marginalRateNextUnitPaise = Math.max(0, marginalNextUnitBill - netPayablePaise);
+  }
 
   // Compute nearest cliff or slab boundary
   let unitsToNextThreshold: number | null = null;
