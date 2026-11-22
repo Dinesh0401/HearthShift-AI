@@ -125,6 +125,44 @@ MAC000002,Std,2012-10-12 01:30:00.0000000,0.110`;
     expect(result.errors[0].error).toContain('Negative consumption rejected');
   });
 
+  it('parses REFIT format (aggregate in Watts) and integrates to kWh via trapezoidal rule', async () => {
+    const refitCsv = `Time,Unix,Aggregate
+2014-04-01 00:00:00,1396310400,1200
+2014-04-01 00:00:08,1396310408,1200
+2014-04-01 00:00:16,1396310416,1400`;
+
+    const result = await parseEnergyCsv(refitCsv);
+
+    expect(result.valid_readings_count).toBe(2);
+    expect(result.measurement_kind).toBe('instantaneous_power_w');
+    expect(result.source_unit).toContain('W');
+    // Interval 1: 8s at 1200W -> (1200 * 8) / 3600000 = 0.00267 kWh
+    // Interval 2: 8s at avg(1200, 1400)=1300W -> (1300 * 8) / 3600000 = 0.00289 kWh
+    expect(result.readings[0].value_kwh).toBeCloseTo(0.00267, 5);
+    expect(result.readings[1].value_kwh).toBeCloseTo(0.00289, 5);
+    expect(result.total_consumption_kwh).toBeCloseTo(0.00556, 4);
+    expect(result.warnings.some((w) => w.includes('trapezoidal numerical integration'))).toBe(true);
+  });
+
+  it('correctly calculates delta across meter rollover when known modulus is provided', async () => {
+    const rolloverCsv = `timestamp,meter_reading
+2026-05-01 00:00:00,99998.0
+2026-05-01 01:00:00,2.0`;
+
+    const result = await parseEnergyCsv(rolloverCsv, {
+      mapping: {
+        is_cumulative_meter: true,
+        rollover_modulus_kwh: 100000,
+      },
+    });
+
+    expect(result.valid_readings_count).toBe(1);
+    // Rollover delta = 2.0 + 100000 - 99998.0 = 4.0 kWh
+    expect(result.readings[0].value_kwh).toBe(4.0);
+    expect(result.total_consumption_kwh).toBe(4.0);
+    expect(result.warnings.some((w) => w.includes('Meter rollover detected'))).toBe(true);
+  });
+
   it('aborts parsing when AbortSignal is triggered', async () => {
     const largeCsv = Array.from(
       { length: 500 },

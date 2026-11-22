@@ -35,6 +35,13 @@ export interface CapabilityPermissions {
   can_generate_sparse_recommendations: boolean;
   can_trigger_evsi_questions: boolean;
   
+  // Granular capability permissions (Milestone 1.3 Gate B contracts)
+  can_analyze_bills: boolean;
+  can_visualize_intervals: boolean;
+  can_simulate_reduction: boolean;
+  can_simulate_time_shift: boolean;
+  can_recommend_action: boolean;
+
   // Strictly forbidden operations (always false in basic mode)
   forbidden_operations: string[];
 }
@@ -113,6 +120,11 @@ export function evaluateCapabilityState(
       can_evaluate_load_shifting: false,
       can_generate_sparse_recommendations: false,
       can_trigger_evsi_questions: false,
+      can_analyze_bills: bills_count > 0,
+      can_visualize_intervals: false,
+      can_simulate_reduction: true,
+      can_simulate_time_shift: false,
+      can_recommend_action: false,
       forbidden_operations: forbiddenOperations,
     };
 
@@ -168,6 +180,11 @@ export function evaluateCapabilityState(
       can_evaluate_load_shifting: Boolean(active_tariff?.is_time_dependent),
       can_generate_sparse_recommendations: true,
       can_trigger_evsi_questions: true,
+      can_analyze_bills: true,
+      can_visualize_intervals: true,
+      can_simulate_reduction: true,
+      can_simulate_time_shift: Boolean(active_tariff?.is_time_dependent),
+      can_recommend_action: true,
       forbidden_operations: [],
     };
 
@@ -206,6 +223,11 @@ export function evaluateCapabilityState(
     can_evaluate_load_shifting: false,
     can_generate_sparse_recommendations: false,
     can_trigger_evsi_questions: false,
+    can_analyze_bills: true,
+    can_visualize_intervals: true,
+    can_simulate_reduction: true,
+    can_simulate_time_shift: false,
+    can_recommend_action: false,
     forbidden_operations: [
       'Premature load-shifting recommendation before comfort constraints are established',
     ],

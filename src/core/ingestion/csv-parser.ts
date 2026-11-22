@@ -25,6 +25,7 @@ export interface CsvColumnMapping {
   timestamp_column?: string;
   data_column?: string;
   measurement_kind?: MeasurementKind;
+  is_cumulative_meter?: boolean;
   /** Known rollover modulus in kWh (e.g. 100000 for 5-digit meter) */
   rollover_modulus_kwh?: number;
   timezone_offset?: string; // e.g. '+05:30' for IST, 'Z' for UTC
@@ -60,6 +61,7 @@ export interface CsvValidationPreview {
   duplicate_count: number;
   detected_resolution: DataResolution;
   measurement_kind: MeasurementKind;
+  is_cumulative_detected?: boolean;
   source_unit: string;
   start_timestamp?: string;
   end_timestamp?: string;
@@ -122,7 +124,9 @@ export async function parseEnergyCsv(
     );
   }
 
-  const measurementKind: MeasurementKind = mapping.measurement_kind ?? detectedKind;
+  const measurementKind: MeasurementKind =
+    mapping.measurement_kind ??
+    (mapping.is_cumulative_meter ? 'cumulative_meter_kwh' : detectedKind);
   const sourceUnit = detectedUnit;
 
   // 2. Stream through rows
@@ -331,7 +335,7 @@ export async function parseEnergyCsv(
           });
 
           warnings.push(
-            `Meter reset boundary at row ${curr.row_num} (${curr.timestamp.toISOString()}): reading dropped from ${prev.raw_val} to ${curr.raw_val}. Omitted delta from total energy.`
+            `Meter reset or rollover boundary at row ${curr.row_num} (${curr.timestamp.toISOString()}): reading dropped from ${prev.raw_val} to ${curr.raw_val}. Omitted delta from total energy.`
           );
 
           normalizedReadings.push({
@@ -432,6 +436,7 @@ export async function parseEnergyCsv(
     duplicate_count: duplicateCount,
     detected_resolution: resolution,
     measurement_kind: measurementKind,
+    is_cumulative_detected: measurementKind === 'cumulative_meter_kwh',
     source_unit: sourceUnit,
     start_timestamp: startTs,
     end_timestamp: endTs,
