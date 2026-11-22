@@ -218,6 +218,41 @@ describe('Deterministic Billing Calculator', () => {
       expect(audit501?.is_eligible).toBe(false);
       expect(audit501?.reason).toContain('exceeded eligibility ceiling of 500 kWh');
     });
+
+    it('reports accurate slab headroom and marginal cliff spike', () => {
+      // At 450 kWh, headroom to 500 kWh cliff should be exactly 50 kWh
+      const bill450 = calculateBill(450, TNPDCL_LT1A_MAY_2026_SCHEME);
+      expect(bill450.units_to_next_threshold).toBe(50);
+      expect(bill450.threshold_description).toContain('500 kWh');
+
+      // At exactly 500 kWh, the marginal cost of the next unit (the 501st unit) spikes to ₹478.40!
+      const bill500 = calculateBill(500, TNPDCL_LT1A_MAY_2026_SCHEME);
+      expect(bill500.marginal_rate_next_unit_paise).toBe(47840);
+      expect(bill500.marginal_rate_next_unit).toBe(478.4);
+    });
+
+    it('verifies strict monotonicity of the underlying unsubsidized gross tariff', () => {
+      // While welfare subsidies create discontinuities, the gross tariff MUST be strictly monotonic
+      let previousGross = 0;
+      for (let kwh = 0; kwh <= 1000; kwh += 25) {
+        const bill = calculateBill(kwh, TNPDCL_LT1A_MAY_2026_SCHEME);
+        expect(bill.gross_energy_charges_paise).toBeGreaterThanOrEqual(previousGross);
+        previousGross = bill.gross_energy_charges_paise;
+      }
+    });
+
+    it('handles fractional kilowatt-hour consumption accurately with integer paise rounding', () => {
+      // 123.45 kWh under flat tariff (₹5.00/kWh)
+      // 123.45 * 500 paise = 61725 paise = ₹617.25
+      // Fixed charge = ₹50.00
+      // Duty (5%) = Math.round(61725 * 0.05) = 3086 paise = ₹30.86
+      // Total = 61725 + 5000 + 3086 = 69811 paise = ₹698.11
+      const result = calculateBill(123.45, GENERIC_FLAT_TARIFF_INR);
+      expect(result.gross_energy_charges_paise).toBe(61725);
+      expect(result.electricity_duty_paise).toBe(3086);
+      expect(result.net_payable_paise).toBe(69811);
+      expect(result.net_payable).toBe(698.11);
+    });
   });
 
   // ══════════════════════════════════════════════════════════
