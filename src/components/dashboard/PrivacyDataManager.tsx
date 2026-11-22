@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { db } from '../../lib/db';
 import { rollbackBatch } from '../../core/storage/ingestion-storage';
 import { useLanguage } from '../../locales/i18n';
-import { ShieldCheck, Download, Trash2, Undo2, CheckCircle2, AlertTriangle, Database } from 'lucide-react';
+import { ShieldCheck, Download, Trash2, Undo2, CheckCircle2 } from 'lucide-react';
 
 interface PrivacyDataManagerProps {
   onDataPurged?: () => void;

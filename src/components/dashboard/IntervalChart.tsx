@@ -13,7 +13,7 @@ import {
   CartesianGrid,
   Legend,
 } from 'recharts';
-import { AlertCircle, Activity, Lock, CheckCircle2 } from 'lucide-react';
+import { Activity, Lock } from 'lucide-react';
 
 interface IntervalChartProps {
   canVisualizeIntervals: boolean;

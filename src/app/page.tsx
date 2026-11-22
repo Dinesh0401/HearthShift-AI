@@ -12,7 +12,7 @@ import { CsvDropzone } from '../components/ingestion/CsvDropzone';
 import { IntervalChart } from '../components/dashboard/IntervalChart';
 import { PrivacyDataManager } from '../components/dashboard/PrivacyDataManager';
 import { useLanguage } from '../locales/i18n';
-import { Receipt, FileSpreadsheet, Activity, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { Receipt, FileSpreadsheet, Activity, ShieldCheck } from 'lucide-react';
 
 type ActiveTab = 'bills' | 'import' | 'intervals' | 'privacy';
 
@@ -20,9 +20,6 @@ export default function DashboardPage() {
   const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<ActiveTab>('bills');
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const [billsCount, setBillsCount] = useState(0);
-  const [readingsCount, setReadingsCount] = useState(0);
-  const [readingsSpanDays, setReadingsSpanDays] = useState(0);
   const [latestUnits, setLatestUnits] = useState(380);
   const [evaluation, setEvaluation] = useState<CapabilityEvaluation | null>(null);
 
@@ -46,10 +43,6 @@ export default function DashboardPage() {
       if (latestBill) {
         setLatestUnits(latestBill.total_units_kwh);
       }
-
-      setBillsCount(bCount);
-      setReadingsCount(rCount);
-      setReadingsSpanDays(spanDays);
 
       const evalResult = evaluateCapabilityState({
         bills_count: bCount,
