@@ -17,7 +17,8 @@ export type DataResolution =
   | 'hourly'
   | 'half-hourly'
   | 'quarter-hourly'
-  | 'minute';
+  | 'minute'
+  | 'sub-minute'; // e.g. REFIT ~8-second sampling
 
 export type DataSource = 
   | 'manual_entry'
@@ -26,7 +27,16 @@ export type DataSource =
   | 'synthetic_simulation';
 
 /**
- * A discrete energy measurement point.
+ * Explicit physical measurement semantics to prevent conflating power (Watts) with energy (kWh).
+ */
+export type MeasurementKind =
+  | 'interval_energy_kwh'      // Energy consumed in the interval (e.g. Low Carbon London KWH/hh)
+  | 'instantaneous_power_w'    // Active power sampled in Watts (e.g. REFIT Aggregate)
+  | 'average_power_w'          // Average power across the interval in Watts
+  | 'cumulative_meter_kwh';    // Monotonic meter register in kWh
+
+/**
+ * A discrete energy or power measurement point with full physical provenance.
  */
 export interface EnergyReading {
   /** ISO 8601 UTC timestamp */
@@ -37,8 +47,18 @@ export interface EnergyReading {
   resolution: DataResolution;
   /** Provenance of the data */
   source: DataSource;
+  /** Raw measurement kind from source data */
+  measurement_kind?: MeasurementKind;
+  /** Original measured value before conversion */
+  raw_value?: number;
+  /** Original unit of the raw measurement (e.g. 'W', 'kW', 'kWh') */
+  raw_unit?: string;
   /** Optional aggregate active power in Watts if available */
   power_watts?: number;
+  /** Duration of interval in seconds if known (used for power integration) */
+  interval_duration_seconds?: number;
+  /** True if reading represents a meter reset or rollover boundary where delta cannot be known */
+  is_discontinuity_boundary?: boolean;
 }
 
 /**
