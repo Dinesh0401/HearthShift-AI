@@ -11,6 +11,21 @@ import {
 import type { ComfortConstraint } from '../../src/types/contracts';
 
 describe('Progressive Capability Gating Policy', () => {
+  it('locks reduction simulations and bill analysis when zero baseline data exists (bills_count === 0, readings_count === 0)', () => {
+    const evaluation = evaluateCapabilityState({
+      bills_count: 0,
+      readings_count: 0,
+      active_tariff: TNPDCL_LT1A_2024_2025,
+    });
+
+    expect(evaluation.mode).toBe('BASIC');
+    expect(evaluation.permissions.can_analyze_bills).toBe(false);
+    expect(evaluation.permissions.can_simulate_reduction).toBe(false);
+    expect(evaluation.permissions.can_visualize_intervals).toBe(false);
+    expect(evaluation.permissions.can_simulate_time_shift).toBe(false);
+    expect(evaluation.permissions.can_recommend_action).toBe(false);
+  });
+
   it('enforces BASIC mode when only monthly bills are available (readings_count === 0)', () => {
     const evaluation = evaluateCapabilityState({
       bills_count: 6,

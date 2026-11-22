@@ -110,10 +110,11 @@ export function evaluateCapabilityState(
       'Standby power baseline measurement'
     );
 
+    const hasBaseline = bills_count > 0;
     const permissions: CapabilityPermissions = {
       can_view_bill_history: bills_count > 0,
       can_calculate_slab_headroom: bills_count > 0,
-      can_simulate_duration_reductions: true,
+      can_simulate_duration_reductions: hasBaseline && active_tariff !== undefined,
       can_view_hourly_timeseries: false,
       can_calculate_night_standby_baseline: false,
       can_generate_empirical_daily_profiles: false,
@@ -122,7 +123,7 @@ export function evaluateCapabilityState(
       can_trigger_evsi_questions: false,
       can_analyze_bills: bills_count > 0,
       can_visualize_intervals: false,
-      can_simulate_reduction: true,
+      can_simulate_reduction: hasBaseline && active_tariff !== undefined,
       can_simulate_time_shift: false,
       can_recommend_action: false,
       forbidden_operations: forbiddenOperations,

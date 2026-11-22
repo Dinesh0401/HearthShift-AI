@@ -163,6 +163,39 @@ MAC000002,Std,2012-10-12 01:30:00.0000000,0.110`;
     expect(result.warnings.some((w) => w.includes('Meter rollover detected'))).toBe(true);
   });
 
+  it('correctly integrates nominal 15-minute power samples without rejecting intervals as gaps', async () => {
+    const power15mCsv = `timestamp,active_power_w
+2026-05-01 00:00:00,1000
+2026-05-01 00:15:00,1000
+2026-05-01 00:30:00,2000`;
+
+    const result = await parseEnergyCsv(power15mCsv);
+
+    expect(result.valid_readings_count).toBe(2);
+    expect(result.measurement_kind).toBe('instantaneous_power_w');
+    // Interval 1: 15 min (900s) at 1000W -> (1000 * 900) / 3,600,000 = 0.25 kWh
+    expect(result.readings[0].value_kwh).toBeCloseTo(0.25, 3);
+    // Interval 2: 15 min (900s) at avg(1000, 2000)=1500W -> (1500 * 900) / 3,600,000 = 0.375 kWh
+    expect(result.readings[1].value_kwh).toBeCloseTo(0.375, 3);
+    expect(result.total_consumption_kwh).toBeCloseTo(0.625, 3);
+    expect(result.readings[0].resolution).toBe('quarter-hourly');
+  });
+
+  it('omits trapezoidal integration across unexplained gaps in 15-minute power data', async () => {
+    const powerGapCsv = `timestamp,active_power_w
+2026-05-01 00:00:00,1000
+2026-05-01 00:15:00,1000
+2026-05-01 04:15:00,1000`; // 4-hour gap!
+
+    const result = await parseEnergyCsv(powerGapCsv);
+
+    // Only 1 valid continuous interval (00:00 to 00:15), gap from 00:15 to 04:15 is omitted!
+    expect(result.valid_readings_count).toBe(1);
+    expect(result.readings[0].value_kwh).toBeCloseTo(0.25, 3);
+    expect(result.total_consumption_kwh).toBeCloseTo(0.25, 3);
+    expect(result.warnings.some((w) => w.includes('exceeds nominal threshold'))).toBe(true);
+  });
+
   it('aborts parsing when AbortSignal is triggered', async () => {
     const largeCsv = Array.from(
       { length: 500 },

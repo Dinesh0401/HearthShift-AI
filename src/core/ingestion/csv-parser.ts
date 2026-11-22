@@ -28,6 +28,8 @@ export interface CsvColumnMapping {
   is_cumulative_meter?: boolean;
   /** Known rollover modulus in kWh (e.g. 100000 for 5-digit meter) */
   rollover_modulus_kwh?: number;
+  /** Source-aware maximum allowable sampling gap in seconds before trapezoidal integration is omitted */
+  max_power_gap_seconds?: number;
   timezone_offset?: string; // e.g. '+05:30' for IST, 'Z' for UTC
   date_format?: 'iso' | 'uk' | 'us' | 'auto'; // 'uk' = DD/MM/YYYY, 'us' = MM/DD/YYYY
 }
@@ -245,8 +247,20 @@ export async function parseEnergyCsv(
     // ══════════════════════════════════════════════════════════
     // POWER (Watts) INTEGRATION: E = Integral P dt
     // ══════════════════════════════════════════════════════════
+    // Source-aware nominal interval detection for power integration gap threshold
+    const sampleDts: number[] = [];
+    for (let s = 1; s < Math.min(deduplicatedRecords.length, 50); s++) {
+      const dt = (deduplicatedRecords[s].timestamp.getTime() - deduplicatedRecords[s - 1].timestamp.getTime()) / 1000;
+      if (dt > 0) sampleDts.push(dt);
+    }
+    sampleDts.sort((a, b) => a - b);
+    // Use minimum step / 25th percentile to represent nominal step, avoiding outlier gaps skewing small samples
+    const nominalDt = sampleDts.length > 0 ? sampleDts[Math.floor((sampleDts.length - 1) * 0.25)] : 60;
+    const gapThresholdSeconds =
+      mapping.max_power_gap_seconds ?? (nominalDt <= 60 ? 300 : nominalDt * 2.5);
+
     warnings.push(
-      `Interpreted column as electrical power in Watts (${sourceUnit}). Converted to energy (kWh) via trapezoidal numerical integration over sample durations.`
+      `Interpreted column as electrical power in Watts (${sourceUnit}). Converted to energy (kWh) via trapezoidal numerical integration over sample durations (nominal step: ${nominalDt}s, gap threshold: ${gapThresholdSeconds}s).`
     );
 
     for (let j = 1; j < deduplicatedRecords.length; j++) {
@@ -267,10 +281,10 @@ export async function parseEnergyCsv(
         continue;
       }
 
-      // If gap exceeds 300 seconds (5 minutes) in high-frequency power data, do not integrate across the gap!
-      if (dtSeconds > 300) {
+      // Source-aware gap limit: do not integrate across unexplained sampling gaps
+      if (dtSeconds > gapThresholdSeconds) {
         warnings.push(
-          `Sampling gap of ${(dtSeconds / 60).toFixed(1)} minutes between row ${prev.row_num} and ${curr.row_num}. Omitted integration across gap to prevent fabricated energy.`
+          `Sampling gap of ${(dtSeconds / 60).toFixed(1)} minutes between row ${prev.row_num} and ${curr.row_num} exceeds nominal threshold (${(gapThresholdSeconds / 60).toFixed(1)} min). Omitted integration across gap to prevent fabricated energy.`
         );
         continue;
       }
@@ -284,7 +298,7 @@ export async function parseEnergyCsv(
       normalizedReadings.push({
         timestamp: curr.timestamp.toISOString(),
         value_kwh: roundedKwh,
-        resolution: dtSeconds < 60 ? 'sub-minute' : dtSeconds <= 900 ? 'quarter-hourly' : 'hourly',
+        resolution: dtSeconds <= 60 ? 'sub-minute' : dtSeconds <= 900 ? 'quarter-hourly' : dtSeconds <= 1800 ? 'half-hourly' : 'hourly',
         source: 'csv_import',
         measurement_kind: measurementKind,
         raw_value: curr.raw_val,
