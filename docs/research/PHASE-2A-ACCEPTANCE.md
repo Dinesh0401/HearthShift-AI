@@ -27,11 +27,11 @@
 
 ## 2. Definition of Done for Phase 2A
 
-- [ ] All 6 Phase 2A research specification documents approved and committed.
-- [ ] Python research package structured under `research/` with isolated dependencies (`pyproject.toml` / `requirements.txt`).
-- [ ] Deterministic Python tariff engine implemented and verified against TypeScript contracts.
-- [ ] Heterogeneous household simulator implemented with hidden ground truth isolation.
-- [ ] Baselines B1, B2, B3, B4, and B5 implemented with clean interfaces.
-- [ ] Automated pytest suite passes with 100% success rate across all RAT criteria.
-- [ ] Existing Next.js application verified unaffected and 100% operational.
-- [ ] Formal closeout report and Phase 2A decision recorded.
+- [x] All 6 Phase 2A research specification documents approved and committed.
+- [x] Python research package structured under `research/` with isolated dependencies (`pyproject.toml` / `requirements.txt`).
+- [x] Deterministic Python tariff engine implemented and verified against TypeScript contracts.
+- [x] Heterogeneous household simulator implemented with hidden ground truth isolation.
+- [x] Baselines B1, B2, B3, B4, and B5 implemented with clean interfaces.
+- [x] Automated pytest suite passes with 100% success rate across all RAT criteria.
+- [x] Existing Next.js application verified unaffected and 100% operational.
+- [x] Formal closeout report and Phase 2A decision recorded (see `docs/research/PHASE-2A-RESULTS.md` and `docs/research/PHASE-2A-AUDIT.md`).
