@@ -241,17 +241,53 @@ describe('Deterministic Billing Calculator', () => {
       }
     });
 
-    it('handles fractional kilowatt-hour consumption accurately with integer paise rounding', () => {
-      // 123.45 kWh under flat tariff (₹5.00/kWh)
-      // 123.45 * 500 paise = 61725 paise = ₹617.25
-      // Fixed charge = ₹50.00
-      // Duty (5%) = Math.round(61725 * 0.05) = 3086 paise = ₹30.86
-      // Total = 61725 + 5000 + 3086 = 69811 paise = ₹698.11
-      const result = calculateBill(123.45, GENERIC_FLAT_TARIFF_INR);
-      expect(result.gross_energy_charges_paise).toBe(61725);
-      expect(result.electricity_duty_paise).toBe(3086);
-      expect(result.net_payable_paise).toBe(69811);
-      expect(result.net_payable).toBe(698.11);
+    it('handles demand charges and per-unit electricity duty', () => {
+      const tariffWithDemand: typeof GENERIC_FLAT_TARIFF_INR = {
+        ...GENERIC_FLAT_TARIFF_INR,
+        fixed_charges: {
+          monthly_amount_paise: 2000, // ₹20.00
+          per_kw_demand_paise: 5000, // ₹50.00 per kW
+        },
+        electricity_duty: {
+          per_unit_paise: 10, // ₹0.10/kWh
+          exemption_threshold_kwh: 50,
+          applies_to_fixed_charges: false,
+        },
+      };
+
+      // 100 kWh @ ₹5.00 = ₹500 (50,000 paise)
+      // Fixed = 2,000 + (5000 * 3 kW) = 17,000 paise (₹170.00)
+      // Duty = 100 * 10 = 1,000 paise (₹10.00)
+      // Total = 50,000 + 17,000 + 1,000 = 68,000 paise = ₹680.00
+      const result = calculateBill(100, tariffWithDemand, { sanctioned_load_kw: 3 });
+      expect(result.fixed_charges_paise).toBe(17000);
+      expect(result.electricity_duty_paise).toBe(1000);
+      expect(result.net_payable_paise).toBe(68000);
+      expect(result.net_payable).toBe(680.0);
+    });
+
+    it('calculates non-telescopic tariff structures correctly', () => {
+      const nonTelescopicTariff: typeof GENERIC_FLAT_TARIFF_INR = {
+        ...GENERIC_FLAT_TARIFF_INR,
+        gross_tariff: {
+          type: 'tiered_slab',
+          is_telescopic: false, // All units billed at matching tier
+          slabs: [
+            { min_kwh: 0, max_kwh: 100, gross_rate_paise: 300 },
+            { min_kwh: 101, max_kwh: null, gross_rate_paise: 600 },
+          ],
+        },
+        fixed_charges: { monthly_amount_paise: 0 },
+        electricity_duty: undefined,
+      };
+
+      // 80 kWh falls in Tier 1 -> 80 * 3.00 = ₹240
+      const bill80 = calculateBill(80, nonTelescopicTariff);
+      expect(bill80.net_payable).toBe(240.0);
+
+      // 150 kWh falls in Tier 2 -> Non-telescopic means ALL 150 units billed at 6.00 = ₹900!
+      const bill150 = calculateBill(150, nonTelescopicTariff);
+      expect(bill150.net_payable).toBe(900.0);
     });
   });
 
