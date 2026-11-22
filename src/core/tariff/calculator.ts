@@ -31,6 +31,8 @@ export interface CalculateBillOptions {
   interval_data?: IntervalConsumptionPoint[];
   /** Sanctioned load in kW (used for demand charges if applicable) */
   sanctioned_load_kw?: number;
+  /** Internal guard to prevent recursion during marginal rate calculation */
+  skip_marginal?: boolean;
 }
 
 /**
