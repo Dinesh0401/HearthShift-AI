@@ -53,8 +53,8 @@ HearthShift introduces **SPARE-HEM** (*Sparse-feedback, Privacy-Aware, Risk-sens
 ### Persona A: Primary — The Working Family in Chennai (Sundaram Family)
 * **Demographics:** 4-person family (parents + 2 school-age children) in a 3BHK flat in T. Nagar, Chennai.
 * **Appliance Inventory:** 3 ceiling fans, 2 split AC units (1.5 ton inverter), 1 front-load washing machine (1.5 kWh cycle), 1 frost-free refrigerator (260L), LED lighting, induction stove.
-* **Tariff Structure:** TANGEDCO LT-1A bi-monthly domestic tariff (slab-based tiered tariff with subsidized tiers and higher marginal rates for consumption > 500 kWh).
-* **Pain Points:** Summer bimonthly bills spike above 800 units, placing them in penalizing tariff slabs. They don't know whether adjusting the AC setpoint from 22°C to 25°C or shifting laundry to the morning will meaningfully reduce their tier. They work busy hours and will uninstall any app that asks 5 questions daily.
+* **Tariff Structure:** TNPDCL (Tamil Nadu Power Distribution Corporation Limited, unbundled from TANGEDCO on 27.06.2024) LT-1A bi-monthly domestic tariff, governed by TNERC Tariff Orders (including Order No. 6 of 2025) and Government of Tamil Nadu (GoTN) Section 65 welfare subsidies (including the universal 100 free units scheme and the May 2026 additional 200 free units scheme for eligible households consuming $\le 500$ units bi-monthly).
+* **Pain Points:** Summer bimonthly bills spike around 500 units, placing them at risk of losing welfare subsidies and entering punitive tariff slabs. They don't know whether adjusting the AC setpoint from 22°C to 25°C or shifting laundry to the morning will meaningfully reduce their tier or save them from the ₹478.40 cliff between 500 and 501 units. They work busy hours and will uninstall any app that asks 5 questions daily.
 
 ### Persona B: Secondary — The Privacy-Minded Tech Professional
 * **Demographics:** Remote software engineer in Bengaluru with rooftop solar and smart meter CSV export.
