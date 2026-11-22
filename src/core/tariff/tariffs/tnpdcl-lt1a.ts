@@ -138,6 +138,9 @@ export const TNPDCL_LT1A_2025_2026: TariffPlan = {
     id: 'gotn-subsidy-2025',
     name: 'GoTN Domestic Tariff Subsidy (2025)',
     authority: 'Government of Tamil Nadu Energy Department',
+    subsidy_order_ref: 'GoTN Energy Dept Notification under Sec 65 Electricity Act (2025)',
+    effective_from: '2025-07-01',
+    effective_to: '2026-05-09',
     rules: [
       {
         type: 'free_units',
@@ -163,30 +166,37 @@ export const TNPDCL_LT1A_2025_2026: TariffPlan = {
 
   electricity_duty: {
     percentage: 0.0,
+    tax_base: 'energy_charges_only',
     applies_to_fixed_charges: false,
   },
 };
 
 /**
  * TNPDCL LT-1A Domestic Schedule (May 2026 Welfare Scheme)
- * Effective: May 1, 2026 onwards
+ * Effective: May 10, 2026 onwards (Published GoTN G.O. and TNERC Provisional Subsidy Order)
+ * Sources:
+ * - SimpliCity News & TN Government Gazette (G.O. Ms No. on 200 Free Units, effective May 10, 2026)
+ * - TNERC Provisional Subsidy Approval for TNPDCL (period starting May 10, 2026)
+ * - ebbillcalc.com verified consumer-payable slab matrix
+ * 
  * Special feature: 200 Free Units bi-monthly for households consuming <= 500 units bi-monthly.
  * Introduces a high-stakes economic cliff at 500 vs 501 units!
  */
 export const TNPDCL_LT1A_MAY_2026_SCHEME: TariffPlan = {
   id: 'in-tnpdcl-lt1a-may2026',
-  name: 'TNPDCL LT-1A Domestic (May 2026 — 200 Free Units Scheme)',
+  name: 'TNPDCL LT-1A Domestic (May 10, 2026 — 200 Free Units Scheme)',
   version: '2026.2.0',
   utility_name: 'Tamil Nadu Power Distribution Corporation Limited (TNPDCL)',
   regulatory_authority: 'Tamil Nadu Electricity Regulatory Commission (TNERC)',
-  tariff_order_ref: 'GoTN May 2026 Domestic Welfare Notification & TNERC Order',
+  tariff_order_ref: 'GoTN May 10, 2026 Domestic Welfare Notification & TNERC Order',
   region: 'Tamil Nadu',
   country_code: 'IN',
   currency: 'INR',
   billing_cadence: 'bimonthly',
-  effective_from: '2026-05-01',
+  effective_from: '2025-07-01', // Underlying TNERC Tariff Order No. 6 of 2025 base rates
   source_url: 'https://www.tnpdcl.org/en/tnpdcl/billing-services/schedules-tariff/',
   is_time_dependent: false,
+  mid_cycle_transition_policy: 'meter_reading_date_after',
 
   gross_tariff: {
     type: 'tiered_slab',
@@ -211,12 +221,14 @@ export const TNPDCL_LT1A_MAY_2026_SCHEME: TariffPlan = {
 
   subsidy_scheme: {
     id: 'gotn-subsidy-may2026-200free',
-    name: 'GoTN 200 Free Units Welfare Scheme (May 2026)',
+    name: 'GoTN 200 Free Units Welfare Scheme (Effective May 10, 2026)',
     authority: 'Government of Tamil Nadu Energy Department',
+    subsidy_order_ref: 'GoTN Energy Dept G.O. (Ms) on 200 Free Units Domestic Scheme (Effective 10-05-2026)',
+    effective_from: '2026-05-10', // Explicitly May 10, 2026 per official Gazette reporting
     rules: [
       {
         type: 'free_units',
-        label: 'May 2026 200 Free Units Scheme (<=500 Units)',
+        label: 'May 10, 2026 200 Free Units Scheme (<=500 Units)',
         free_units_count: 200,
         eligibility_max_units: 500, // Explicit boundary: consuming 501 units forfeits the 200 free units!
         cliff_behavior: 'revert_to_standard',
@@ -239,6 +251,7 @@ export const TNPDCL_LT1A_MAY_2026_SCHEME: TariffPlan = {
 
   electricity_duty: {
     percentage: 0.0,
+    tax_base: 'energy_charges_only',
     applies_to_fixed_charges: false,
   },
 };
@@ -271,7 +284,8 @@ export const GENERIC_FLAT_TARIFF_INR: TariffPlan = {
   },
 
   electricity_duty: {
-    percentage: 0.05, // 5% tax
+    percentage: 0.05, // 5% tax explicitly on energy charges
+    tax_base: 'energy_charges_only', // Explicit statutory base: 5% of ₹1,500 = ₹75.00 (Total ₹1,625.00)
     applies_to_fixed_charges: false,
   },
 };

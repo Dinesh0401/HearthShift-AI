@@ -310,9 +310,12 @@ export function calculateBill(
 
     if (!isExempt) {
       if (electricity_duty.percentage) {
-        const taxableBase = electricity_duty.applies_to_fixed_charges
-          ? netEnergyChargesPaise + fixedChargesPaise
-          : netEnergyChargesPaise;
+        let taxableBase = netEnergyChargesPaise;
+        if (electricity_duty.tax_base === 'energy_plus_fixed' || electricity_duty.applies_to_fixed_charges) {
+          taxableBase = netEnergyChargesPaise + fixedChargesPaise;
+        } else if (electricity_duty.tax_base === 'gross_energy_charges') {
+          taxableBase = grossEnergyChargesPaise;
+        }
         electricityDutyPaise = Math.round(taxableBase * electricity_duty.percentage);
       }
       if (electricity_duty.per_unit_paise) {
