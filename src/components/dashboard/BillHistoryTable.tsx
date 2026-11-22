@@ -101,9 +101,7 @@ export const BillHistoryTable: React.FC<BillHistoryTableProps> = ({
             <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
               {bills.map((bill) => {
                 const tariff = getTariffForDate(bill.billing_period_end);
-                const breakdown = calculateBill(tariff, bill.total_units_kwh, {
-                  billing_date: bill.billing_period_end,
-                });
+                const breakdown = calculateBill(bill.total_units_kwh, tariff);
 
                 return (
                   <tr key={bill.id} className="hover:bg-gray-50/50 dark:hover:bg-gray-800/40">

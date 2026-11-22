@@ -18,13 +18,13 @@ export const TariffHeadroomCard: React.FC<TariffHeadroomCardProps> = ({
   const { t } = useLanguage();
 
   // Deterministically compute cliff calculations
-  const bill500 = calculateBill(TNPDCL_LT1A_2026_MAY10, 500);
-  const bill501 = calculateBill(TNPDCL_LT1A_2026_MAY10, 501);
+  const bill500 = calculateBill(500, TNPDCL_LT1A_2026_MAY10);
+  const bill501 = calculateBill(501, TNPDCL_LT1A_2026_MAY10);
   const cliffCostIncrease = (bill501.net_payable_paise - bill500.net_payable_paise) / 100;
 
   // Compute for current household consumption
   const currentUnits = Math.max(0, latestUnitsKwh);
-  const currentBill = calculateBill(TNPDCL_LT1A_2026_MAY10, currentUnits);
+  const currentBill = calculateBill(currentUnits, TNPDCL_LT1A_2026_MAY10);
   const isNearCliff = currentUnits > 420 && currentUnits <= 500;
   const hasExceededCliff = currentUnits > 500;
   const headroomUnits = Math.max(0, 500 - currentUnits);
