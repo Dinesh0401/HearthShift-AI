@@ -20,21 +20,48 @@
   * Total Calculated Amount: $₹1,627.50$
 * **Verification:** Vitest assertion: `expect(calculateBill(input, flatTariff).total_amount).toBe(1627.50)`.
 
-### AT-002: Tiered Slab Tariff Calculation (TANGEDCO LT-1A Domestic Schedule)
-* **Pre-condition:** TANGEDCO domestic schedule loaded (Telescopic):
-  * Tier 1: 0–100 units @ ₹0.00 (subsidized)
-  * Tier 2: 101–200 units @ ₹2.25
-  * Tier 3: 201–400 units @ ₹4.50
-  * Tier 4: 401–500 units @ ₹6.00
-  * Tier 5: >500 units @ ₹8.00
-* **Input:** Consumption of $450\text{ kWh}$ in bi-monthly cycle.
-* **Expected Result:**
-  * Tier 1 (100 units): $100 \times 0.00 = ₹0.00$
-  * Tier 2 (100 units): $100 \times 2.25 = ₹225.00$
-  * Tier 3 (200 units): $200 \times 4.50 = ₹900.00$
-  * Tier 4 (50 units): $50 \times 6.00 = ₹300.00$
-  * Total Energy Cost: $₹1,425.00$
-* **Verification:** Exact Rupee-for-Rupee match in automated test suite.
+### AT-002: Tiered Slab Tariff Calculation (TNPDCL LT-1A Domestic Schedule)
+* **Pre-condition:** TNPDCL (formerly TANGEDCO, unbundled 27.06.2024) domestic LT I-A bi-monthly schedule loaded:
+  * Universal Welfare Subsidy: First 100 units free (0–100 units @ ₹0.00).
+  * Category 1 (Consumption up to 500 units bi-monthly):
+    * Units 101–200: Concessionary rate of ₹2.25/kWh (₹4.50 gross - ₹2.25 GoTN subsidy).
+    * Units 201–400: ₹4.50/kWh.
+    * Units 401–500: ₹6.00/kWh.
+  * Category 2 (High Consumption > 500 units bi-monthly):
+    * Units 101–400: ₹4.50/kWh (loss of 101–200 concessionary subsidy).
+    * Units 401–500: ₹6.00/kWh.
+    * Units 501–600: ₹8.00/kWh.
+* **Input A:** Consumption of $400\text{ kWh}$ in bi-monthly cycle.
+* **Expected Result A:**
+  * Units 0–100: Free ($100 \times 0.00 = ₹0.00$)
+  * Units 101–200: $100 \times 2.25 = ₹225.00$
+  * Units 201–400: $200 \times 4.50 = ₹900.00$
+  * Total Payable: $₹225 + ₹900 = ₹1,125.00$.
+* **Input B (Discontinuity Cliff at 500 vs 501 kWh):**
+  * At 500 kWh: $₹225 + ₹900 + (100 \times 6.00) = ₹1,725.00$.
+  * At 501 kWh: Shifts to Category 2 (loss of slab discount for units 101-200):
+    * Units 0–100: Free ($₹0.00$).
+    * Units 101–400: $300 \times 4.50 = ₹1,350.00$.
+    * Units 401–500: $100 \times 6.00 = ₹600.00$.
+    * Units 501–501: $1 \times 8.00 = ₹8.00$.
+    * Total Payable: $₹1,350 + ₹600 + ₹8 = ₹1,958.00$ (₹233.00 cliff jump for 1 unit!).
+* **Verification:** Exact integer paise match in automated test suite (`tests/unit/billing-calculator.test.ts`).
+
+### AT-002B: May 2026 Welfare Scheme (200 Free Units for $\le 500$ kWh)
+* **Pre-condition:** TNPDCL LT-1A May 2026 Scheme loaded.
+* **Input A:** Consumption of $500\text{ kWh}$.
+  * Units 0–200: Free under May 2026 Scheme ($₹0.00$).
+  * Units 201–400: $200 \times 4.70 = ₹940.00$.
+  * Units 401–500: $100 \times 6.30 = ₹630.00$.
+  * Total Payable: $₹1,570.00$.
+* **Input B:** Consumption of $501\text{ kWh}$.
+  * Exceeds 500 kWh limit $\rightarrow$ Disqualified from 200 free units scheme; reverts to universal 100 free units!
+  * Units 0–100: Free ($₹0.00$).
+  * Units 101–400: $300 \times 4.70 = ₹1,410.00$.
+  * Units 401–500: $100 \times 6.30 = ₹630.00$.
+  * Units 501–501: $1 \times 8.40 = ₹8.40$.
+  * Total Payable: $₹2,048.40$ (₹478.40 jump for 1 single kWh!).
+* **Verification:** Validated by dedicated automated cliff test in Vitest.
 
 ### AT-003: Multi-Period Time-of-Use (TOU) Calculation
 * **Pre-condition:** TOU tariff with:
