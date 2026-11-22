@@ -23,7 +23,7 @@ export interface BatchCommitResult {
  */
 export async function commitValidatedReadings(
   readings: EnergyReading[],
-  fileName?: string
+  _fileName?: string
 ): Promise<BatchCommitResult> {
   if (readings.length === 0) {
     throw new Error('Cannot commit empty readings array.');

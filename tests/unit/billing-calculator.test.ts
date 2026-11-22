@@ -251,6 +251,7 @@ describe('Deterministic Billing Calculator', () => {
         electricity_duty: {
           per_unit_paise: 10, // ₹0.10/kWh
           exemption_threshold_kwh: 50,
+          tax_base: 'energy_charges_only',
           applies_to_fixed_charges: false,
         },
       };
