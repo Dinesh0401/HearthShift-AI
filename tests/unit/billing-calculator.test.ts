@@ -302,6 +302,37 @@ describe('Deterministic Billing Calculator', () => {
       expect(result.is_time_dependent_savings).toBe(true);
       expect(result.explanation).toContain('yields ₹10.00 savings');
     });
+
+    it('AT-TOU-COST-INCREASE: Shifting load from off-peak to peak correctly calculates negative savings', () => {
+      // Shift 1.0 kWh from Night Off-Peak (23:00, ₹5/kWh) to Morning Peak (08:00, ₹10/kWh)
+      const baselineSchedule = [{ hour: 23, kwh: 1.0 }]; // ₹5.00
+      const proposedSchedule = [{ hour: 8, kwh: 1.0 }]; // ₹10.00
+
+      const result = calculateShiftCostDelta(
+        baselineSchedule,
+        proposedSchedule,
+        GENERIC_TOU_TARIFF_INR
+      );
+
+      expect(result.cost_delta_paise).toBe(-500); // -₹5.00
+      expect(result.cost_delta).toBe(-5.0);
+      expect(result.explanation).toContain('increases costs by ₹5.00');
+    });
+
+    it('AT-TOU-IDENTICAL: Shifting between identical rate hours under TOU yields ₹0 savings', () => {
+      // Shift 1.0 kWh from 07:00 (Peak) to 08:00 (Peak)
+      const baselineSchedule = [{ hour: 7, kwh: 1.0 }];
+      const proposedSchedule = [{ hour: 8, kwh: 1.0 }];
+
+      const result = calculateShiftCostDelta(
+        baselineSchedule,
+        proposedSchedule,
+        GENERIC_TOU_TARIFF_INR
+      );
+
+      expect(result.cost_delta_paise).toBe(0);
+      expect(result.explanation).toContain('No cost difference');
+    });
   });
 
   // ══════════════════════════════════════════════════════════
