@@ -326,7 +326,47 @@
 <a name='L261'></a><a href='#L261'>261</a>
 <a name='L262'></a><a href='#L262'>262</a>
 <a name='L263'></a><a href='#L263'>263</a>
-<a name='L264'></a><a href='#L264'>264</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L264'></a><a href='#L264'>264</a>
+<a name='L265'></a><a href='#L265'>265</a>
+<a name='L266'></a><a href='#L266'>266</a>
+<a name='L267'></a><a href='#L267'>267</a>
+<a name='L268'></a><a href='#L268'>268</a>
+<a name='L269'></a><a href='#L269'>269</a>
+<a name='L270'></a><a href='#L270'>270</a>
+<a name='L271'></a><a href='#L271'>271</a>
+<a name='L272'></a><a href='#L272'>272</a>
+<a name='L273'></a><a href='#L273'>273</a>
+<a name='L274'></a><a href='#L274'>274</a>
+<a name='L275'></a><a href='#L275'>275</a>
+<a name='L276'></a><a href='#L276'>276</a>
+<a name='L277'></a><a href='#L277'>277</a>
+<a name='L278'></a><a href='#L278'>278</a>
+<a name='L279'></a><a href='#L279'>279</a>
+<a name='L280'></a><a href='#L280'>280</a>
+<a name='L281'></a><a href='#L281'>281</a>
+<a name='L282'></a><a href='#L282'>282</a>
+<a name='L283'></a><a href='#L283'>283</a>
+<a name='L284'></a><a href='#L284'>284</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -718,6 +758,12 @@ export interface SubsidyScheme {
   id: string;
   name: string;
   authority: string; // e.g., 'Government of Tamil Nadu (GoTN)'
+  /** Official government notification / order reference */
+  subsidy_order_ref: string;
+  /** ISO 8601 effective start date of this subsidy scheme */
+  effective_from: string;
+  /** ISO 8601 expiry date if superseded */
+  effective_to?: string;
   rules: SubsidyRule[];
 }
 &nbsp;
@@ -734,13 +780,20 @@ export interface FixedChargeRule {
   waived_below_kwh?: number;
 }
 &nbsp;
+export type DutyTaxBase = 
+  | 'energy_charges_only' 
+  | 'energy_plus_fixed' 
+  | 'gross_energy_charges';
+&nbsp;
 export interface ElectricityDutyRule {
   /** Percentage of energy charges (e.g., 0.05 for 5% electricity tax) */
   percentage?: number;
   /** Per-unit duty in paise per kWh (e.g., 5 paise/kWh) */
   per_unit_paise?: number;
-  /** Apply duty to fixed charges? */
-  applies_to_fixed_charges: boolean;
+  /** Explicit statutory tax base for duty assessment */
+  tax_base: DutyTaxBase;
+  /** Backwards compatibility alias for tax_base === 'energy_plus_fixed' */
+  applies_to_fixed_charges?: boolean;
   /** Exempt if total consumption is below this threshold */
   exemption_threshold_kwh?: number;
 }
@@ -748,6 +801,11 @@ export interface ElectricityDutyRule {
 // ══════════════════════════════════════════════════════════
 // 5. Complete Consumer Tariff Plan
 // ══════════════════════════════════════════════════════════
+&nbsp;
+export type MidCycleTransitionPolicy = 
+  | 'prorate'                      // Calendar-day linear prorating across tariff versions
+  | 'meter_reading_date_after'     // Applies new scheme if billing cycle ends on or after effective date
+  | 'strict_start_date';           // Applies new scheme only if billing cycle starts on or after effective date
 &nbsp;
 export interface TariffPlan {
   id: string;
@@ -763,11 +821,13 @@ export interface TariffPlan {
   country_code: string;
   currency: CurrencyCode;
   billing_cadence: BillingCadence;
-  /** ISO 8601 start date of this rule version */
+  /** ISO 8601 start date of this regulatory gross tariff schedule */
   effective_from: string;
   /** ISO 8601 expiry date if superseded */
   effective_to?: string;
   source_url: string;
+  /** How mid-cycle tariff/subsidy changes are officially billed */
+  mid_cycle_transition_policy?: MidCycleTransitionPolicy;
   /** Gross regulatory rate schedule */
   gross_tariff: GrossTariffStructure;
   /** Government subsidies applied to consumer bill */
@@ -859,7 +919,7 @@ export interface BillCalculationResult {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-11-22T08:37:50.783Z
+                at 2026-11-22T12:24:53.071Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
