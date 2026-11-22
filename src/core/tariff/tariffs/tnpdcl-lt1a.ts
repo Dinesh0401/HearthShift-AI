@@ -59,6 +59,9 @@ export const TNPDCL_LT1A_2024_2025: TariffPlan = {
     id: 'gotn-subsidy-2024',
     name: 'GoTN Domestic Tariff Subsidy (2024)',
     authority: 'Government of Tamil Nadu Energy Department',
+    subsidy_order_ref: 'GoTN Energy Dept Notification under Sec 65 Electricity Act (2024)',
+    effective_from: '2024-07-01',
+    effective_to: '2025-06-30',
     rules: [
       {
         type: 'free_units',
@@ -84,6 +87,7 @@ export const TNPDCL_LT1A_2024_2025: TariffPlan = {
 
   electricity_duty: {
     percentage: 0.0, // Domestic consumers exempt under basic consumption thresholds
+    tax_base: 'energy_charges_only',
     applies_to_fixed_charges: false,
   },
 };

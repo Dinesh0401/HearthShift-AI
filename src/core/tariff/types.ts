@@ -127,6 +127,12 @@ export interface SubsidyScheme {
   id: string;
   name: string;
   authority: string; // e.g., 'Government of Tamil Nadu (GoTN)'
+  /** Official government notification / order reference */
+  subsidy_order_ref: string;
+  /** ISO 8601 effective start date of this subsidy scheme */
+  effective_from: string;
+  /** ISO 8601 expiry date if superseded */
+  effective_to?: string;
   rules: SubsidyRule[];
 }
 
@@ -143,13 +149,20 @@ export interface FixedChargeRule {
   waived_below_kwh?: number;
 }
 
+export type DutyTaxBase = 
+  | 'energy_charges_only' 
+  | 'energy_plus_fixed' 
+  | 'gross_energy_charges';
+
 export interface ElectricityDutyRule {
   /** Percentage of energy charges (e.g., 0.05 for 5% electricity tax) */
   percentage?: number;
   /** Per-unit duty in paise per kWh (e.g., 5 paise/kWh) */
   per_unit_paise?: number;
-  /** Apply duty to fixed charges? */
-  applies_to_fixed_charges: boolean;
+  /** Explicit statutory tax base for duty assessment */
+  tax_base: DutyTaxBase;
+  /** Backwards compatibility alias for tax_base === 'energy_plus_fixed' */
+  applies_to_fixed_charges?: boolean;
   /** Exempt if total consumption is below this threshold */
   exemption_threshold_kwh?: number;
 }
@@ -157,6 +170,11 @@ export interface ElectricityDutyRule {
 // ══════════════════════════════════════════════════════════
 // 5. Complete Consumer Tariff Plan
 // ══════════════════════════════════════════════════════════
+
+export type MidCycleTransitionPolicy = 
+  | 'prorate'                      // Calendar-day linear prorating across tariff versions
+  | 'meter_reading_date_after'     // Applies new scheme if billing cycle ends on or after effective date
+  | 'strict_start_date';           // Applies new scheme only if billing cycle starts on or after effective date
 
 export interface TariffPlan {
   id: string;
@@ -172,11 +190,13 @@ export interface TariffPlan {
   country_code: string;
   currency: CurrencyCode;
   billing_cadence: BillingCadence;
-  /** ISO 8601 start date of this rule version */
+  /** ISO 8601 start date of this regulatory gross tariff schedule */
   effective_from: string;
   /** ISO 8601 expiry date if superseded */
   effective_to?: string;
   source_url: string;
+  /** How mid-cycle tariff/subsidy changes are officially billed */
+  mid_cycle_transition_policy?: MidCycleTransitionPolicy;
   /** Gross regulatory rate schedule */
   gross_tariff: GrossTariffStructure;
   /** Government subsidies applied to consumer bill */
