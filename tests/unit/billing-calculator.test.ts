@@ -355,6 +355,12 @@ describe('Deterministic Billing Calculator', () => {
       expect(prorated.prorated_payable).toBeGreaterThan(0);
       expect(Number.isFinite(prorated.prorated_payable)).toBe(true);
     });
+
+    it('rejects invalid total days (<= 0) in prorateBillAcrossTariffVersions', () => {
+      expect(() =>
+        prorateBillAcrossTariffVersions(400, 0, TNPDCL_LT1A_2024_2025, 0, TNPDCL_LT1A_2025_2026)
+      ).toThrow(/Total days in prorating periods must be greater than 0/);
+    });
   });
 
   // ══════════════════════════════════════════════════════════
