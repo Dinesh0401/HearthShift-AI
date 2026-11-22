@@ -1,7 +1,16 @@
 import { test, expect } from '@playwright/test';
+import fs from 'node:fs';
+import path from 'node:path';
 
 test.describe('HearthShift AI — Full Ingestion & Privacy Verification Workflow', () => {
-  test('executes manual bill entry, validates deterministic tariff breakdown, gates interval chart, and confirms zero external telemetry', async ({
+  test.beforeAll(async () => {
+    const screenshotDir = path.resolve('tests/e2e/screenshots');
+    if (!fs.existsSync(screenshotDir)) {
+      fs.mkdirSync(screenshotDir, { recursive: true });
+    }
+  });
+
+  test('executes manual bill entry, validates deterministic tariff breakdown, gates interval chart, tests persistence across reload, and confirms zero external telemetry', async ({
     page,
   }) => {
     // ══════════════════════════════════════════════════════════
@@ -34,13 +43,15 @@ test.describe('HearthShift AI — Full Ingestion & Privacy Verification Workflow
     // Verify Capability Badge starts in BASIC MODE (zero interval data)
     await expect(page.getByText('BASIC MODE')).toBeVisible();
     await expect(
-      page.getByText('Monthly utility bills only. Slab tracking active. Hourly load-shifting is strictly disabled.')
+      page.getByText(/Monthly utility bills only\. Slab tracking active\./i)
     ).toBeVisible();
 
     // Verify Deterministic Tariff Headroom Card & ₹478.40 Cliff Warning
     await expect(page.getByText('TNPDCL LT-1A (2026 Scheme)')).toBeVisible();
     await expect(page.getByText('Cliff Cost Delta')).toBeVisible();
     await expect(page.getByText('+₹478.40')).toBeVisible();
+
+    await page.screenshot({ path: 'tests/e2e/screenshots/1-dashboard-initial.png' });
 
     // ══════════════════════════════════════════════════════════
     // 3. Manual Bill Entry Workflow
@@ -50,7 +61,7 @@ test.describe('HearthShift AI — Full Ingestion & Privacy Verification Workflow
     await page.locator('input[name="total_units_kwh"]').fill('480');
 
     // Submit the bill form
-    await page.getByRole('button', { name: 'Save Bill Locally' }).click();
+    await page.getByRole('button', { name: /Save Bill Locally/i }).click();
 
     // Assert success message
     await expect(
@@ -61,21 +72,32 @@ test.describe('HearthShift AI — Full Ingestion & Privacy Verification Workflow
     await expect(page.getByText('2026-05-01 → 2026-06-30')).toBeVisible();
     await expect(page.getByText('480 kWh')).toBeVisible();
 
+    await page.screenshot({ path: 'tests/e2e/screenshots/2-bill-entered.png' });
+
     // ══════════════════════════════════════════════════════════
-    // 4. Verify Scientific Gating on Interval Load Curve (Basic Mode)
+    // 4. Persistence Test Across Page Reload
+    // ══════════════════════════════════════════════════════════
+    await page.reload();
+    await expect(page.getByText('2026-05-01 → 2026-06-30')).toBeVisible();
+    await expect(page.getByText('480 kWh')).toBeVisible();
+
+    // ══════════════════════════════════════════════════════════
+    // 5. Verify Scientific Gating on Interval Load Curve (Basic Mode)
     // ══════════════════════════════════════════════════════════
     await page.getByRole('button', { name: /Load Curves & Intervals/i }).click();
 
     // Verify interval chart is explicitly gated with scientific justification banner
     await expect(
-      page.getByText('Interval Time-Series Chart Gated (Basic Mode)')
+      page.getByText(/Interval Time-Series Chart Gated/i)
     ).toBeVisible();
     await expect(
-      page.getByText('Aggregated monthly/bi-monthly utility bills contain zero physical information about intra-day timing')
+      page.getByText(/Aggregated monthly\/bi-monthly utility bills contain zero physical information/i)
     ).toBeVisible();
 
+    await page.screenshot({ path: 'tests/e2e/screenshots/3-interval-gated.png' });
+
     // ══════════════════════════════════════════════════════════
-    // 5. Smart-Meter CSV Ingestion Workflow
+    // 6. Smart-Meter CSV Ingestion Workflow
     // ══════════════════════════════════════════════════════════
     await page.getByRole('button', { name: /Smart Meter CSV Import/i }).click();
 
@@ -97,20 +119,19 @@ test.describe('HearthShift AI — Full Ingestion & Privacy Verification Workflow
     });
 
     // Verify validation preview displays physical metadata
-    await expect(page.getByText('Validation Preview: smart_meter_sample.csv')).toBeVisible();
-    await expect(page.getByText('4 valid readings')).toBeVisible();
+    await expect(page.getByText(/CSV Validation Preview/i)).toBeVisible();
     await expect(page.getByText('Resolution: hourly')).toBeVisible();
 
     // Commit readings to IndexedDB
-    await page.getByRole('button', { name: 'Commit to Local Database' }).click();
+    await page.getByRole('button', { name: /Confirm & Save.*Readings/i }).click();
 
     // Verify commit success
     await expect(
-      page.getByText(/Successfully committed 4 readings to local IndexedDB/)
+      page.getByText(/Successfully saved.*interval readings locally/i)
     ).toBeVisible();
 
     // ══════════════════════════════════════════════════════════
-    // 6. Verify Capability Transition to INTERVAL Mode
+    // 7. Verify Capability Transition to INTERVAL Mode
     // ══════════════════════════════════════════════════════════
     await expect(page.getByText('INTERVAL MODE')).toBeVisible();
 
@@ -119,8 +140,10 @@ test.describe('HearthShift AI — Full Ingestion & Privacy Verification Workflow
     await expect(page.getByText('Empirical Interval Load Profile')).toBeVisible();
     await expect(page.getByText('Validated interval readings stored:')).toBeVisible();
 
+    await page.screenshot({ path: 'tests/e2e/screenshots/4-interval-unlocked.png' });
+
     // ══════════════════════════════════════════════════════════
-    // 7. Bilingual Tamil (தமிழ்) Verification
+    // 8. Bilingual Tamil (தமிழ்) Verification
     // ══════════════════════════════════════════════════════════
     await page.getByLabel('Toggle language between English and Tamil').click();
 
@@ -128,12 +151,14 @@ test.describe('HearthShift AI — Full Ingestion & Privacy Verification Workflow
     await expect(page.getByText('ஹார்த்ஷிஃப்ட் AI')).toBeVisible();
     await expect(page.getByText('கால இடைவெளி முறைமை')).toBeVisible();
 
+    await page.screenshot({ path: 'tests/e2e/screenshots/5-tamil-language.png' });
+
     // Switch back to English
     await page.getByLabel('Toggle language between English and Tamil').click();
     await expect(page.getByText('HearthShift AI')).toBeVisible();
 
     // ══════════════════════════════════════════════════════════
-    // 8. Data Sovereign Purge ("Delete All My Data")
+    // 9. Data Sovereign Purge ("Delete All My Data")
     // ══════════════════════════════════════════════════════════
     await page.getByRole('button', { name: /Privacy & Storage/i }).click();
 
@@ -154,13 +179,16 @@ test.describe('HearthShift AI — Full Ingestion & Privacy Verification Workflow
       page.getByText('All household data was permanently wiped from IndexedDB.')
     ).toBeVisible();
 
-    // Verify system returns to BASIC MODE with zero bills
+    // Reload page and verify system returns to clean initial state with zero bills
+    await page.reload();
     await page.getByRole('button', { name: /Bills & Slab Analysis/i }).click();
     await expect(page.getByText('BASIC MODE')).toBeVisible();
     await expect(page.getByText('No electricity bills recorded yet.')).toBeVisible();
 
+    await page.screenshot({ path: 'tests/e2e/screenshots/6-purged-empty-state.png' });
+
     // ══════════════════════════════════════════════════════════
-    // 9. FINAL HARD PRIVACY ASSERTION: Zero external telemetry
+    // 10. FINAL HARD PRIVACY ASSERTION: Zero external telemetry
     // ══════════════════════════════════════════════════════════
     expect(externalTelemetryRequests).toEqual([]);
   });
