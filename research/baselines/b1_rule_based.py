@@ -74,10 +74,10 @@ class SafeRuleBasedAdvisor(BaseAdvisor):
         pub = env.get_public_view(household)
         baseline = pub.baseline_kwh
 
-        # Filter strictly safe actions (discomfort <= 1.0)
+        # Filter strictly safe micro-actions (feature vector <= 0.3 ensures D <= 0.90 even for extreme theta=3.0)
         safe_reductions = [
             a for a in pub.candidate_actions
-            if a.is_reduction() and a.id != 'null_action' and float(np.max(a.feature_vector)) <= 0.5
+            if a.is_reduction() and a.id != 'null_action' and float(np.max(a.feature_vector)) <= 0.3
         ]
         null_action = next(a for a in pub.candidate_actions if a.id == 'null_action')
 
