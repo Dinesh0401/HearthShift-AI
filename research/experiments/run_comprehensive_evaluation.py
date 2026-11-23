@@ -115,14 +115,19 @@ def run_comprehensive_benchmark():
 
     start_all = time.perf_counter()
 
+    # Track raw paired trial vectors across all 500 household runs
+    raw_paired_regret: Dict[str, List[float]] = {pname: [] for pname in policies}
+    raw_paired_cvr: Dict[str, List[float]] = {pname: [] for pname in policies}
+
     for seed in SEEDS:
         print(f"\n--- Running Seed {seed} ---")
         cohort = generate_synthetic_cohort(n_households=N_HOUSEHOLDS, seed=seed)
         env = SimulationEnvironment(cohort, tariff, rng=np.random.default_rng(seed))
+        paired_realizations = env.generate_paired_realizations()
 
         for pname, policy in policies.items():
             t0 = time.perf_counter()
-            summary = env.run_advisor_trial(policy)
+            summary = env.run_advisor_trial(policy, realized_kwh_map=paired_realizations)
             elapsed_ms = (time.perf_counter() - t0) * 1000.0 / N_HOUSEHOLDS
 
             policy_metrics[pname]['norm_regret'].append(summary.mean_normalized_regret)
@@ -135,6 +140,10 @@ def run_comprehensive_benchmark():
             policy_metrics[pname]['abstention_precision'].append(summary.abstention_precision)
             policy_metrics[pname]['casr'].append(summary.cliff_avoidance_success_rate)
             policy_metrics[pname]['latency_ms'].append(elapsed_ms)
+
+            # Raw paired vectors
+            raw_paired_regret[pname].extend([r.normalized_regret for r in summary.records])
+            raw_paired_cvr[pname].extend([1.0 if r.is_comfort_violated else 0.0 for r in summary.records])
 
             # False alarms: count load shift actions
             hh_map = {h.household_id: h for h in cohort}
