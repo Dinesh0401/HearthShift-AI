@@ -173,7 +173,7 @@ class RiskAbstainExactEVSIAdvisor(RiskExactEVSIAdvisor):
         c_min_paise: float = 3000.0,  # ₹30.00
         cost_ask_paise: float = 200.0,
         lambda_discomfort_paise: float = 20000.0,
-        d_max_nominal: float = 2.0,
+        d_max_nominal: float = 1.0,
         z_alpha: float = 1.645,
         enforce_privacy_cost: bool = True,
     ):
