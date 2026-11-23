@@ -10,11 +10,14 @@ import { ManualBillForm } from '../components/ingestion/ManualBillForm';
 import { BillHistoryTable } from '../components/dashboard/BillHistoryTable';
 import { CsvDropzone } from '../components/ingestion/CsvDropzone';
 import { IntervalChart } from '../components/dashboard/IntervalChart';
+import { ScenarioSimulator } from '../components/dashboard/ScenarioSimulator';
+import { RecommendationFeed } from '../components/dashboard/RecommendationFeed';
+import { SavingsLedger } from '../components/dashboard/SavingsLedger';
 import { PrivacyDataManager } from '../components/dashboard/PrivacyDataManager';
 import { useLanguage } from '../locales/i18n';
-import { Receipt, FileSpreadsheet, Activity, ShieldCheck } from 'lucide-react';
+import { Receipt, FileSpreadsheet, Activity, Sliders, Lightbulb, Award, ShieldCheck } from 'lucide-react';
 
-type ActiveTab = 'bills' | 'import' | 'intervals' | 'privacy';
+type ActiveTab = 'bills' | 'import' | 'intervals' | 'simulator' | 'recommendations' | 'savings' | 'privacy';
 
 export default function DashboardPage() {
   const { t } = useLanguage();
@@ -131,6 +134,45 @@ export default function DashboardPage() {
 
           <button
             type="button"
+            onClick={() => setActiveTab('simulator')}
+            className={`flex items-center gap-2 py-3 px-3 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap transition-colors ${
+              activeTab === 'simulator'
+                ? 'border-emerald-600 text-emerald-700 font-bold'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            <Sliders className="w-4 h-4" />
+            {t('tabSimulator')}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('recommendations')}
+            className={`flex items-center gap-2 py-3 px-3 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap transition-colors ${
+              activeTab === 'recommendations'
+                ? 'border-emerald-600 text-emerald-700 font-bold'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            <Lightbulb className="w-4 h-4" />
+            {t('tabRecommendations')}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('savings')}
+            className={`flex items-center gap-2 py-3 px-3 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap transition-colors ${
+              activeTab === 'savings'
+                ? 'border-emerald-600 text-emerald-700 font-bold'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            <Award className="w-4 h-4" />
+            {t('tabSavings')}
+          </button>
+
+          <button
+            type="button"
             onClick={() => setActiveTab('privacy')}
             className={`flex items-center gap-2 py-3 px-3 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap transition-colors ${
               activeTab === 'privacy'
@@ -179,6 +221,27 @@ export default function DashboardPage() {
               canVisualizeIntervals={evaluation?.permissions.can_visualize_intervals ?? false}
               refreshTrigger={refreshTrigger}
             />
+          </div>
+        )}
+
+        {activeTab === 'simulator' && (
+          <div className="space-y-6">
+            <ScenarioSimulator baselineUnitsKwh={latestUnits} />
+          </div>
+        )}
+
+        {activeTab === 'recommendations' && (
+          <div className="space-y-6">
+            <RecommendationFeed
+              latestUnitsKwh={latestUnits}
+              onActionLogged={handleStateUpdated}
+            />
+          </div>
+        )}
+
+        {activeTab === 'savings' && (
+          <div className="space-y-6">
+            <SavingsLedger refreshTrigger={refreshTrigger} />
           </div>
         )}
 
