@@ -25,13 +25,14 @@ import numpy as np
 from simulator.tariffs import create_tnpdcl_lt1a_may2026_tariff
 from simulator.household import generate_synthetic_cohort
 from simulator.environment import SimulationEnvironment
-from baselines.b1_rule_based import RuleBasedAdvisor
+from baselines.b1_rule_based import RuleBasedAdvisor, SafeRuleBasedAdvisor
 from baselines.b2_fixed_survey import FixedSurveyAdvisor
 from baselines.b3_entropy import EntropyActiveAdvisor
 from baselines.b4_linear_evsi import LinearEVSIAdvisor
 from baselines.b5_oracle import OracleAdvisor
 from baselines.b6_exact_passive import ExactPassiveAdvisor
 from baselines.b7_exact_evsi import ExactEVSIAdvisor
+from baselines.b7_risk_evsi import RiskExactEVSIAdvisor, RiskAbstainExactEVSIAdvisor
 from baselines.b8_risk_passive import RiskSensitivePassiveAdvisor
 from baselines.b9_evsi_no_privacy import ExactEVSINoPrivacyAdvisor
 from algorithms.tr_voi import ThresholdAwareRobustVOIAdvisor
@@ -44,12 +45,15 @@ N_HOUSEHOLDS = 100
 def build_policy_suite() -> Dict[str, Any]:
     policies: Dict[str, Any] = {
         'B1_RuleBased': RuleBasedAdvisor(),
+        'B1_Safe': SafeRuleBasedAdvisor(),
         'B2_FixedSurvey': FixedSurveyAdvisor(k_questions=3),
         'B3_EntropyLICA': EntropyActiveAdvisor(max_queries=3),
         'B4_LinearEVSI': LinearEVSIAdvisor(max_queries=3),
         'B5_Oracle': OracleAdvisor(),
         'B6_ExactPassive': ExactPassiveAdvisor(),
         'B7_ExactEVSI': ExactEVSIAdvisor(max_queries=3),
+        'B7_RiskEVSI': RiskExactEVSIAdvisor(max_queries=3),
+        'B7_RiskAbstainEVSI': RiskAbstainExactEVSIAdvisor(max_queries=3),
         'B8_RiskPassive': RiskSensitivePassiveAdvisor(),
         'B9_EVSINoPrivacy': ExactEVSINoPrivacyAdvisor(max_queries=3),
         'TR_VOI_Full': ThresholdAwareRobustVOIAdvisor(max_queries=3),
