@@ -10,13 +10,14 @@ import pytest
 from simulator.tariffs import create_tnpdcl_lt1a_may2026_tariff, TariffPlan
 from simulator.household import SyntheticHousehold, generate_synthetic_cohort
 from simulator.environment import SimulationEnvironment
-from baselines.b1_rule_based import RuleBasedAdvisor
+from baselines.b1_rule_based import RuleBasedAdvisor, SafeRuleBasedAdvisor
 from baselines.b2_fixed_survey import FixedSurveyAdvisor
 from baselines.b3_entropy import EntropyActiveAdvisor
 from baselines.b4_linear_evsi import LinearEVSIAdvisor
 from baselines.b5_oracle import OracleAdvisor
 from baselines.b6_exact_passive import ExactPassiveAdvisor
 from baselines.b7_exact_evsi import ExactEVSIAdvisor
+from baselines.b7_risk_evsi import RiskExactEVSIAdvisor, RiskAbstainExactEVSIAdvisor
 from baselines.b8_risk_passive import RiskSensitivePassiveAdvisor
 from baselines.b9_evsi_no_privacy import ExactEVSINoPrivacyAdvisor
 from algorithms.tr_voi import ThresholdAwareRobustVOIAdvisor
