@@ -1,0 +1,2541 @@
+{
+  "policies": {
+    "B1_RuleBased": {
+      "norm_regret": {
+        "mean": 1.06088,
+        "std": 0.06566,
+        "ci95": 0.08152
+      },
+      "abs_regret_paise": {
+        "mean": 21833.71978,
+        "std": 3607.47769,
+        "ci95": 4478.55707
+      },
+      "savings_inr": {
+        "mean": 256.00462,
+        "std": 40.50666,
+        "ci95": 50.2876
+      },
+      "queries": {
+        "mean": 0.0,
+        "std": 0.0,
+        "ci95": 0.0
+      },
+      "cvr": {
+        "mean": 0.204,
+        "std": 0.04506,
+        "ci95": 0.05593
+      },
+      "rar": {
+        "mean": 0.30729,
+        "std": 0.06422,
+        "ci95": 0.07973
+      },
+      "abstention_rate": {
+        "mean": 0.336,
+        "std": 0.0305,
+        "ci95": 0.03786
+      },
+      "abstention_precision": {
+        "mean": 0.53911,
+        "std": 0.05527,
+        "ci95": 0.06862
+      },
+      "casr": {
+        "mean": 0.42913,
+        "std": 0.10642,
+        "ci95": 0.13211
+      },
+      "false_alarms": {
+        "mean": 0.0,
+        "std": 0.0,
+        "ci95": 0.0
+      },
+      "latency_ms": {
+        "mean": 0.19225,
+        "std": 0.01081,
+        "ci95": 0.01341
+      }
+    },
+    "B2_FixedSurvey": {
+      "norm_regret": {
+        "mean": 0.46294,
+        "std": 0.04821,
+        "ci95": 0.05985
+      },
+      "abs_regret_paise": {
+        "mean": 10632.80055,
+        "std": 1504.69104,
+        "ci95": 1868.02118
+      },
+      "savings_inr": {
+        "mean": 367.63562,
+        "std": 21.93635,
+        "ci95": 27.23322
+      },
+      "queries": {
+        "mean": 3.0,
+        "std": 0.0,
+        "ci95": 0.0
+      },
+      "cvr": {
+        "mean": 0.158,
+        "std": 0.01643,
+        "ci95": 0.0204
+      },
+      "rar": {
+        "mean": 0.64599,
+        "std": 0.02886,
+        "ci95": 0.03583
+      },
+      "abstention_rate": {
+        "mean": 0.266,
+        "std": 0.02302,
+        "ci95": 0.02858
+      },
+      "abstention_precision": {
+        "mean": 0.81113,
+        "std": 0.06145,
+        "ci95": 0.07629
+      },
+      "casr": {
+        "mean": 0.83388,
+        "std": 0.06305,
+        "ci95": 0.07827
+      },
+      "false_alarms": {
+        "mean": 0.0,
+        "std": 0.0,
+        "ci95": 0.0
+      },
+      "latency_ms": {
+        "mean": 0.30343,
+        "std": 0.05024,
+        "ci95": 0.06237
+      }
+    },
+    "B3_EntropyLICA": {
+      "norm_regret": {
+        "mean": 0.48654,
+        "std": 0.04139,
+        "ci95": 0.05139
+      },
+      "abs_regret_paise": {
+        "mean": 11602.86013,
+        "std": 1667.49127,
+        "ci95": 2070.13195
+      },
+      "savings_inr": {
+        "mean": 360.60306,
+        "std": 16.83643,
+        "ci95": 20.90184
+      },
+      "queries": {
+        "mean": 4.784,
+        "std": 0.04099,
+        "ci95": 0.05088
+      },
+      "cvr": {
+        "mean": 0.178,
+        "std": 0.02387,
+        "ci95": 0.02964
+      },
+      "rar": {
+        "mean": 0.63644,
+        "std": 0.05006,
+        "ci95": 0.06214
+      },
+      "abstention_rate": {
+        "mean": 0.174,
+        "std": 0.01817,
+        "ci95": 0.02255
+      },
+      "abstention_precision": {
+        "mean": 0.9337,
+        "std": 0.04506,
+        "ci95": 0.05595
+      },
+      "casr": {
+        "mean": 0.84797,
+        "std": 0.04427,
+        "ci95": 0.05496
+      },
+      "false_alarms": {
+        "mean": 0.0,
+        "std": 0.0,
+        "ci95": 0.0
+      },
+      "latency_ms": {
+        "mean": 0.28103,
+        "std": 0.03042,
+        "ci95": 0.03777
+      }
+    },
+    "B4_LinearEVSI": {
+      "norm_regret": {
+        "mean": 0.56476,
+        "std": 0.06166,
+        "ci95": 0.07655
+      },
+      "abs_regret_paise": {
+        "mean": 10717.79234,
+        "std": 1818.72996,
+        "ci95": 2257.88948
+      },
+      "savings_inr": {
+        "mean": 119.56214,
+        "std": 17.54699,
+        "ci95": 21.78398
+      },
+      "queries": {
+        "mean": 5.454,
+        "std": 0.03847,
+        "ci95": 0.04776
+      },
+      "cvr": {
+        "mean": 0.018,
+        "std": 0.02168,
+        "ci95": 0.02691
+      },
+      "rar": {
+        "mean": 0.84006,
+        "std": 0.10603,
+        "ci95": 0.13164
+      },
+      "abstention_rate": {
+        "mean": 0.82,
+        "std": 0.0324,
+        "ci95": 0.04023
+      },
+      "abstention_precision": {
+        "mean": 0.35087,
+        "std": 0.036,
+        "ci95": 0.0447
+      },
+      "casr": {
+        "mean": 0.76119,
+        "std": 0.04964,
+        "ci95": 0.06162
+      },
+      "false_alarms": {
+        "mean": 0.0,
+        "std": 0.0,
+        "ci95": 0.0
+      },
+      "latency_ms": {
+        "mean": 0.29828,
+        "std": 0.02272,
+        "ci95": 0.02821
+      }
+    },
+    "B5_Oracle": {
+      "norm_regret": {
+        "mean": 0.0069,
+        "std": 0.01305,
+        "ci95": 0.0162
+      },
+      "abs_regret_paise": {
+        "mean": 98.45283,
+        "std": 191.83568,
+        "ci95": 238.15727
+      },
+      "savings_inr": {
+        "mean": 315.90788,
+        "std": 6.87879,
+        "ci95": 8.53978
+      },
+      "queries": {
+        "mean": 5.454,
+        "std": 0.03847,
+        "ci95": 0.04776
+      },
+      "cvr": {
+        "mean": 0.0,
+        "std": 0.0,
+        "ci95": 0.0
+      },
+      "rar": {
+        "mean": 0.80539,
+        "std": 0.0253,
+        "ci95": 0.03141
+      },
+      "abstention_rate": {
+        "mean": 0.294,
+        "std": 0.03209,
+        "ci95": 0.03984
+      },
+      "abstention_precision": {
+        "mean": 0.99375,
+        "std": 0.01398,
+        "ci95": 0.01735
+      },
+      "casr": {
+        "mean": 0.99091,
+        "std": 0.02033,
+        "ci95": 0.02524
+      },
+      "false_alarms": {
+        "mean": 0.0,
+        "std": 0.0,
+        "ci95": 0.0
+      },
+      "latency_ms": {
+        "mean": 0.30837,
+        "std": 0.04325,
+        "ci95": 0.05369
+      }
+    },
+    "B6_ExactPassive": {
+      "norm_regret": {
+        "mean": 0.45357,
+        "std": 0.0393,
+        "ci95": 0.0488
+      },
+      "abs_regret_paise": {
+        "mean": 10486.44744,
+        "std": 852.47524,
+        "ci95": 1058.31812
+      },
+      "savings_inr": {
+        "mean": 363.64348,
+        "std": 17.1804,
+        "ci95": 21.32887
+      },
+      "queries": {
+        "mean": 5.454,
+        "std": 0.03847,
+        "ci95": 0.04776
+      },
+      "cvr": {
+        "mean": 0.172,
+        "std": 0.01095,
+        "ci95": 0.0136
+      },
+      "rar": {
+        "mean": 0.62353,
+        "std": 0.05327,
+        "ci95": 0.06613
+      },
+      "abstention_rate": {
+        "mean": 0.15,
+        "std": 0.0,
+        "ci95": 0.0
+      },
+      "abstention_precision": {
+        "mean": 1.0,
+        "std": 0.0,
+        "ci95": 0.0
+      },
+      "casr": {
+        "mean": 0.93499,
+        "std": 0.02021,
+        "ci95": 0.02508
+      },
+      "false_alarms": {
+        "mean": 0.0,
+        "std": 0.0,
+        "ci95": 0.0
+      },
+      "latency_ms": {
+        "mean": 0.25067,
+        "std": 0.03097,
+        "ci95": 0.03844
+      }
+    },
+    "B7_ExactEVSI": {
+      "norm_regret": {
+        "mean": 0.49009,
+        "std": 0.0281,
+        "ci95": 0.03488
+      },
+      "abs_regret_paise": {
+        "mean": 11599.4436,
+        "std": 540.26599,
+        "ci95": 670.72129
+      },
+      "savings_inr": {
+        "mean": 369.68836,
+        "std": 17.78865,
+        "ci95": 22.08398
+      },
+      "queries": {
+        "mean": 6.306,
+        "std": 0.07335,
+        "ci95": 0.09106
+      },
+      "cvr": {
+        "mean": 0.186,
+        "std": 0.0114,
+        "ci95": 0.01415
+      },
+      "rar": {
+        "mean": 0.59294,
+        "std": 0.03955,
+        "ci95": 0.0491
+      },
+      "abstention_rate": {
+        "mean": 0.15,
+        "std": 0.0,
+        "ci95": 0.0
+      },
+      "abstention_precision": {
+        "mean": 1.0,
+        "std": 0.0,
+        "ci95": 0.0
+      },
+      "casr": {
+        "mean": 0.90573,
+        "std": 0.03026,
+        "ci95": 0.03756
+      },
+      "false_alarms": {
+        "mean": 0.0,
+        "std": 0.0,
+        "ci95": 0.0
+      },
+      "latency_ms": {
+        "mean": 1.53351,
+        "std": 0.25289,
+        "ci95": 0.31395
+      }
+    },
+    "B8_RiskPassive": {
+      "norm_regret": {
+        "mean": 0.67029,
+        "std": 0.03941,
+        "ci95": 0.04893
+      },
+      "abs_regret_paise": {
+        "mean": 14819.78811,
+        "std": 2360.70788,
+        "ci95": 2930.73606
+      },
+      "savings_inr": {
+        "mean": 29.06922,
+        "std": 6.13795,
+        "ci95": 7.62004
+      },
+      "queries": {
+        "mean": 6.306,
+        "std": 0.07335,
+        "ci95": 0.09106
+      },
+      "cvr": {
+        "mean": 0.002,
+        "std": 0.00447,
+        "ci95": 0.00555
+      },
+      "rar": {
+        "mean": 0.54583,
+        "std": 0.11379,
+        "ci95": 0.14127
+      },
+      "abstention_rate": {
+        "mean": 0.854,
+        "std": 0.00894,
+        "ci95": 0.0111
+      },
+      "abstention_precision": {
+        "mean": 0.34445,
+        "std": 0.04289,
+        "ci95": 0.05324
+      },
+      "casr": {
+        "mean": 0.61842,
+        "std": 0.14929,
+        "ci95": 0.18534
+      },
+      "false_alarms": {
+        "mean": 0.0,
+        "std": 0.0,
+        "ci95": 0.0
+      },
+      "latency_ms": {
+        "mean": 0.22677,
+        "std": 0.01905,
+        "ci95": 0.02366
+      }
+    },
+    "B9_EVSINoPrivacy": {
+      "norm_regret": {
+        "mean": 0.46954,
+        "std": 0.04637,
+        "ci95": 0.05756
+      },
+      "abs_regret_paise": {
+        "mean": 10578.93386,
+        "std": 1006.64032,
+        "ci95": 1249.70867
+      },
+      "savings_inr": {
+        "mean": 354.72972,
+        "std": 13.76561,
+        "ci95": 17.08952
+      },
+      "queries": {
+        "mean": 7.166,
+        "std": 0.06841,
+        "ci95": 0.08493
+      },
+      "cvr": {
+        "mean": 0.176,
+        "std": 0.0114,
+        "ci95": 0.01415
+      },
+      "rar": {
+        "mean": 0.64706,
+        "std": 0.02201,
+        "ci95": 0.02732
+      },
+      "abstention_rate": {
+        "mean": 0.15,
+        "std": 0.0,
+        "ci95": 0.0
+      },
+      "abstention_precision": {
+        "mean": 1.0,
+        "std": 0.0,
+        "ci95": 0.0
+      },
+      "casr": {
+        "mean": 0.92673,
+        "std": 0.02996,
+        "ci95": 0.0372
+      },
+      "false_alarms": {
+        "mean": 0.0,
+        "std": 0.0,
+        "ci95": 0.0
+      },
+      "latency_ms": {
+        "mean": 1.3923,
+        "std": 0.09252,
+        "ci95": 0.11486
+      }
+    },
+    "TR_VOI_Full": {
+      "norm_regret": {
+        "mean": 0.60687,
+        "std": 0.06981,
+        "ci95": 0.08666
+      },
+      "abs_regret_paise": {
+        "mean": 11530.18288,
+        "std": 1898.4522,
+        "ci95": 2356.86185
+      },
+      "savings_inr": {
+        "mean": 151.41932,
+        "std": 27.95068,
+        "ci95": 34.69979
+      },
+      "queries": {
+        "mean": 8.034,
+        "std": 0.07436,
+        "ci95": 0.09232
+      },
+      "cvr": {
+        "mean": 0.054,
+        "std": 0.03507,
+        "ci95": 0.04354
+      },
+      "rar": {
+        "mean": 0.76575,
+        "std": 0.12253,
+        "ci95": 0.15212
+      },
+      "abstention_rate": {
+        "mean": 0.764,
+        "std": 0.03578,
+        "ci95": 0.04442
+      },
+      "abstention_precision": {
+        "mean": 0.34737,
+        "std": 0.03167,
+        "ci95": 0.03931
+      },
+      "casr": {
+        "mean": 0.81034,
+        "std": 0.07118,
+        "ci95": 0.08837
+      },
+      "false_alarms": {
+        "mean": 0.0,
+        "std": 0.0,
+        "ci95": 0.0
+      },
+      "latency_ms": {
+        "mean": 5.16762,
+        "std": 0.23031,
+        "ci95": 0.28592
+      }
+    },
+    "TR_VOI_Ablation_NoThreshold": {
+      "norm_regret": {
+        "mean": 0.54484,
+        "std": 0.04881,
+        "ci95": 0.0606
+      },
+      "abs_regret_paise": {
+        "mean": 8934.80648,
+        "std": 1521.40333,
+        "ci95": 1888.7689
+      },
+      "savings_inr": {
+        "mean": 214.47526,
+        "std": 24.93742,
+        "ci95": 30.95894
+      },
+      "queries": {
+        "mean": 8.9,
+        "std": 0.06892,
+        "ci95": 0.08556
+      },
+      "cvr": {
+        "mean": 0.07,
+        "std": 0.03082,
+        "ci95": 0.03826
+      },
+      "rar": {
+        "mean": 0.76289,
+        "std": 0.08888,
+        "ci95": 0.11034
+      },
+      "abstention_rate": {
+        "mean": 0.648,
+        "std": 0.03962,
+        "ci95": 0.04919
+      },
+      "abstention_precision": {
+        "mean": 0.39759,
+        "std": 0.03235,
+        "ci95": 0.04016
+      },
+      "casr": {
+        "mean": 0.92709,
+        "std": 0.03185,
+        "ci95": 0.03954
+      },
+      "false_alarms": {
+        "mean": 0.0,
+        "std": 0.0,
+        "ci95": 0.0
+      },
+      "latency_ms": {
+        "mean": 1.47768,
+        "std": 0.09147,
+        "ci95": 0.11355
+      }
+    },
+    "TR_VOI_Ablation_NoRiskConstraints": {
+      "norm_regret": {
+        "mean": 0.44974,
+        "std": 0.04288,
+        "ci95": 0.05324
+      },
+      "abs_regret_paise": {
+        "mean": 10242.92094,
+        "std": 1002.59162,
+        "ci95": 1244.68235
+      },
+      "savings_inr": {
+        "mean": 363.21724,
+        "std": 20.27217,
+        "ci95": 25.16719
+      },
+      "queries": {
+        "mean": 9.702,
+        "std": 0.10281,
+        "ci95": 0.12764
+      },
+      "cvr": {
+        "mean": 0.172,
+        "std": 0.01095,
+        "ci95": 0.0136
+      },
+      "rar": {
+        "mean": 0.65647,
+        "std": 0.02683,
+        "ci95": 0.03331
+      },
+      "abstention_rate": {
+        "mean": 0.15,
+        "std": 0.0,
+        "ci95": 0.0
+      },
+      "abstention_precision": {
+        "mean": 1.0,
+        "std": 0.0,
+        "ci95": 0.0
+      },
+      "casr": {
+        "mean": 0.94463,
+        "std": 0.04539,
+        "ci95": 0.05635
+      },
+      "false_alarms": {
+        "mean": 0.0,
+        "std": 0.0,
+        "ci95": 0.0
+      },
+      "latency_ms": {
+        "mean": 5.69286,
+        "std": 0.27919,
+        "ci95": 0.3466
+      }
+    },
+    "TR_VOI_Ablation_NoQuestioning": {
+      "norm_regret": {
+        "mean": 0.64302,
+        "std": 0.05995,
+        "ci95": 0.07443
+      },
+      "abs_regret_paise": {
+        "mean": 12387.55106,
+        "std": 2037.12842,
+        "ci95": 2529.02352
+      },
+      "savings_inr": {
+        "mean": 133.79494,
+        "std": 25.58449,
+        "ci95": 31.76225
+      },
+      "queries": {
+        "mean": 9.702,
+        "std": 0.10281,
+        "ci95": 0.12764
+      },
+      "cvr": {
+        "mean": 0.058,
+        "std": 0.0295,
+        "ci95": 0.03662
+      },
+      "rar": {
+        "mean": 0.69727,
+        "std": 0.09408,
+        "ci95": 0.11679
+      },
+      "abstention_rate": {
+        "mean": 0.782,
+        "std": 0.02864,
+        "ci95": 0.03555
+      },
+      "abstention_precision": {
+        "mean": 0.33198,
+        "std": 0.02622,
+        "ci95": 0.03255
+      },
+      "casr": {
+        "mean": 0.77132,
+        "std": 0.09326,
+        "ci95": 0.11578
+      },
+      "false_alarms": {
+        "mean": 0.0,
+        "std": 0.0,
+        "ci95": 0.0
+      },
+      "latency_ms": {
+        "mean": 0.63664,
+        "std": 0.05992,
+        "ci95": 0.07438
+      }
+    },
+    "TR_VOI_Ablation_NoPrivacyCost": {
+      "norm_regret": {
+        "mean": 0.62692,
+        "std": 0.05655,
+        "ci95": 0.07021
+      },
+      "abs_regret_paise": {
+        "mean": 11585.22489,
+        "std": 2198.63285,
+        "ci95": 2729.5256
+      },
+      "savings_inr": {
+        "mean": 136.93706,
+        "std": 25.83054,
+        "ci95": 32.06771
+      },
+      "queries": {
+        "mean": 10.558,
+        "std": 0.10281,
+        "ci95": 0.12764
+      },
+      "cvr": {
+        "mean": 0.056,
+        "std": 0.02966,
+        "ci95": 0.03683
+      },
+      "rar": {
+        "mean": 0.71758,
+        "std": 0.09227,
+        "ci95": 0.11455
+      },
+      "abstention_rate": {
+        "mean": 0.774,
+        "std": 0.02966,
+        "ci95": 0.03683
+      },
+      "abstention_precision": {
+        "mean": 0.34049,
+        "std": 0.02437,
+        "ci95": 0.03026
+      },
+      "casr": {
+        "mean": 0.79928,
+        "std": 0.10137,
+        "ci95": 0.12584
+      },
+      "false_alarms": {
+        "mean": 0.0,
+        "std": 0.0,
+        "ci95": 0.0
+      },
+      "latency_ms": {
+        "mean": 5.02279,
+        "std": 0.25084,
+        "ci95": 0.3114
+      }
+    },
+    "TR_VOI_Ablation_LinearTariff": {
+      "norm_regret": {
+        "mean": 0.68926,
+        "std": 0.02968,
+        "ci95": 0.03685
+      },
+      "abs_regret_paise": {
+        "mean": 16467.08371,
+        "std": 1074.94512,
+        "ci95": 1334.50669
+      },
+      "savings_inr": {
+        "mean": 1.6985,
+        "std": 3.79796,
+        "ci95": 4.71504
+      },
+      "queries": {
+        "mean": 10.724,
+        "std": 0.09127,
+        "ci95": 0.11331
+      },
+      "cvr": {
+        "mean": 0.0,
+        "std": 0.0,
+        "ci95": 0.0
+      },
+      "rar": {
+        "mean": 1.0,
+        "std": 0.0,
+        "ci95": 0.0
+      },
+      "abstention_rate": {
+        "mean": 0.998,
+        "std": 0.00447,
+        "ci95": 0.00555
+      },
+      "abstention_precision": {
+        "mean": 0.29665,
+        "std": 0.02951,
+        "ci95": 0.03664
+      },
+      "casr": {
+        "mean": 0.42723,
+        "std": 0.09615,
+        "ci95": 0.11937
+      },
+      "false_alarms": {
+        "mean": 0.0,
+        "std": 0.0,
+        "ci95": 0.0
+      },
+      "latency_ms": {
+        "mean": 1.11542,
+        "std": 0.12608,
+        "ci95": 0.15652
+      }
+    }
+  },
+  "archetypes": {
+    "B1_RuleBased": {
+      "cliff_critical": {
+        "norm_regret": {
+          "mean": 1.0845,
+          "std": 0.16043,
+          "ci95": 0.19917
+        },
+        "cvr": {
+          "mean": 0.56,
+          "std": 0.08,
+          "ci95": 0.09932
+        },
+        "abstention_rate": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 783.404,
+          "std": 67.26858,
+          "ci95": 83.51158
+        }
+      },
+      "inelastic_constrained": {
+        "norm_regret": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 1.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        }
+      },
+      "inflexible_extreme": {
+        "norm_regret": {
+          "mean": 1.7129,
+          "std": 0.22277,
+          "ci95": 0.27656
+        },
+        "cvr": {
+          "mean": 0.30667,
+          "std": 0.23381,
+          "ci95": 0.29027
+        },
+        "abstention_rate": {
+          "mean": 0.12,
+          "std": 0.08692,
+          "ci95": 0.10791
+        },
+        "savings_inr": {
+          "mean": 263.96733,
+          "std": 230.67225,
+          "ci95": 286.37152
+        }
+      },
+      "noisy_unresponsive": {
+        "norm_regret": {
+          "mean": 1.35871,
+          "std": 0.14895,
+          "ci95": 0.18492
+        },
+        "cvr": {
+          "mean": 0.18,
+          "std": 0.13038,
+          "ci95": 0.16187
+        },
+        "abstention_rate": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 176.3664,
+          "std": 127.73983,
+          "ci95": 158.58452
+        }
+      },
+      "standard_flexible": {
+        "norm_regret": {
+          "mean": 1.13413,
+          "std": 0.07205,
+          "ci95": 0.08945
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 0.48,
+          "std": 0.10182,
+          "ci95": 0.12641
+        },
+        "savings_inr": {
+          "mean": 8.34823,
+          "std": 1.77808,
+          "ci95": 2.20743
+        }
+      }
+    },
+    "B2_FixedSurvey": {
+      "cliff_critical": {
+        "norm_regret": {
+          "mean": 0.31495,
+          "std": 0.13233,
+          "ci95": 0.16428
+        },
+        "cvr": {
+          "mean": 0.144,
+          "std": 0.05367,
+          "ci95": 0.06662
+        },
+        "abstention_rate": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 738.1808,
+          "std": 21.8414,
+          "ci95": 27.11533
+        }
+      },
+      "inelastic_constrained": {
+        "norm_regret": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 1.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        }
+      },
+      "inflexible_extreme": {
+        "norm_regret": {
+          "mean": 1.28,
+          "std": 0.29212,
+          "ci95": 0.36266
+        },
+        "cvr": {
+          "mean": 0.64,
+          "std": 0.14606,
+          "ci95": 0.18133
+        },
+        "abstention_rate": {
+          "mean": 0.36,
+          "std": 0.14606,
+          "ci95": 0.18133
+        },
+        "savings_inr": {
+          "mean": 306.74707,
+          "std": 146.55047,
+          "ci95": 181.93727
+        }
+      },
+      "noisy_unresponsive": {
+        "norm_regret": {
+          "mean": 0.36692,
+          "std": 0.19635,
+          "ci95": 0.24377
+        },
+        "cvr": {
+          "mean": 0.12,
+          "std": 0.08367,
+          "ci95": 0.10387
+        },
+        "abstention_rate": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 410.8088,
+          "std": 57.73084,
+          "ci95": 71.67081
+        }
+      },
+      "standard_flexible": {
+        "norm_regret": {
+          "mean": 0.44431,
+          "std": 0.07416,
+          "ci95": 0.09207
+        },
+        "cvr": {
+          "mean": 0.04,
+          "std": 0.01565,
+          "ci95": 0.01943
+        },
+        "abstention_rate": {
+          "mean": 0.17714,
+          "std": 0.0313,
+          "ci95": 0.03886
+        },
+        "savings_inr": {
+          "mean": 274.27851,
+          "std": 9.2893,
+          "ci95": 11.53234
+        }
+      }
+    },
+    "B3_EntropyLICA": {
+      "cliff_critical": {
+        "norm_regret": {
+          "mean": 0.24197,
+          "std": 0.13915,
+          "ci95": 0.17275
+        },
+        "cvr": {
+          "mean": 0.088,
+          "std": 0.05215,
+          "ci95": 0.06475
+        },
+        "abstention_rate": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 647.66136,
+          "std": 51.58961,
+          "ci95": 64.04669
+        }
+      },
+      "inelastic_constrained": {
+        "norm_regret": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 1.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        }
+      },
+      "inflexible_extreme": {
+        "norm_regret": {
+          "mean": 1.82452,
+          "std": 0.17432,
+          "ci95": 0.21642
+        },
+        "cvr": {
+          "mean": 0.90667,
+          "std": 0.08944,
+          "ci95": 0.11104
+        },
+        "abstention_rate": {
+          "mean": 0.09333,
+          "std": 0.08944,
+          "ci95": 0.11104
+        },
+        "savings_inr": {
+          "mean": 381.95773,
+          "std": 124.45424,
+          "ci95": 154.50557
+        }
+      },
+      "noisy_unresponsive": {
+        "norm_regret": {
+          "mean": 0.4495,
+          "std": 0.21997,
+          "ci95": 0.27308
+        },
+        "cvr": {
+          "mean": 0.12,
+          "std": 0.08367,
+          "ci95": 0.10387
+        },
+        "abstention_rate": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 383.8604,
+          "std": 70.90128,
+          "ci95": 88.02145
+        }
+      },
+      "standard_flexible": {
+        "norm_regret": {
+          "mean": 0.30691,
+          "std": 0.07883,
+          "ci95": 0.09787
+        },
+        "cvr": {
+          "mean": 0.02286,
+          "std": 0.0313,
+          "ci95": 0.03886
+        },
+        "abstention_rate": {
+          "mean": 0.02857,
+          "std": 0.0202,
+          "ci95": 0.02508
+        },
+        "savings_inr": {
+          "mean": 294.30863,
+          "std": 4.94575,
+          "ci95": 6.13998
+        }
+      }
+    },
+    "B4_LinearEVSI": {
+      "cliff_critical": {
+        "norm_regret": {
+          "mean": 0.4954,
+          "std": 0.07586,
+          "ci95": 0.09418
+        },
+        "cvr": {
+          "mean": 0.008,
+          "std": 0.01789,
+          "ci95": 0.02221
+        },
+        "abstention_rate": {
+          "mean": 0.472,
+          "std": 0.09121,
+          "ci95": 0.11324
+        },
+        "savings_inr": {
+          "mean": 358.894,
+          "std": 34.02512,
+          "ci95": 42.241
+        }
+      },
+      "inelastic_constrained": {
+        "norm_regret": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 1.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        }
+      },
+      "inflexible_extreme": {
+        "norm_regret": {
+          "mean": 0.37332,
+          "std": 0.26312,
+          "ci95": 0.32666
+        },
+        "cvr": {
+          "mean": 0.10667,
+          "std": 0.12111,
+          "ci95": 0.15035
+        },
+        "abstention_rate": {
+          "mean": 0.89333,
+          "std": 0.12111,
+          "ci95": 0.15035
+        },
+        "savings_inr": {
+          "mean": 95.4368,
+          "std": 107.47735,
+          "ci95": 133.42936
+        }
+      },
+      "noisy_unresponsive": {
+        "norm_regret": {
+          "mean": 0.74837,
+          "std": 0.24435,
+          "ci95": 0.30335
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 0.86,
+          "std": 0.16733,
+          "ci95": 0.20774
+        },
+        "savings_inr": {
+          "mean": 99.7914,
+          "std": 120.70843,
+          "ci95": 149.85528
+        }
+      },
+      "standard_flexible": {
+        "norm_regret": {
+          "mean": 0.88593,
+          "std": 0.03768,
+          "ci95": 0.04677
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 0.94857,
+          "std": 0.0313,
+          "ci95": 0.03886
+        },
+        "savings_inr": {
+          "mean": 15.83994,
+          "std": 9.35428,
+          "ci95": 11.61301
+        }
+      }
+    },
+    "B5_Oracle": {
+      "cliff_critical": {
+        "norm_regret": {
+          "mean": 0.00798,
+          "std": 0.01785,
+          "ci95": 0.02216
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 0.016,
+          "std": 0.02191,
+          "ci95": 0.0272
+        },
+        "savings_inr": {
+          "mean": 696.08168,
+          "std": 24.84453,
+          "ci95": 30.84361
+        }
+      },
+      "inelastic_constrained": {
+        "norm_regret": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 1.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        }
+      },
+      "inflexible_extreme": {
+        "norm_regret": {
+          "mean": 0.02667,
+          "std": 0.05963,
+          "ci95": 0.07403
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 0.73333,
+          "std": 0.14907,
+          "ci95": 0.18507
+        },
+        "savings_inr": {
+          "mean": 10.96,
+          "std": 7.01296,
+          "ci95": 8.70634
+        }
+      },
+      "noisy_unresponsive": {
+        "norm_regret": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 0.12,
+          "std": 0.13038,
+          "ci95": 0.16187
+        },
+        "savings_inr": {
+          "mean": 375.9632,
+          "std": 50.09002,
+          "ci95": 62.18501
+        }
+      },
+      "standard_flexible": {
+        "norm_regret": {
+          "mean": 0.0026,
+          "std": 0.00581,
+          "ci95": 0.00721
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 0.05143,
+          "std": 0.03725,
+          "ci95": 0.04625
+        },
+        "savings_inr": {
+          "mean": 293.27754,
+          "std": 15.28969,
+          "ci95": 18.98161
+        }
+      }
+    },
+    "B6_ExactPassive": {
+      "cliff_critical": {
+        "norm_regret": {
+          "mean": 0.14806,
+          "std": 0.08265,
+          "ci95": 0.1026
+        },
+        "cvr": {
+          "mean": 0.032,
+          "std": 0.01789,
+          "ci95": 0.02221
+        },
+        "abstention_rate": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 655.65016,
+          "std": 40.09752,
+          "ci95": 49.77967
+        }
+      },
+      "inelastic_constrained": {
+        "norm_regret": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 1.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        }
+      },
+      "inflexible_extreme": {
+        "norm_regret": {
+          "mean": 2.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "cvr": {
+          "mean": 1.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 402.47813,
+          "std": 96.83937,
+          "ci95": 120.22269
+        }
+      },
+      "noisy_unresponsive": {
+        "norm_regret": {
+          "mean": 0.41654,
+          "std": 0.19138,
+          "ci95": 0.23759
+        },
+        "cvr": {
+          "mean": 0.12,
+          "std": 0.08367,
+          "ci95": 0.10387
+        },
+        "abstention_rate": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 374.6466,
+          "std": 52.73921,
+          "ci95": 65.47389
+        }
+      },
+      "standard_flexible": {
+        "norm_regret": {
+          "mean": 0.214,
+          "std": 0.07957,
+          "ci95": 0.09879
+        },
+        "cvr": {
+          "mean": 0.00571,
+          "std": 0.01278,
+          "ci95": 0.01586
+        },
+        "abstention_rate": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 291.12731,
+          "std": 3.96477,
+          "ci95": 4.92213
+        }
+      }
+    },
+    "B7_ExactEVSI": {
+      "cliff_critical": {
+        "norm_regret": {
+          "mean": 0.22382,
+          "std": 0.04887,
+          "ci95": 0.06067
+        },
+        "cvr": {
+          "mean": 0.072,
+          "std": 0.01789,
+          "ci95": 0.02221
+        },
+        "abstention_rate": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 643.85824,
+          "std": 35.30819,
+          "ci95": 43.83388
+        }
+      },
+      "inelastic_constrained": {
+        "norm_regret": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 1.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        }
+      },
+      "inflexible_extreme": {
+        "norm_regret": {
+          "mean": 2.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "cvr": {
+          "mean": 1.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 418.7468,
+          "std": 99.6596,
+          "ci95": 123.72389
+        }
+      },
+      "noisy_unresponsive": {
+        "norm_regret": {
+          "mean": 0.43583,
+          "std": 0.21107,
+          "ci95": 0.26204
+        },
+        "cvr": {
+          "mean": 0.12,
+          "std": 0.08367,
+          "ci95": 0.10387
+        },
+        "abstention_rate": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 392.1886,
+          "std": 58.6512,
+          "ci95": 72.81341
+        }
+      },
+      "standard_flexible": {
+        "norm_regret": {
+          "mean": 0.25871,
+          "std": 0.01864,
+          "ci95": 0.02314
+        },
+        "cvr": {
+          "mean": 0.01714,
+          "std": 0.02556,
+          "ci95": 0.03173
+        },
+        "abstention_rate": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 304.83691,
+          "std": 8.32869,
+          "ci95": 10.33978
+        }
+      }
+    },
+    "B8_RiskPassive": {
+      "cliff_critical": {
+        "norm_regret": {
+          "mean": 0.90668,
+          "std": 0.03541,
+          "ci95": 0.04396
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 0.464,
+          "std": 0.02191,
+          "ci95": 0.0272
+        },
+        "savings_inr": {
+          "mean": 92.72144,
+          "std": 17.44308,
+          "ci95": 21.65497
+        }
+      },
+      "inelastic_constrained": {
+        "norm_regret": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 1.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        }
+      },
+      "inflexible_extreme": {
+        "norm_regret": {
+          "mean": 0.2331,
+          "std": 0.16728,
+          "ci95": 0.20767
+        },
+        "cvr": {
+          "mean": 0.01333,
+          "std": 0.02981,
+          "ci95": 0.03701
+        },
+        "abstention_rate": {
+          "mean": 0.97333,
+          "std": 0.03651,
+          "ci95": 0.04533
+        },
+        "savings_inr": {
+          "mean": 8.17387,
+          "std": 17.58143,
+          "ci95": 21.82673
+        }
+      },
+      "noisy_unresponsive": {
+        "norm_regret": {
+          "mean": 0.81561,
+          "std": 0.20356,
+          "ci95": 0.25272
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 0.92,
+          "std": 0.13038,
+          "ci95": 0.16187
+        },
+        "savings_inr": {
+          "mean": 46.6278,
+          "std": 75.63286,
+          "ci95": 93.89554
+        }
+      },
+      "standard_flexible": {
+        "norm_regret": {
+          "mean": 0.93456,
+          "std": 0.03806,
+          "ci95": 0.04725
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 1.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        }
+      }
+    },
+    "B9_EVSINoPrivacy": {
+      "cliff_critical": {
+        "norm_regret": {
+          "mean": 0.15015,
+          "std": 0.07524,
+          "ci95": 0.09341
+        },
+        "cvr": {
+          "mean": 0.032,
+          "std": 0.01789,
+          "ci95": 0.02221
+        },
+        "abstention_rate": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 603.8236,
+          "std": 33.74501,
+          "ci95": 41.89324
+        }
+      },
+      "inelastic_constrained": {
+        "norm_regret": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 1.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        }
+      },
+      "inflexible_extreme": {
+        "norm_regret": {
+          "mean": 2.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "cvr": {
+          "mean": 1.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 402.04187,
+          "std": 96.18761,
+          "ci95": 119.41355
+        }
+      },
+      "noisy_unresponsive": {
+        "norm_regret": {
+          "mean": 0.44527,
+          "std": 0.21876,
+          "ci95": 0.27158
+        },
+        "cvr": {
+          "mean": 0.12,
+          "std": 0.08367,
+          "ci95": 0.10387
+        },
+        "abstention_rate": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 385.319,
+          "std": 39.72916,
+          "ci95": 49.32236
+        }
+      },
+      "standard_flexible": {
+        "norm_regret": {
+          "mean": 0.24992,
+          "std": 0.0963,
+          "ci95": 0.11956
+        },
+        "cvr": {
+          "mean": 0.01714,
+          "std": 0.01565,
+          "ci95": 0.01943
+        },
+        "abstention_rate": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 299.81611,
+          "std": 9.16997,
+          "ci95": 11.3842
+        }
+      }
+    },
+    "TR_VOI_Full": {
+      "cliff_critical": {
+        "norm_regret": {
+          "mean": 0.48699,
+          "std": 0.04765,
+          "ci95": 0.05915
+        },
+        "cvr": {
+          "mean": 0.008,
+          "std": 0.01789,
+          "ci95": 0.02221
+        },
+        "abstention_rate": {
+          "mean": 0.456,
+          "std": 0.03578,
+          "ci95": 0.04442
+        },
+        "savings_inr": {
+          "mean": 394.59536,
+          "std": 36.54795,
+          "ci95": 45.373
+        }
+      },
+      "inelastic_constrained": {
+        "norm_regret": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 1.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        }
+      },
+      "inflexible_extreme": {
+        "norm_regret": {
+          "mean": 0.73295,
+          "std": 0.42468,
+          "ci95": 0.52723
+        },
+        "cvr": {
+          "mean": 0.33333,
+          "std": 0.21082,
+          "ci95": 0.26172
+        },
+        "abstention_rate": {
+          "mean": 0.66667,
+          "std": 0.21082,
+          "ci95": 0.26172
+        },
+        "savings_inr": {
+          "mean": 201.9844,
+          "std": 164.30024,
+          "ci95": 203.97299
+        }
+      },
+      "noisy_unresponsive": {
+        "norm_regret": {
+          "mean": 0.63961,
+          "std": 0.12174,
+          "ci95": 0.15114
+        },
+        "cvr": {
+          "mean": 0.02,
+          "std": 0.04472,
+          "ci95": 0.05552
+        },
+        "abstention_rate": {
+          "mean": 0.66,
+          "std": 0.23022,
+          "ci95": 0.28581
+        },
+        "savings_inr": {
+          "mean": 178.8424,
+          "std": 149.08518,
+          "ci95": 185.08402
+        }
+      },
+      "standard_flexible": {
+        "norm_regret": {
+          "mean": 0.88919,
+          "std": 0.0394,
+          "ci95": 0.04891
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 0.95429,
+          "std": 0.02556,
+          "ci95": 0.03173
+        },
+        "savings_inr": {
+          "mean": 13.11023,
+          "std": 7.6383,
+          "ci95": 9.48268
+        }
+      }
+    },
+    "TR_VOI_Ablation_NoThreshold": {
+      "cliff_critical": {
+        "norm_regret": {
+          "mean": 0.15181,
+          "std": 0.05791,
+          "ci95": 0.07189
+        },
+        "cvr": {
+          "mean": 0.032,
+          "std": 0.01789,
+          "ci95": 0.02221
+        },
+        "abstention_rate": {
+          "mean": 0.016,
+          "std": 0.03578,
+          "ci95": 0.04442
+        },
+        "savings_inr": {
+          "mean": 632.27784,
+          "std": 34.35722,
+          "ci95": 42.65328
+        }
+      },
+      "inelastic_constrained": {
+        "norm_regret": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 1.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        }
+      },
+      "inflexible_extreme": {
+        "norm_regret": {
+          "mean": 0.84241,
+          "std": 0.40329,
+          "ci95": 0.50067
+        },
+        "cvr": {
+          "mean": 0.4,
+          "std": 0.20548,
+          "ci95": 0.2551
+        },
+        "abstention_rate": {
+          "mean": 0.6,
+          "std": 0.20548,
+          "ci95": 0.2551
+        },
+        "savings_inr": {
+          "mean": 227.19213,
+          "std": 165.53071,
+          "ci95": 205.50057
+        }
+      },
+      "noisy_unresponsive": {
+        "norm_regret": {
+          "mean": 0.61412,
+          "std": 0.08152,
+          "ci95": 0.1012
+        },
+        "cvr": {
+          "mean": 0.02,
+          "std": 0.04472,
+          "ci95": 0.05552
+        },
+        "abstention_rate": {
+          "mean": 0.62,
+          "std": 0.22804,
+          "ci95": 0.2831
+        },
+        "savings_inr": {
+          "mean": 201.4314,
+          "std": 138.54996,
+          "ci95": 172.00492
+        }
+      },
+      "standard_flexible": {
+        "norm_regret": {
+          "mean": 0.91176,
+          "std": 0.05164,
+          "ci95": 0.06411
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 0.97714,
+          "std": 0.0239,
+          "ci95": 0.02968
+        },
+        "savings_inr": {
+          "mean": 6.23954,
+          "std": 6.37741,
+          "ci95": 7.91733
+        }
+      }
+    },
+    "TR_VOI_Ablation_NoRiskConstraints": {
+      "cliff_critical": {
+        "norm_regret": {
+          "mean": 0.1263,
+          "std": 0.0673,
+          "ci95": 0.08355
+        },
+        "cvr": {
+          "mean": 0.032,
+          "std": 0.01789,
+          "ci95": 0.02221
+        },
+        "abstention_rate": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 651.44176,
+          "std": 32.19636,
+          "ci95": 39.97065
+        }
+      },
+      "inelastic_constrained": {
+        "norm_regret": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 1.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        }
+      },
+      "inflexible_extreme": {
+        "norm_regret": {
+          "mean": 2.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "cvr": {
+          "mean": 1.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 407.21893,
+          "std": 91.18064,
+          "ci95": 113.19756
+        }
+      },
+      "noisy_unresponsive": {
+        "norm_regret": {
+          "mean": 0.44627,
+          "std": 0.21845,
+          "ci95": 0.2712
+        },
+        "cvr": {
+          "mean": 0.12,
+          "std": 0.08367,
+          "ci95": 0.10387
+        },
+        "abstention_rate": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 374.2222,
+          "std": 55.44556,
+          "ci95": 68.83372
+        }
+      },
+      "standard_flexible": {
+        "norm_regret": {
+          "mean": 0.21011,
+          "std": 0.08401,
+          "ci95": 0.1043
+        },
+        "cvr": {
+          "mean": 0.00571,
+          "std": 0.01278,
+          "ci95": 0.01586
+        },
+        "abstention_rate": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 291.00497,
+          "std": 4.06412,
+          "ci95": 5.04547
+        }
+      }
+    },
+    "TR_VOI_Ablation_NoQuestioning": {
+      "cliff_critical": {
+        "norm_regret": {
+          "mean": 0.49827,
+          "std": 0.04724,
+          "ci95": 0.05864
+        },
+        "cvr": {
+          "mean": 0.008,
+          "std": 0.01789,
+          "ci95": 0.02221
+        },
+        "abstention_rate": {
+          "mean": 0.464,
+          "std": 0.02191,
+          "ci95": 0.0272
+        },
+        "savings_inr": {
+          "mean": 350.59336,
+          "std": 35.34163,
+          "ci95": 43.87539
+        }
+      },
+      "inelastic_constrained": {
+        "norm_regret": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 1.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        }
+      },
+      "inflexible_extreme": {
+        "norm_regret": {
+          "mean": 0.79902,
+          "std": 0.34827,
+          "ci95": 0.43236
+        },
+        "cvr": {
+          "mean": 0.36,
+          "std": 0.17385,
+          "ci95": 0.21582
+        },
+        "abstention_rate": {
+          "mean": 0.64,
+          "std": 0.17385,
+          "ci95": 0.21582
+        },
+        "savings_inr": {
+          "mean": 213.1308,
+          "std": 154.87509,
+          "ci95": 192.27199
+        }
+      },
+      "noisy_unresponsive": {
+        "norm_regret": {
+          "mean": 0.71707,
+          "std": 0.10897,
+          "ci95": 0.13529
+        },
+        "cvr": {
+          "mean": 0.02,
+          "std": 0.04472,
+          "ci95": 0.05552
+        },
+        "abstention_rate": {
+          "mean": 0.7,
+          "std": 0.21213,
+          "ci95": 0.26335
+        },
+        "savings_inr": {
+          "mean": 141.7698,
+          "std": 116.18429,
+          "ci95": 144.23873
+        }
+      },
+      "standard_flexible": {
+        "norm_regret": {
+          "mean": 0.93397,
+          "std": 0.03771,
+          "ci95": 0.04681
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 1.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        }
+      }
+    },
+    "TR_VOI_Ablation_NoPrivacyCost": {
+      "cliff_critical": {
+        "norm_regret": {
+          "mean": 0.49691,
+          "std": 0.06415,
+          "ci95": 0.07964
+        },
+        "cvr": {
+          "mean": 0.008,
+          "std": 0.01789,
+          "ci95": 0.02221
+        },
+        "abstention_rate": {
+          "mean": 0.456,
+          "std": 0.03578,
+          "ci95": 0.04442
+        },
+        "savings_inr": {
+          "mean": 358.06216,
+          "std": 37.45058,
+          "ci95": 46.49358
+        }
+      },
+      "inelastic_constrained": {
+        "norm_regret": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 1.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        }
+      },
+      "inflexible_extreme": {
+        "norm_regret": {
+          "mean": 0.75973,
+          "std": 0.36518,
+          "ci95": 0.45336
+        },
+        "cvr": {
+          "mean": 0.34667,
+          "std": 0.17889,
+          "ci95": 0.22208
+        },
+        "abstention_rate": {
+          "mean": 0.65333,
+          "std": 0.17889,
+          "ci95": 0.22208
+        },
+        "savings_inr": {
+          "mean": 199.472,
+          "std": 154.16541,
+          "ci95": 191.39095
+        }
+      },
+      "noisy_unresponsive": {
+        "norm_regret": {
+          "mean": 0.69599,
+          "std": 0.11697,
+          "ci95": 0.14521
+        },
+        "cvr": {
+          "mean": 0.02,
+          "std": 0.04472,
+          "ci95": 0.05552
+        },
+        "abstention_rate": {
+          "mean": 0.7,
+          "std": 0.21213,
+          "ci95": 0.26335
+        },
+        "savings_inr": {
+          "mean": 152.4472,
+          "std": 120.70995,
+          "ci95": 149.85717
+        }
+      },
+      "standard_flexible": {
+        "norm_regret": {
+          "mean": 0.91181,
+          "std": 0.04344,
+          "ci95": 0.05393
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 0.97714,
+          "std": 0.0239,
+          "ci95": 0.02968
+        },
+        "savings_inr": {
+          "mean": 6.44571,
+          "std": 6.74109,
+          "ci95": 8.36883
+        }
+      }
+    },
+    "TR_VOI_Ablation_LinearTariff": {
+      "cliff_critical": {
+        "norm_regret": {
+          "mean": 0.97182,
+          "std": 0.03573,
+          "ci95": 0.04436
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 0.992,
+          "std": 0.01789,
+          "ci95": 0.02221
+        },
+        "savings_inr": {
+          "mean": 6.794,
+          "std": 15.19185,
+          "ci95": 18.86014
+        }
+      },
+      "inelastic_constrained": {
+        "norm_regret": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 1.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        }
+      },
+      "inflexible_extreme": {
+        "norm_regret": {
+          "mean": 0.22583,
+          "std": 0.13216,
+          "ci95": 0.16408
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 1.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        }
+      },
+      "noisy_unresponsive": {
+        "norm_regret": {
+          "mean": 0.85457,
+          "std": 0.13258,
+          "ci95": 0.16459
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 1.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        }
+      },
+      "standard_flexible": {
+        "norm_regret": {
+          "mean": 0.93419,
+          "std": 0.03768,
+          "ci95": 0.04677
+        },
+        "cvr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "abstention_rate": {
+          "mean": 1.0,
+          "std": 0.0,
+          "ci95": 0.0
+        },
+        "savings_inr": {
+          "mean": 0.0,
+          "std": 0.0,
+          "ci95": 0.0
+        }
+      }
+    }
+  }
+}
