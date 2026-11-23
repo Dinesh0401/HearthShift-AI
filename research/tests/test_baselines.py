@@ -139,8 +139,21 @@ class TestBaselineB5Oracle:
         assert summary_oracle.comfort_violation_rate == 0.0
 
         for r in summary_oracle.records:
-            assert pytest.approx(r.absolute_regret_paise, abs=1e-3) == 0.0
-            assert pytest.approx(r.normalized_regret, abs=1e-3) == 0.0
+            assert r.absolute_regret_paise == 0.0
+            assert r.normalized_regret == 0.0
+
+    def test_b5_bitwise_zero_regret_under_stochastic_jitter(self, test_tariff, small_cohort):
+        """Even under non-zero weather jitter (sigma=8.0 kWh), ex-post oracle has bitwise 0.0 regret."""
+        env = SimulationEnvironment(small_cohort, test_tariff, weather_jitter_std=8.0)
+        oracle = OracleAdvisor()
+        summary_oracle = env.run_advisor_trial(oracle)
+
+        assert summary_oracle.comfort_violation_rate == 0.0
+        assert summary_oracle.mean_absolute_regret_paise == 0.0
+        assert summary_oracle.mean_normalized_regret == 0.0
+        for r in summary_oracle.records:
+            assert r.absolute_regret_paise == 0.0
+            assert r.normalized_regret == 0.0
 
 
 class TestNewBaselinesB6ThroughB9:

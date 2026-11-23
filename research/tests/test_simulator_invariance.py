@@ -55,6 +55,27 @@ class TestHiddenGroundTruthIsolation:
         assert isinstance(record.true_action_welfare_paise, float)
         assert isinstance(record.oracle_welfare_paise, float)
 
+    def test_comfort_violation_rejection_and_realized_welfare_no_clipping(self):
+        """When an advisor proposes an intolerable action, household strictly rejects, falls back to null_action."""
+        tariff = create_tnpdcl_lt1a_may2026_tariff()
+        # Inflexible household where discomfort tolerance is small (d_max = 1.0)
+        hh = SyntheticHousehold('hh_rigid', 505.0, np.array([3.0, 3.0, 3.0, 3.0]), d_max=1.0, archetype='inflexible_extreme')
+        assert hh.d_max == 1.0
+        env = SimulationEnvironment([hh], tariff)
+
+        # Force advisor to propose action that violates d_max (e.g. ac_curtail_afternoon_1h where D = 3.0 * 0.8 = 2.4 > 1.0)
+        intolerable_action = next(a for a in hh.candidate_actions if a.id == 'ac_curtail_afternoon_1h')
+        record = env.evaluate_decision(hh, chosen_action=intolerable_action, is_abstention=False)
+
+        assert record.is_comfort_violated is True
+        assert record.user_accepted is False
+        assert record.executed_action_id == 'null_action'
+        assert record.monetary_savings_paise == 0.0
+        assert record.discomfort_paise == 0.0
+        assert record.true_action_welfare_paise == 0.0
+        assert record.absolute_regret_paise == record.oracle_welfare_paise
+        assert 0.0 <= record.normalized_regret <= 1.0
+
 
 class TestSeededInvariance:
     """RAT-003: Seeded Invariance and Reproducibility."""
