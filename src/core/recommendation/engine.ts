@@ -12,16 +12,13 @@ import type {
   Recommendation, 
   SavingsEstimate, 
   AdaptiveQuestion,
-  ConfidenceLevel,
   DecisionOutcome
 } from '../../types/contracts';
 import { 
   decideTrVoi, 
   updateBeliefWithFeedback,
   type LatentPreferenceBelief,
-  type TrVoiConfig,
-  type ClientEnergyAction,
-  type ClientAdaptiveQuestion
+  type TrVoiConfig
 } from '../optimization/tr-voi';
 import { evaluateCapabilityState, type CapabilityEvaluationInputs } from '../capabilities/policy';
 
@@ -90,9 +87,9 @@ export function generateHouseholdRecommendation(
       text: cq.text,
       category: cq.category,
       evsi_score: decision.metadata.decisionMetricPaise / 100.0,
-      burdenScore: cq.burdenScore,
-      privacyScore: cq.privacyCostPaise / 1000.0,
-      netValue: decision.metadata.decisionMetricPaise / 100.0,
+      burden_score: cq.burdenScore,
+      privacy_score: cq.privacyCostPaise / 1000.0,
+      net_value: decision.metadata.decisionMetricPaise / 100.0,
       options: [
         {
           value: 'flexible',

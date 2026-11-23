@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { TNPDCL_LT1A_2026_MAY10 } from '../../core/tariff/tariffs/tnpdcl-lt1a';
 import { calculateScenarioOutcome, type ScenarioActionSelection } from '../../core/simulation/scenario-engine';
 import { useLanguage } from '../../locales/i18n';
-import { Sliders, Zap, AlertTriangle, CheckCircle, Info, Sparkles } from 'lucide-react';
+import { Sliders, Zap, Info, Sparkles } from 'lucide-react';
 
 interface ScenarioSimulatorProps {
   baselineUnitsKwh: number;

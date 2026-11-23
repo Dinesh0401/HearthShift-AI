@@ -23,8 +23,7 @@ import {
   Star, 
   Info, 
   Zap, 
-  TrendingDown, 
-  Clock 
+  TrendingDown 
 } from 'lucide-react';
 
 interface RecommendationFeedProps {
@@ -64,7 +63,7 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
       const pref = await db.preferences.get('default_household');
       const constraints = pref?.comfort_constraints && pref.comfort_constraints.length > 0
         ? pref.comfort_constraints
-        : (rCount >= 168 ? [{ id: 'default_c', type: 'temperature_max' as const, description: 'Default AC comfort bounds', flexibility: 'moderate' as const, confidence: 1.0 }] : []);
+        : (rCount >= 168 ? [{ id: 'default_c', type: 'temperature_bound' as const, description: 'Default AC comfort bounds', flexibility: 'medium' as const, confidence: 1.0 }] : []);
 
       const output = generateHouseholdRecommendation({
         baselineKwh: latestUnitsKwh,

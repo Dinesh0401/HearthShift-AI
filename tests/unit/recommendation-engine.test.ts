@@ -1,8 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  generateHouseholdRecommendation,
-  DEFAULT_INITIAL_BELIEF,
-} from '../../src/core/recommendation/engine';
+import { generateHouseholdRecommendation } from '../../src/core/recommendation/engine';
 import { TNPDCL_LT1A_2026_MAY10 } from '../../src/core/tariff/tariffs/tnpdcl-lt1a';
 
 describe('Recommendation Generation Engine', () => {
@@ -38,9 +35,9 @@ describe('Recommendation Generation Engine', () => {
         comfort_constraints: [
           {
             id: 'c1',
-            type: 'temperature_max',
+            type: 'temperature_bound',
             description: 'AC setpoint comfort max 25C',
-            flexibility: 'moderate',
+            flexibility: 'medium',
             confidence: 1.0,
           },
         ],
@@ -52,10 +49,10 @@ describe('Recommendation Generation Engine', () => {
 
     if (output.outcome === 'recommend') {
       expect(output.recommendation).toBeDefined();
-      expect(output.recommendation?.title.en).toBeDefined();
-      expect(output.recommendation?.title.ta).toBeDefined();
-      expect(output.recommendation?.estimated_savings.basis).toBe('simulated');
-      expect(output.recommendation?.estimated_savings.point_estimate).toBeGreaterThan(0);
+      expect(output.recommendation?.action.title.en).toBeDefined();
+      expect(output.recommendation?.action.title.ta).toBeDefined();
+      expect(output.recommendation?.savings_estimate.basis).toBe('simulated');
+      expect(output.recommendation?.savings_estimate.point_estimate).toBeGreaterThan(0);
     }
   });
 
@@ -76,9 +73,9 @@ describe('Recommendation Generation Engine', () => {
         comfort_constraints: [
           {
             id: 'c1',
-            type: 'temperature_max',
+            type: 'temperature_bound',
             description: 'AC setpoint comfort max 25C',
-            flexibility: 'moderate',
+            flexibility: 'medium',
             confidence: 1.0,
           },
         ],

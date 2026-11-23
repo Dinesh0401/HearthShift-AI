@@ -5,7 +5,6 @@ import {
   decideTrVoi,
   updateBeliefWithFeedback,
   PHYSICAL_ACTION_CATALOG,
-  ADAPTIVE_QUESTION_CATALOG,
   type LatentPreferenceBelief,
 } from '../../src/core/optimization/tr-voi';
 import { TNPDCL_LT1A_2026_MAY10 } from '../../src/core/tariff/tariffs/tnpdcl-lt1a';

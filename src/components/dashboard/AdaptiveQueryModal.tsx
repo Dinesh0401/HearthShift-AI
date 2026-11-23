@@ -3,7 +3,7 @@
 import React from 'react';
 import type { AdaptiveQuestion } from '../../types/contracts';
 import { useLanguage } from '../../locales/i18n';
-import { HelpCircle, Shield, X, Check, ArrowRight } from 'lucide-react';
+import { HelpCircle, Shield, X, Check } from 'lucide-react';
 
 interface AdaptiveQueryModalProps {
   question: AdaptiveQuestion;
