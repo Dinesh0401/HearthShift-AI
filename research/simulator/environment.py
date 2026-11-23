@@ -221,6 +221,10 @@ class SimulationEnvironment:
         advisor: Any,  # BaseAdvisor
     ) -> TrialSummary:
         """Runs the advisor over all households in the cohort and aggregates metrics."""
+        # Reset query tracking at the start of each advisor trial!
+        self._query_counts = {hh.household_id: 0 for hh in self.cohort}
+        self._asked_question_ids = {hh.household_id: [] for hh in self.cohort}
+
         records: List[EvaluationRecord] = []
         for hh in self.cohort:
             result = advisor.decide(self, hh, self.tariff)
