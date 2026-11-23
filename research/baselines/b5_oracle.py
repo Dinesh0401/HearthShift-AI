@@ -21,16 +21,22 @@ class OracleAdvisor(BaseAdvisor):
         env: Any,
         household: SyntheticHousehold,
         tariff: TariffPlan,
+        realized_kwh: Optional[float] = None,
     ) -> DecisionResult:
-        pub = env.get_public_view(household)
-        baseline = pub.baseline_kwh
+        # Ex-post oracle has perfect foresight of the true realized consumption
+        if realized_kwh is None and hasattr(env, 'get_realized_kwh'):
+            realized_kwh = env.get_realized_kwh(household.household_id)
 
-        null_action = next(a for a in pub.candidate_actions if a.id == 'null_action')
+        if realized_kwh is None:
+            pub = env.get_public_view(household)
+            realized_kwh = pub.baseline_kwh
+
+        null_action = next(a for a in household.candidate_actions if a.id == 'null_action')
         best_action = null_action
         best_welfare = 0.0
 
-        for action in pub.candidate_actions:
-            welfare = household.evaluate_true_welfare(action, baseline, tariff)
+        for action in household.candidate_actions:
+            welfare = household.evaluate_true_welfare(action, realized_kwh, tariff)
             if welfare > best_welfare:
                 best_welfare = welfare
                 best_action = action
@@ -41,5 +47,5 @@ class OracleAdvisor(BaseAdvisor):
             action=best_action,
             decision_type=decision_type,
             questions_asked=[],
-            metadata={'oracle_welfare_paise': best_welfare},
+            metadata={'oracle_welfare_paise': best_welfare, 'realized_kwh': realized_kwh},
         )
