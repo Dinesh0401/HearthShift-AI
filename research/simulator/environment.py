@@ -83,6 +83,7 @@ class SimulationEnvironment:
     ):
         self.cohort = cohort
         self.tariff = tariff
+        self.weather_jitter_std = weather_jitter_std
         self.rng = rng or np.random.default_rng(42)
         self.feedback_model = feedback_model or UserFeedbackModel(rng=self.rng)
 
