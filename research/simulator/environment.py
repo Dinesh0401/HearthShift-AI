@@ -47,6 +47,7 @@ class EvaluationRecord:
     is_abstention_optimal: bool
     user_accepted: bool
     fatigued_out: bool
+    executed_action_id: str = 'null_action'
 
 
 @dataclass
@@ -70,6 +71,7 @@ class SimulationEnvironment:
     """
     Simulation Environment orchestrating interaction between Advisors and Households.
     Enforces the privacy barrier: Advisors CANNOT access _theta_star.
+    Supports paired stochastic realizations across policies for identical seed conditions.
     """
     def __init__(
         self,
@@ -88,6 +90,29 @@ class SimulationEnvironment:
         # Internal tracking per household: household_id -> total queries asked
         self._query_counts: Dict[str, int] = {hh.household_id: 0 for hh in cohort}
         self._asked_question_ids: Dict[str, List[str]] = {hh.household_id: [] for hh in cohort}
+        # Paired stochastic realizations across all evaluated advisors
+        self._active_realizations: Dict[str, float] = {}
+
+    def generate_paired_realizations(self) -> Dict[str, float]:
+        """Pre-computes paired stochastic realized_kwh for all households in the cohort."""
+        self._active_realizations = {
+            hh.household_id: max(10.0, hh.baseline_kwh + float(self.rng.normal(0, self.weather_jitter_std)))
+            for hh in self.cohort
+        }
+        return dict(self._active_realizations)
+
+    def set_realizations(self, realizations: Dict[str, float]) -> None:
+        """Sets external paired realizations (e.g. for multi-seed benchmarks)."""
+        self._active_realizations = dict(realizations)
+
+    def get_realized_kwh(self, household_id: str) -> float:
+        """Endpoint for Ex-Post Oracle to access realization foresight."""
+        if household_id not in self._active_realizations:
+            hh = next(h for h in self.cohort if h.household_id == household_id)
+            self._active_realizations[household_id] = max(
+                10.0, hh.baseline_kwh + float(self.rng.normal(0, self.weather_jitter_std))
+            )
+        return self._active_realizations[household_id]
 
     def get_public_view(self, household: SyntheticHousehold) -> HouseholdPublicView:
         """Returns safe public view of household without private parameters."""
@@ -129,16 +154,14 @@ class SimulationEnvironment:
         hid = household.household_id
         queries_asked = self._query_counts[hid]
 
-        # Realize stochastic consumption if not pre-seeded
         if realized_kwh is None:
-            jitter = float(self.rng.normal(0, self.weather_jitter_std))
-            realized_kwh = max(10.0, household.baseline_kwh + jitter)
+            realized_kwh = self.get_realized_kwh(hid)
 
         # 1. Evaluate Full-Information Constrained Ex-Post Oracle
         # Oracle solves: max_{a in A_feas} U(a, realized_kwh, theta*)
         null_action = next(a for a in household.candidate_actions if a.id == 'null_action')
         best_oracle_action = null_action
-        best_oracle_welfare = 0.0  # Status quo welfare is 0.0
+        best_oracle_welfare = 0.0  # Status quo welfare is identically 0.0
 
         for cand in household.candidate_actions:
             welfare = household.evaluate_true_welfare(cand, realized_kwh, self.tariff)
@@ -146,62 +169,69 @@ class SimulationEnvironment:
                 best_oracle_welfare = welfare
                 best_oracle_action = cand
 
-        # Check if abstention was objectively the optimal welfare choice
         is_abstention_optimal = (best_oracle_action.id == 'null_action')
 
-        # 2. Evaluate Chosen Action True Welfare
+        # 2. Evaluate Chosen Action True Welfare & Household Rejection Gate
         effective_is_abstention = is_abstention or (chosen_action.id == 'null_action')
 
         if effective_is_abstention:
-            effective_action = null_action
-            chosen_welfare = 0.0
-            monetary_savings = 0.0
+            proposed_action = null_action
+            executed_action = null_action
             discomfort_score = 0.0
             discomfort_paise = 0.0
-            is_comfort_violated = False
+            monetary_savings = 0.0
+            realized_welfare = 0.0
+            is_attempted_comfort_violation = False
             user_accepted = True
             fatigued_out = False
         else:
-            effective_action = chosen_action
-            discomfort_score = float(np.dot(household._theta_star, effective_action.feature_vector))
-            discomfort_paise = household.lambda_discomfort_paise * discomfort_score
-            is_comfort_violated = discomfort_score > household.d_max
+            proposed_action = chosen_action
+            discomfort_score = float(np.dot(household._theta_star, proposed_action.feature_vector))
+            is_attempted_comfort_violation = (discomfort_score > household.d_max)
 
-            bill_sq = calculate_bill(realized_kwh, self.tariff).net_payable_paise
-            bill_act = calculate_bill(max(0.0, realized_kwh - effective_action.delta_kwh), self.tariff).net_payable_paise
-            monetary_savings = float(bill_sq - bill_act)
-
-            if is_comfort_violated:
-                chosen_welfare = -float('inf')
-            else:
-                chosen_welfare = monetary_savings - discomfort_paise
-
-            # User acceptance model
+            # Bounded-rational acceptance gate:
+            # If comfort is violated, UserFeedbackModel returns -1 (strict rejection).
             feedback = self.feedback_model.evaluate_recommendation(
-                household, effective_action, realized_kwh, self.tariff
+                household, proposed_action, realized_kwh, self.tariff
             )
             user_accepted = (feedback.response_value == 1)
             fatigued_out = feedback.is_fatigue_dropout
 
+            if user_accepted:
+                # Recommendation adopted and executed by the household
+                executed_action = proposed_action
+                bill_sq = calculate_bill(realized_kwh, self.tariff).net_payable_paise
+                bill_act = calculate_bill(max(0.0, realized_kwh - executed_action.delta_kwh), self.tariff).net_payable_paise
+                monetary_savings = float(bill_sq - bill_act)
+                discomfort_paise = household.lambda_discomfort_paise * discomfort_score
+                realized_welfare = monetary_savings - discomfort_paise
+            else:
+                # Recommendation rejected (due to comfort violation or negative perceived surplus).
+                # Household remains in status quo!
+                executed_action = null_action
+                monetary_savings = 0.0
+                discomfort_paise = 0.0
+                realized_welfare = 0.0
+
         # 3. Exact Decision Regret Calculations
+        # When chosen action matches the oracle action, regret is bitwise exact zero
         if chosen_action.id == best_oracle_action.id:
-            # Bitwise exact zero regret when matching oracle
             abs_regret = 0.0
             normalized_regret = 0.0
         else:
-            effective_welfare = max(-50_000.0, chosen_welfare)
-            abs_regret = max(0.0, best_oracle_welfare - effective_welfare)
-            normalized_regret = min(2.0, abs_regret / (best_oracle_welfare + 100.0))
+            abs_regret = max(0.0, best_oracle_welfare - realized_welfare)
+            denom = max(100.0, best_oracle_welfare)
+            normalized_regret = min(1.0, abs_regret / denom)
 
         return EvaluationRecord(
             household_id=hid,
             archetype=household.archetype,
             baseline_kwh=household.baseline_kwh,
             realized_kwh=realized_kwh,
-            chosen_action_id=effective_action.id,
+            chosen_action_id=proposed_action.id,
             is_abstention=effective_is_abstention,
             queries_asked=queries_asked,
-            true_action_welfare_paise=chosen_welfare,
+            true_action_welfare_paise=realized_welfare,
             oracle_action_id=best_oracle_action.id,
             oracle_welfare_paise=best_oracle_welfare,
             status_quo_welfare_paise=0.0,
@@ -210,20 +240,27 @@ class SimulationEnvironment:
             monetary_savings_paise=monetary_savings,
             discomfort_score=discomfort_score,
             discomfort_paise=discomfort_paise,
-            is_comfort_violated=is_comfort_violated,
+            is_comfort_violated=is_attempted_comfort_violation,
             is_abstention_optimal=is_abstention_optimal,
             user_accepted=user_accepted,
             fatigued_out=fatigued_out,
+            executed_action_id=executed_action.id,
         )
 
     def run_advisor_trial(
         self,
         advisor: Any,  # BaseAdvisor
+        realized_kwh_map: Optional[Dict[str, float]] = None,
     ) -> TrialSummary:
         """Runs the advisor over all households in the cohort and aggregates metrics."""
         # Reset query tracking at the start of each advisor trial!
         self._query_counts = {hh.household_id: 0 for hh in self.cohort}
         self._asked_question_ids = {hh.household_id: [] for hh in self.cohort}
+
+        if realized_kwh_map is not None:
+            self.set_realizations(realized_kwh_map)
+        elif not self._active_realizations:
+            self.generate_paired_realizations()
 
         records: List[EvaluationRecord] = []
         for hh in self.cohort:
@@ -232,6 +269,7 @@ class SimulationEnvironment:
                 household=hh,
                 chosen_action=result.action,
                 is_abstention=(result.decision_type == 'abstain'),
+                realized_kwh=self.get_realized_kwh(hh.household_id),
             )
             records.append(record)
 
