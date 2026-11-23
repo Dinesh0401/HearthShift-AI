@@ -83,9 +83,8 @@ class SimulationEnvironment:
     ):
         self.cohort = cohort
         self.tariff = tariff
-        self.feedback_model = feedback_model or UserFeedbackModel()
-        self.weather_jitter_std = weather_jitter_std
         self.rng = rng or np.random.default_rng(42)
+        self.feedback_model = feedback_model or UserFeedbackModel(rng=self.rng)
 
         # Internal tracking per household: household_id -> total queries asked
         self._query_counts: Dict[str, int] = {hh.household_id: 0 for hh in cohort}
