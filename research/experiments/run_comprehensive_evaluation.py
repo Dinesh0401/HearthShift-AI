@@ -193,6 +193,38 @@ def run_comprehensive_benchmark():
                     'ci95': round(ci95, 5),
                 }
 
+    # Paired Statistical Hypothesis Testing against TR_VOI_Full across N=500 trials
+    from scipy import stats
+    tr_regret = np.array(raw_paired_regret['TR_VOI_Full'])
+    paired_tests: Dict[str, Any] = {}
+
+    for pname in policies:
+        if pname == 'TR_VOI_Full':
+            continue
+        other_regret = np.array(raw_paired_regret[pname])
+        diff = other_regret - tr_regret  # Positive if other policy has higher regret than TR_VOI
+        mean_diff = float(np.mean(diff))
+
+        # Paired t-test
+        t_stat, p_val_t = stats.ttest_rel(other_regret, tr_regret)
+
+        # Wilcoxon signed-rank test (handles non-normal/bimodal regret differences)
+        try:
+            w_stat, p_val_w = stats.wilcoxon(other_regret, tr_regret)
+        except Exception:
+            w_stat, p_val_w = 0.0, 1.0
+
+        paired_tests[pname] = {
+            'mean_regret_diff': round(mean_diff, 5),
+            't_statistic': round(float(t_stat), 4) if not np.isnan(t_stat) else 0.0,
+            'p_value_ttest': float(p_val_t) if not np.isnan(p_val_t) else 1.0,
+            'wilcoxon_stat': float(w_stat),
+            'p_value_wilcoxon': float(p_val_w),
+            'statistically_significant_005': bool(p_val_t < 0.05) if not np.isnan(p_val_t) else False,
+        }
+
+    summary_report['paired_statistical_tests'] = paired_tests
+
     out_path = Path('research/results/comprehensive_evaluation.json')
     out_path.parent.mkdir(parents=True, exist_ok=True)
     with open(out_path, 'w', encoding='utf-8') as f:
