@@ -23,20 +23,23 @@ class UserFeedbackModel:
     """
     Simulates probabilistic household interaction dynamics:
     - Bounded rationality link function for proposal acceptance
+    - Hard comfort constraint rejection
     - Survey fatigue (dropout probability increases with query count)
     - Preference drift over time
     """
     def __init__(
         self,
-        rationality_gamma: float = 0.002,  # inverse temperature over paise
-        base_dropout_prob: float = 0.05,
-        dropout_escalation_per_query: float = 0.15,
+        rationality_gamma: float = 0.0002,  # calibrated inverse temperature over paise (0.02 / INR)
+        base_dropout_prob: float = 0.04,
+        dropout_escalation_per_query: float = 0.12,
+        switching_cost_paise: float = 3000.0,  # ₹30.00 friction for adopting an energy action
         drift_rate_std: float = 0.05,
         rng: Optional[np.random.Generator] = None,
     ):
         self.gamma = rationality_gamma
         self.base_dropout_prob = base_dropout_prob
         self.dropout_escalation = dropout_escalation_per_query
+        self.switching_cost_paise = switching_cost_paise
         self.drift_rate_std = drift_rate_std
         self.rng = rng or np.random.default_rng()
 
@@ -46,8 +49,12 @@ class UserFeedbackModel:
         question: CandidateQuestion,
         total_queries_asked: int,
     ) -> FeedbackObservation:
-        """Simulates household response to an active query."""
-        p_dropout = min(0.9, self.base_dropout_prob + total_queries_asked * self.dropout_escalation)
+        """Simulates household response to an active query with fatigue."""
+        # Archetype-dependent fatigue
+        base_p = 0.20 if household.archetype == 'noisy_unresponsive' else self.base_dropout_prob
+        escalation = 0.25 if household.archetype == 'noisy_unresponsive' else self.dropout_escalation
+        p_dropout = min(0.95, base_p + total_queries_asked * escalation)
+
         if self.rng.random() < p_dropout:
             return FeedbackObservation(
                 action_or_question_id=question.id,
@@ -73,20 +80,28 @@ class UserFeedbackModel:
     ) -> FeedbackObservation:
         """Simulates household decision to accept or reject an energy action."""
         if action.id == 'null_action':
-            return FeedbackObservation('null_action', 'recommendation_outcome', 0)
+            return FeedbackObservation('null_action', 'recommendation_outcome', 1)
 
-        # Net perceived benefit in paise
+        # 1. Hard constraint check: if action violates maximum tolerable discomfort, strict rejection!
+        discomfort_score = float(np.dot(household._theta_star, action.feature_vector))
+        if discomfort_score > household.d_max:
+            return FeedbackObservation(
+                action_or_question_id=action.id,
+                kind='recommendation_outcome',
+                response_value=-1,
+            )
+
+        # 2. Net perceived welfare in paise
         bill_status_quo = calculate_bill(realized_kwh, tariff).net_payable_paise
-        bill_with_action = calculate_bill(realized_kwh - action.delta_kwh, tariff).net_payable_paise
+        bill_with_action = calculate_bill(max(0.0, realized_kwh - action.delta_kwh), tariff).net_payable_paise
         monetary_savings = bill_status_quo - bill_with_action
 
-        discomfort_paise = household.lambda_discomfort_paise * float(
-            np.dot(household._theta_star, action.feature_vector)
-        )
-        net_surplus_paise = monetary_savings - discomfort_paise
+        discomfort_paise = household.lambda_discomfort_paise * discomfort_score
+        net_welfare_paise = monetary_savings - discomfort_paise
 
-        # Logistic probability of acceptance: P(accept) = 1 / (1 + exp(-gamma * surplus))
-        p_accept = 1.0 / (1.0 + np.exp(-np.clip(self.gamma * net_surplus_paise, -20.0, 20.0)))
+        # 3. Logistic probability of acceptance with switching friction
+        net_surplus = net_welfare_paise - self.switching_cost_paise
+        p_accept = 1.0 / (1.0 + np.exp(-np.clip(self.gamma * net_surplus, -15.0, 15.0)))
         accepted = self.rng.random() < p_accept
 
         return FeedbackObservation(

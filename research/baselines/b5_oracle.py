@@ -1,7 +1,7 @@
 """
-Baseline B5: Full-Information Oracle Reference
-Theoretical performance upper bound.
-Zero queries asked (K=0). Evaluates exact loss minimum using true hidden ground truth _theta_star.
+Baseline B5: Full-Information Constrained Oracle Reference
+Theoretical performance ceiling.
+Zero queries asked (K=0). Evaluates exact constrained welfare maximum using true hidden ground truth _theta_star.
 """
 
 from __future__ import annotations
@@ -25,19 +25,21 @@ class OracleAdvisor(BaseAdvisor):
         pub = env.get_public_view(household)
         baseline = pub.baseline_kwh
 
-        # Oracle directly evaluates true loss across candidate actions
-        best_action = pub.candidate_actions[0]
-        min_loss = float('inf')
+        null_action = next(a for a in pub.candidate_actions if a.id == 'null_action')
+        best_action = null_action
+        best_welfare = 0.0
 
         for action in pub.candidate_actions:
-            loss = household.evaluate_true_loss(action, baseline, tariff)
-            if loss < min_loss:
-                min_loss = loss
+            welfare = household.evaluate_true_welfare(action, baseline, tariff)
+            if welfare > best_welfare:
+                best_welfare = welfare
                 best_action = action
+
+        decision_type = 'abstain' if best_action.id == 'null_action' else 'recommend'
 
         return DecisionResult(
             action=best_action,
-            decision_type='recommend',
+            decision_type=decision_type,
             questions_asked=[],
-            metadata={'oracle_loss': min_loss},
+            metadata={'oracle_welfare_paise': best_welfare},
         )

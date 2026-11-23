@@ -19,7 +19,7 @@ class LinearEVSIAdvisor(BaseAdvisor):
         self,
         max_queries: int = 3,
         cost_ask_paise: float = 200.0,  # ₹2.00 annoyance cost per query
-        lambda_discomfort_paise: float = 1000.0,
+        lambda_discomfort_paise: float = 20000.0,
     ):
         super().__init__('B4_LinearEVSI')
         self.max_queries = max_queries
@@ -33,7 +33,7 @@ class LinearEVSIAdvisor(BaseAdvisor):
         marginal_rate_paise_per_kwh: float,
     ) -> float:
         """Surplus = Linear Bill Savings - Discomfort."""
-        if action.is_shift():
+        if action.is_shift() or action.id == 'null_action':
             return 0.0
         monetary_savings = marginal_rate_paise_per_kwh * action.delta_kwh
         discomfort = self.lambda_discomfort_paise * float(np.dot(mu, action.feature_vector))
@@ -52,16 +52,14 @@ class LinearEVSIAdvisor(BaseAdvisor):
         bill_base = calculate_bill(baseline, tariff).net_payable_paise
         linear_rate = bill_base / max(1.0, baseline)
 
-        # Prior belief over preferences
         mu = np.array([1.0, 1.0, 1.0, 1.0])
         asked_ids: List[str] = []
         asked_feature_indices: Set[int] = set()
 
         for _ in range(self.max_queries):
-            # Compute Prior Value V0 under linear pricing
-            v0 = max(self._expected_linear_surplus(a, mu, linear_rate) for a in pub.candidate_actions)
+            # Prior value under status quo option (status quo gives 0 surplus)
+            v0 = max(0.0, max(self._expected_linear_surplus(a, mu, linear_rate) for a in pub.candidate_actions))
 
-            # Evaluate linear EVSI for each unasked question
             available_questions = [
                 q for q in pub.candidate_questions
                 if q.id not in asked_ids and q.feature_index not in asked_feature_indices
@@ -77,12 +75,12 @@ class LinearEVSIAdvisor(BaseAdvisor):
                 # Hypothetical posterior given y = +1 (user is flexible)
                 mu_pos = mu.copy()
                 mu_pos[feat] = max(0.2, mu_pos[feat] - 0.4)
-                v_pos = max(self._expected_linear_surplus(a, mu_pos, linear_rate) for a in pub.candidate_actions)
+                v_pos = max(0.0, max(self._expected_linear_surplus(a, mu_pos, linear_rate) for a in pub.candidate_actions))
 
                 # Hypothetical posterior given y = -1 (user is inflexible)
                 mu_neg = mu.copy()
                 mu_neg[feat] = mu_neg[feat] + 0.6
-                v_neg = max(self._expected_linear_surplus(a, mu_neg, linear_rate) for a in pub.candidate_actions)
+                v_neg = max(0.0, max(self._expected_linear_surplus(a, mu_neg, linear_rate) for a in pub.candidate_actions))
 
                 # Expected posterior value assuming 50/50 prior response probability
                 evsi_linear = 0.5 * v_pos + 0.5 * v_neg - v0
@@ -91,11 +89,9 @@ class LinearEVSIAdvisor(BaseAdvisor):
                     best_evsi = evsi_linear
                     best_q = q
 
-            # Stopping condition: EVSI must exceed query cost
             if best_q is None or best_evsi <= self.cost_ask_paise:
                 break
 
-            # Execute query
             obs = env.ask_question(household, best_q)
             asked_ids.append(best_q.id)
             asked_feature_indices.add(best_q.feature_index)
@@ -109,14 +105,21 @@ class LinearEVSIAdvisor(BaseAdvisor):
                 mu[best_q.feature_index] = mu[best_q.feature_index] + 0.6
 
         # Pick action maximizing linear expected surplus
-        best_action = max(
-            pub.candidate_actions,
-            key=lambda a: self._expected_linear_surplus(a, mu, linear_rate),
-        )
+        null_action = next(a for a in pub.candidate_actions if a.id == 'null_action')
+        best_action = null_action
+        max_surplus = 0.0
+
+        for a in pub.candidate_actions:
+            surplus = self._expected_linear_surplus(a, mu, linear_rate)
+            if surplus > max_surplus:
+                max_surplus = surplus
+                best_action = a
+
+        decision_type = 'abstain' if best_action.id == 'null_action' else 'recommend'
 
         return DecisionResult(
             action=best_action,
-            decision_type='recommend',
+            decision_type=decision_type,
             questions_asked=asked_ids,
             metadata={'linear_rate_paise': linear_rate, 'posterior_mu': mu.tolist()},
         )

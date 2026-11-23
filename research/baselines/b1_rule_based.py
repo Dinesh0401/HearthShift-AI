@@ -26,22 +26,24 @@ class RuleBasedAdvisor(BaseAdvisor):
         pub = env.get_public_view(household)
         baseline = pub.baseline_kwh
 
-        # Invariant: Never recommend load-shifting if tariff has no time-varying rates
         candidate_reductions = [a for a in pub.candidate_actions if a.is_reduction() and a.id != 'null_action']
         null_action = next(a for a in pub.candidate_actions if a.id == 'null_action')
 
-        if not candidate_reductions:
-            return DecisionResult(action=null_action, decision_type='recommend')
+        if not candidate_reductions or baseline < self.mid_threshold:
+            # Low consumption: Abstain / Status Quo
+            return DecisionResult(
+                action=null_action,
+                decision_type='abstain',
+                questions_asked=[],
+                metadata={'rule_applied': 'below_threshold_abstain', 'baseline_kwh': baseline},
+            )
 
         if baseline >= self.high_threshold:
             # Aggressive rule: Pick largest reduction action to avoid high tier/cliff
             best_action = max(candidate_reductions, key=lambda a: a.delta_kwh)
-        elif baseline >= self.mid_threshold:
+        else:
             # Moderate rule: Pick smallest non-zero reduction action
             best_action = min(candidate_reductions, key=lambda a: a.delta_kwh)
-        else:
-            # Low consumption: Status quo
-            best_action = null_action
 
         return DecisionResult(
             action=best_action,

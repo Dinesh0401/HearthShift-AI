@@ -1,7 +1,7 @@
 """
 Simulation Environment & Cohort Evaluation Engine
 Manages synthetic household cohorts, stochastic energy realizations,
-interaction protocols, and ex-post decision evaluation.
+interaction protocols, and ex-post decision evaluation with exact oracle optimality.
 """
 
 from __future__ import annotations
@@ -20,6 +20,7 @@ class HouseholdPublicView:
     """Public read-only view of household. Ground truth _theta_star is strictly isolated."""
     household_id: str
     baseline_kwh: float
+    archetype: str
     candidate_actions: List[EnergyAction]
     candidate_questions: List[CandidateQuestion]
 
@@ -27,21 +28,23 @@ class HouseholdPublicView:
 @dataclass(frozen=True)
 class EvaluationRecord:
     household_id: str
+    archetype: str
     baseline_kwh: float
     realized_kwh: float
     chosen_action_id: str
     is_abstention: bool
     queries_asked: int
-    true_action_loss_paise: float
+    true_action_welfare_paise: float
     oracle_action_id: str
-    oracle_loss_paise: float
-    status_quo_loss_paise: float
+    oracle_welfare_paise: float
+    status_quo_welfare_paise: float
     absolute_regret_paise: float
     normalized_regret: float
     monetary_savings_paise: float
     discomfort_score: float
     discomfort_paise: float
     is_comfort_violated: bool
+    is_abstention_optimal: bool
     user_accepted: bool
     fatigued_out: bool
 
@@ -57,7 +60,9 @@ class TrialSummary:
     recommendation_acceptance_rate: float
     comfort_violation_rate: float
     abstention_rate: float
+    abstention_precision: float
     cliff_avoidance_success_rate: float
+    archetype_breakdown: Dict[str, Dict[str, float]] = field(default_factory=dict)
     records: List[EvaluationRecord] = field(default_factory=list)
 
 
@@ -71,15 +76,13 @@ class SimulationEnvironment:
         cohort: List[SyntheticHousehold],
         tariff: TariffPlan,
         feedback_model: Optional[UserFeedbackModel] = None,
-        weather_jitter_std: float = 12.0,  # kWh jitter around baseline
-        discomfort_max_threshold: float = 2.5,
+        weather_jitter_std: float = 8.0,  # Realistic kWh jitter around baseline
         rng: Optional[np.random.Generator] = None,
     ):
         self.cohort = cohort
         self.tariff = tariff
         self.feedback_model = feedback_model or UserFeedbackModel()
         self.weather_jitter_std = weather_jitter_std
-        self.discomfort_max_threshold = discomfort_max_threshold
         self.rng = rng or np.random.default_rng(42)
 
         # Internal tracking per household: household_id -> total queries asked
@@ -91,6 +94,7 @@ class SimulationEnvironment:
         return HouseholdPublicView(
             household_id=household.household_id,
             baseline_kwh=household.baseline_kwh,
+            archetype=household.archetype,
             candidate_actions=household.candidate_actions,
             candidate_questions=household.candidate_questions,
         )
@@ -116,83 +120,98 @@ class SimulationEnvironment:
         household: SyntheticHousehold,
         chosen_action: EnergyAction,
         is_abstention: bool = False,
+        realized_kwh: Optional[float] = None,
     ) -> EvaluationRecord:
         """
-        Ex-post true evaluation using hidden ground truth _theta_star.
+        Ex-post true evaluation using hidden ground truth _theta_star and d_max.
         Called STRICTLY by the evaluation harness after advisor decision is final.
         """
         hid = household.household_id
         queries_asked = self._query_counts[hid]
 
-        # Realize stochastic consumption: E = baseline + weather jitter
-        jitter = float(self.rng.normal(0, self.weather_jitter_std))
-        realized_kwh = max(10.0, household.baseline_kwh + jitter)
+        # Realize stochastic consumption if not pre-seeded
+        if realized_kwh is None:
+            jitter = float(self.rng.normal(0, self.weather_jitter_std))
+            realized_kwh = max(10.0, household.baseline_kwh + jitter)
 
-        # 1. Evaluate Chosen Action True Loss
-        if is_abstention or chosen_action.id == 'null_action':
-            effective_action = next(a for a in household.candidate_actions if a.id == 'null_action')
-            chosen_loss = household.evaluate_true_loss(effective_action, realized_kwh, self.tariff)
+        # 1. Evaluate Full-Information Constrained Ex-Post Oracle
+        # Oracle solves: max_{a in A_feas} U(a, realized_kwh, theta*)
+        null_action = next(a for a in household.candidate_actions if a.id == 'null_action')
+        best_oracle_action = null_action
+        best_oracle_welfare = 0.0  # Status quo welfare is 0.0
+
+        for cand in household.candidate_actions:
+            welfare = household.evaluate_true_welfare(cand, realized_kwh, self.tariff)
+            if welfare > best_oracle_welfare:
+                best_oracle_welfare = welfare
+                best_oracle_action = cand
+
+        # Check if abstention was objectively the optimal welfare choice
+        is_abstention_optimal = (best_oracle_action.id == 'null_action')
+
+        # 2. Evaluate Chosen Action True Welfare
+        effective_is_abstention = is_abstention or (chosen_action.id == 'null_action')
+
+        if effective_is_abstention:
+            effective_action = null_action
+            chosen_welfare = 0.0
             monetary_savings = 0.0
             discomfort_score = 0.0
             discomfort_paise = 0.0
             is_comfort_violated = False
-            user_accepted = True  # Status quo is inherently accepted
+            user_accepted = True
             fatigued_out = False
         else:
             effective_action = chosen_action
-            chosen_loss = household.evaluate_true_loss(effective_action, realized_kwh, self.tariff)
-            
-            # Monetary bill savings: Bill(E) - Bill(E - deltaE)
+            discomfort_score = float(np.dot(household._theta_star, effective_action.feature_vector))
+            discomfort_paise = household.lambda_discomfort_paise * discomfort_score
+            is_comfort_violated = discomfort_score > household.d_max
+
             bill_sq = calculate_bill(realized_kwh, self.tariff).net_payable_paise
             bill_act = calculate_bill(max(0.0, realized_kwh - effective_action.delta_kwh), self.tariff).net_payable_paise
             monetary_savings = float(bill_sq - bill_act)
 
-            discomfort_score = float(np.dot(household._theta_star, effective_action.feature_vector))
-            discomfort_paise = household.lambda_discomfort_paise * discomfort_score
-            is_comfort_violated = discomfort_score > self.discomfort_max_threshold
+            if is_comfort_violated:
+                chosen_welfare = -float('inf')
+            else:
+                chosen_welfare = monetary_savings - discomfort_paise
 
-            # Evaluate user acceptance feedback
+            # User acceptance model
             feedback = self.feedback_model.evaluate_recommendation(
                 household, effective_action, realized_kwh, self.tariff
             )
             user_accepted = (feedback.response_value == 1)
             fatigued_out = feedback.is_fatigue_dropout
 
-        # 2. Evaluate Status Quo (Null Action) Loss
-        null_action = next(a for a in household.candidate_actions if a.id == 'null_action')
-        sq_loss = household.evaluate_true_loss(null_action, realized_kwh, self.tariff)
-
-        # 3. Evaluate Full-Information Oracle Action Loss
-        best_oracle_action = null_action
-        best_oracle_loss = sq_loss
-        for cand in household.candidate_actions:
-            loss = household.evaluate_true_loss(cand, realized_kwh, self.tariff)
-            if loss < best_oracle_loss:
-                best_oracle_loss = loss
-                best_oracle_action = cand
-
-        # 4. Regret Calculations
-        abs_regret = max(0.0, chosen_loss - best_oracle_loss)
-        max_possible_regret = max(1e-6, sq_loss - best_oracle_loss)
-        normalized_regret = min(1.0, abs_regret / max_possible_regret) if max_possible_regret > 1e-6 else 0.0
+        # 3. Exact Decision Regret Calculations
+        if chosen_action.id == best_oracle_action.id:
+            # Bitwise exact zero regret when matching oracle
+            abs_regret = 0.0
+            normalized_regret = 0.0
+        else:
+            effective_welfare = max(-50_000.0, chosen_welfare)
+            abs_regret = max(0.0, best_oracle_welfare - effective_welfare)
+            normalized_regret = min(2.0, abs_regret / (best_oracle_welfare + 100.0))
 
         return EvaluationRecord(
             household_id=hid,
+            archetype=household.archetype,
             baseline_kwh=household.baseline_kwh,
             realized_kwh=realized_kwh,
             chosen_action_id=effective_action.id,
-            is_abstention=is_abstention,
+            is_abstention=effective_is_abstention,
             queries_asked=queries_asked,
-            true_action_loss_paise=chosen_loss,
+            true_action_welfare_paise=chosen_welfare,
             oracle_action_id=best_oracle_action.id,
-            oracle_loss_paise=best_oracle_loss,
-            status_quo_loss_paise=sq_loss,
+            oracle_welfare_paise=best_oracle_welfare,
+            status_quo_welfare_paise=0.0,
             absolute_regret_paise=abs_regret,
             normalized_regret=normalized_regret,
             monetary_savings_paise=monetary_savings,
             discomfort_score=discomfort_score,
             discomfort_paise=discomfort_paise,
             is_comfort_violated=is_comfort_violated,
+            is_abstention_optimal=is_abstention_optimal,
             user_accepted=user_accepted,
             fatigued_out=fatigued_out,
         )
@@ -204,7 +223,6 @@ class SimulationEnvironment:
         """Runs the advisor over all households in the cohort and aggregates metrics."""
         records: List[EvaluationRecord] = []
         for hh in self.cohort:
-            # Advisor decides using the public view and environment query interface
             result = advisor.decide(self, hh, self.tariff)
             record = self.evaluate_decision(
                 household=hh,
@@ -213,33 +231,62 @@ class SimulationEnvironment:
             )
             records.append(record)
 
-        # Compute aggregate metrics
         n = len(records)
         mean_norm_regret = float(np.mean([r.normalized_regret for r in records]))
         mean_abs_regret = float(np.mean([r.absolute_regret_paise for r in records]))
         mean_savings_inr = float(np.mean([r.monetary_savings_paise / 100.0 for r in records]))
         mean_queries = float(np.mean([r.queries_asked for r in records]))
-        
-        non_null_recs = [r for r in records if r.chosen_action_id != 'null_action' and not r.is_abstention]
+
+        non_null_recs = [r for r in records if not r.is_abstention]
         rar = float(np.mean([1.0 if r.user_accepted else 0.0 for r in non_null_recs])) if non_null_recs else 1.0
         cvr = float(np.mean([1.0 if r.is_comfort_violated else 0.0 for r in records]))
         abstention_rate = float(np.mean([1.0 if r.is_abstention else 0.0 for r in records]))
 
-        # Cliff Avoidance Success Rate: for households starting in [490, 520] kWh,
-        # what fraction ended up <= 500 kWh with their action?
-        cliff_households = [r for r in records if 490.0 <= r.realized_kwh <= 520.0]
-        hh_by_id = {hh.household_id: hh for hh in self.cohort}
-        if cliff_households:
-            avoided = 0
-            for r in cliff_households:
-                hh = hh_by_id.get(r.household_id)
-                cand = next((a for a in hh.candidate_actions if a.id == r.chosen_action_id), None) if hh else None
-                delta = cand.delta_kwh if cand else 0.0
-                if (r.realized_kwh - delta) <= 500.0:
-                    avoided += 1
-            casr = avoided / len(cliff_households)
+        # Abstention Precision: fraction of abstentions where abstention was objectively optimal
+        abstentions = [r for r in records if r.is_abstention]
+        if abstentions:
+            ap = float(np.mean([1.0 if r.is_abstention_optimal else 0.0 for r in abstentions]))
         else:
-            casr = 1.0
+            ap = 1.0
+
+        # Cliff Avoidance Success Rate:
+        # Evaluated on households near cliff (490 <= X <= 520) where safe avoidance was actually feasible!
+        cliff_records = [r for r in records if 490.0 <= r.realized_kwh <= 520.0]
+        hh_by_id = {hh.household_id: hh for hh in self.cohort}
+        feasible_cliff_avoidance = 0
+        successful_cliff_avoidance = 0
+
+        for r in cliff_records:
+            hh = hh_by_id.get(r.household_id)
+            if not hh:
+                continue
+            # Can any tolerable action bring household below 500 kWh?
+            can_avoid_safely = any(
+                (r.realized_kwh - a.delta_kwh <= 500.0) and (np.dot(hh._theta_star, a.feature_vector) <= hh.d_max)
+                for a in hh.candidate_actions if a.is_reduction()
+            )
+            if can_avoid_safely:
+                feasible_cliff_avoidance += 1
+                cand = next((a for a in hh.candidate_actions if a.id == r.chosen_action_id), None)
+                if cand and (r.realized_kwh - cand.delta_kwh <= 500.0) and not r.is_comfort_violated:
+                    successful_cliff_avoidance += 1
+
+        casr = (successful_cliff_avoidance / feasible_cliff_avoidance) if feasible_cliff_avoidance > 0 else 1.0
+
+        # Stratified Breakdown by Archetype
+        archetypes = sorted(list({r.archetype for r in records}))
+        breakdown: Dict[str, Dict[str, float]] = {}
+        for arch in archetypes:
+            arch_recs = [r for r in records if r.archetype == arch]
+            arch_non_null = [r for r in arch_recs if not r.is_abstention]
+            breakdown[arch] = {
+                'count': float(len(arch_recs)),
+                'norm_regret': float(np.mean([r.normalized_regret for r in arch_recs])),
+                'savings_inr': float(np.mean([r.monetary_savings_paise / 100.0 for r in arch_recs])),
+                'cvr': float(np.mean([1.0 if r.is_comfort_violated else 0.0 for r in arch_recs])),
+                'abstention_rate': float(np.mean([1.0 if r.is_abstention else 0.0 for r in arch_recs])),
+                'acceptance_rate': float(np.mean([1.0 if r.user_accepted else 0.0 for r in arch_non_null])) if arch_non_null else 1.0,
+            }
 
         return TrialSummary(
             advisor_name=advisor.name,
@@ -251,6 +298,8 @@ class SimulationEnvironment:
             recommendation_acceptance_rate=rar,
             comfort_violation_rate=cvr,
             abstention_rate=abstention_rate,
+            abstention_precision=ap,
             cliff_avoidance_success_rate=casr,
+            archetype_breakdown=breakdown,
             records=records,
         )
