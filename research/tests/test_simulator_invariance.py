@@ -63,8 +63,7 @@ class TestHiddenGroundTruthIsolation:
         assert hh.d_max == 1.0
         env = SimulationEnvironment([hh], tariff)
 
-        # Force advisor to propose action that violates d_max (e.g. ac_curtail_afternoon_1h where D = 3.0 * 0.8 = 2.4 > 1.0)
-        intolerable_action = next(a for a in hh.candidate_actions if a.id == 'ac_curtail_afternoon_1h')
+        intolerable_action = next(a for a in hh.candidate_actions if np.dot(hh._theta_star, a.feature_vector) > hh.d_max)
         record = env.evaluate_decision(hh, chosen_action=intolerable_action, is_abstention=False)
 
         assert record.is_comfort_violated is True

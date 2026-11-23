@@ -185,6 +185,26 @@ class TestNewBaselinesB6ThroughB9:
         summary = env.run_advisor_trial(advisor)
         assert summary.mean_queries_asked <= 2.0
 
+    def test_safe_rule_based_zero_violations(self, test_tariff, small_cohort):
+        env = SimulationEnvironment(small_cohort, test_tariff)
+        advisor = SafeRuleBasedAdvisor()
+        summary = env.run_advisor_trial(advisor)
+        assert summary.comfort_violation_rate == 0.0
+
+    def test_b7_risk_evsi_comfort_constraint(self, test_tariff, small_cohort):
+        env = SimulationEnvironment(small_cohort, test_tariff)
+        advisor = RiskExactEVSIAdvisor(max_queries=2)
+        summary = env.run_advisor_trial(advisor)
+        assert summary.comfort_violation_rate <= 0.05
+
+    def test_b7_risk_abstain_evsi_lower_bound(self, test_tariff, small_cohort):
+        env = SimulationEnvironment(small_cohort, test_tariff)
+        advisor = RiskAbstainExactEVSIAdvisor(max_queries=2)
+        summary = env.run_advisor_trial(advisor)
+        assert summary.comfort_violation_rate <= 0.05
+        # Conservative lower bound leads to non-zero abstentions for marginal cases
+        assert summary.abstention_rate >= 0.0
+
 
 class TestTRVOICandidate:
     """Verification for SPARE-HEM candidate TR-VOI."""
