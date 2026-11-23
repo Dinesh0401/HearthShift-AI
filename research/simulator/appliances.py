@@ -43,7 +43,7 @@ class AirConditioner(Appliance):
     """
     Domestic Inverter AC model.
     Power: 1500W. Typical usage: 6-10 hours/day.
-    Actions: setpoint adjustments (+1°C, +2°C) or 1h duration curtailment.
+    Actions: setpoint adjustments (+0.5°C, +1°C, +2°C) or 1h duration curtailment.
     """
     def __init__(self, appliance_id: str = 'ac_1', baseline_hours: float = 8.0, baseline_setpoint: float = 23.0):
         super().__init__(appliance_id, 'Air Conditioner', 1500.0)
@@ -51,26 +51,33 @@ class AirConditioner(Appliance):
         self.baseline_setpoint = baseline_setpoint
 
     def get_candidate_actions(self) -> List[EnergyAction]:
-        # Rule of thumb: +1°C reduces AC compressor energy by ~6% (0.06 * 1.5kW * 8h = 0.72 kWh/day = 43.2 kWh/cycle)
-        # 1 hour curtailment saves 1.5 kWh/day = 90.0 kWh/cycle
         return [
+            EnergyAction(
+                id=f'{self.appliance_id}_setpoint_plus0_5',
+                appliance_id=self.appliance_id,
+                action_type='reduction',
+                description='Raise AC thermostat by 0.5°C (mild micro-curtailment)',
+                delta_kwh=15.0,
+                shift_hours=0.0,
+                feature_vector=np.array([0.5, 0.0, 0.0, 0.0]),
+            ),
             EnergyAction(
                 id=f'{self.appliance_id}_setpoint_plus1',
                 appliance_id=self.appliance_id,
                 action_type='reduction',
                 description='Raise AC thermostat by 1°C (23°C -> 24°C)',
-                delta_kwh=43.2,
+                delta_kwh=35.0,
                 shift_hours=0.0,
-                feature_vector=np.array([1.0, 0.0, 0.0, 0.0]),  # 1°C thermal discomfort
+                feature_vector=np.array([1.0, 0.0, 0.0, 0.0]),
             ),
             EnergyAction(
                 id=f'{self.appliance_id}_setpoint_plus2',
                 appliance_id=self.appliance_id,
                 action_type='reduction',
                 description='Raise AC thermostat by 2°C (23°C -> 25°C)',
-                delta_kwh=86.4,
+                delta_kwh=70.0,
                 shift_hours=0.0,
-                feature_vector=np.array([2.0, 0.0, 0.0, 0.0]),  # 2°C thermal discomfort
+                feature_vector=np.array([2.0, 0.0, 0.0, 0.0]),
             ),
             EnergyAction(
                 id=f'{self.appliance_id}_curtail_1h',
@@ -79,7 +86,7 @@ class AirConditioner(Appliance):
                 description='Reduce AC cooling by 1 hour per day (use fan for last hour)',
                 delta_kwh=90.0,
                 shift_hours=0.0,
-                feature_vector=np.array([1.8, 0.0, 0.0, 0.0]),
+                feature_vector=np.array([2.5, 0.0, 0.0, 0.0]),
             ),
         ]
 
@@ -148,3 +155,36 @@ class WaterHeater(Appliance):
                 feature_vector=np.array([0.0, 0.0, 0.4, 0.0]),
             ),
         ]
+
+
+class StandbyPower(Appliance):
+    """
+    Domestic standby power and ambient lighting.
+    Micro-actions: small energy reductions (3.0 to 6.0 kWh) with minimal discomfort.
+    Critical for fine-grained testing around the 500 kWh cliff boundary.
+    """
+    def __init__(self, appliance_id: str = 'stby_1'):
+        super().__init__(appliance_id, 'Standby & Lighting', 120.0)
+
+    def get_candidate_actions(self) -> List[EnergyAction]:
+        return [
+            EnergyAction(
+                id=f'{self.appliance_id}_kill_standby',
+                appliance_id=self.appliance_id,
+                action_type='reduction',
+                description='Power down entertainment center standby on smart strip',
+                delta_kwh=3.0,
+                shift_hours=0.0,
+                feature_vector=np.array([0.0, 0.0, 0.0, 0.2]),
+            ),
+            EnergyAction(
+                id=f'{self.appliance_id}_led_downlight',
+                appliance_id=self.appliance_id,
+                action_type='reduction',
+                description='Replace 2 primary halogen downlights with 9W LEDs',
+                delta_kwh=6.0,
+                shift_hours=0.0,
+                feature_vector=np.array([0.0, 0.0, 0.0, 0.3]),
+            ),
+        ]
+
