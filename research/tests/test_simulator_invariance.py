@@ -9,7 +9,7 @@ import pytest
 
 from simulator.tariffs import create_tnpdcl_lt1a_may2026_tariff
 from simulator.household import SyntheticHousehold, generate_synthetic_cohort
-from simulator.appliances import EnergyAction, AirConditioner, WashingMachine, WaterHeater
+from simulator.appliances import EnergyAction, AirConditioner, WashingMachine, WaterHeater, StandbyPower
 from simulator.environment import SimulationEnvironment, HouseholdPublicView
 from simulator.power_integration import integrate_power_series
 from baselines.b1_rule_based import RuleBasedAdvisor
@@ -29,6 +29,7 @@ class TestHiddenGroundTruthIsolation:
         assert not hasattr(pub, '_theta_star')
         assert not hasattr(pub, 'theta_star')
         assert not hasattr(pub, 'lambda_discomfort_paise')
+        assert not hasattr(pub, 'd_max')
 
         # Public view must have safe public attributes
         assert pub.household_id == 'hh_test'
@@ -38,12 +39,11 @@ class TestHiddenGroundTruthIsolation:
 
     def test_synthetic_household_private_attribute_naming(self):
         hh = SyntheticHousehold('hh_test', 450.0, np.array([1.2, 0.8, 1.5, 1.0]))
-        # In Python conventions, private attributes start with '_'
         assert hasattr(hh, '_theta_star')
         assert not hasattr(hh, 'theta_star')
 
-    def test_environment_evaluation_isolates_true_loss(self):
-        """Environment computes true loss internally and does not leak _theta_star in public result."""
+    def test_environment_evaluation_isolates_true_loss_and_welfare(self):
+        """Environment computes true welfare internally and does not leak _theta_star in public result."""
         tariff = create_tnpdcl_lt1a_may2026_tariff()
         hh = SyntheticHousehold('hh_001', 505.0, np.array([0.5, 0.5, 0.5, 1.0]))
         env = SimulationEnvironment([hh], tariff)
@@ -51,10 +51,9 @@ class TestHiddenGroundTruthIsolation:
         advisor = RuleBasedAdvisor()
         record = env.run_advisor_trial(advisor).records[0]
 
-        # The record contains loss and regret numbers, but does NOT leak the parameter array _theta_star
         assert not hasattr(record, '_theta_star')
-        assert isinstance(record.true_action_loss_paise, float)
-        assert isinstance(record.oracle_loss_paise, float)
+        assert isinstance(record.true_action_welfare_paise, float)
+        assert isinstance(record.oracle_welfare_paise, float)
 
 
 class TestSeededInvariance:
@@ -68,6 +67,7 @@ class TestSeededInvariance:
         for ha, hb in zip(cohort_a, cohort_b):
             assert ha.household_id == hb.household_id
             assert ha.baseline_kwh == hb.baseline_kwh
+            assert ha.archetype == hb.archetype
             np.testing.assert_array_equal(ha._theta_star, hb._theta_star)
 
     def test_different_seeds_produce_distinct_cohorts(self):
@@ -94,7 +94,7 @@ class TestSeededInvariance:
         for r1, r2 in zip(summary_1.records, summary_2.records):
             assert r1.chosen_action_id == r2.chosen_action_id
             assert r1.realized_kwh == r2.realized_kwh
-            assert r1.true_action_loss_paise == r2.true_action_loss_paise
+            assert r1.true_action_welfare_paise == r2.true_action_welfare_paise
 
 
 class TestFeasibleActionPhysicalBounds:
@@ -105,11 +105,8 @@ class TestFeasibleActionPhysicalBounds:
         actions = hh.candidate_actions
 
         for a in actions:
-            # Energy delta must be non-negative (we only model reduction >= 0)
             assert a.delta_kwh >= 0.0, f"Action {a.id} has negative delta_kwh"
-            # Time shifts must be bounded within +/- 24 hours
             assert -24.0 <= a.shift_hours <= 24.0, f"Action {a.id} has unreasonable shift hours"
-            # Feature vector dimensions
             assert len(a.feature_vector) == 4
             assert np.all(a.feature_vector >= 0.0), f"Action {a.id} has negative feature values"
 
@@ -122,7 +119,6 @@ class TestFeasibleActionPhysicalBounds:
                     assert a.shift_hours == 0.0
 
             if a.is_shift():
-                # Load shifting MUST have zero net energy reduction
                 assert a.delta_kwh == 0.0
                 assert a.shift_hours != 0.0
 
@@ -130,18 +126,18 @@ class TestFeasibleActionPhysicalBounds:
         ac = AirConditioner('ac_test')
         wm = WashingMachine('wm_test')
         wh = WaterHeater('wh_test')
+        stby = StandbyPower('stby_test')
 
         assert 500.0 <= ac.nominal_power_w <= 3000.0
         assert 300.0 <= wm.nominal_power_w <= 2500.0
         assert 1000.0 <= wh.nominal_power_w <= 4000.0
+        assert 50.0 <= stby.nominal_power_w <= 500.0
 
 
 class TestDynamicGapHandling:
     """RAT-005: Dynamic Source-Aware Gap Handling in Power Integration."""
 
     def test_uniform_15min_power_series_exact_integration(self):
-        # 1000W steady power for 1 hour (4 samples, 900s interval)
-        # 1000W * 3600s = 3.6 MJ = 1.0 kWh
         ts = np.array([0, 900, 1800, 2700, 3600], dtype=float)
         pw = np.array([1000.0, 1000.0, 1000.0, 1000.0, 1000.0], dtype=float)
 
@@ -151,8 +147,6 @@ class TestDynamicGapHandling:
         assert gaps == 0
 
     def test_uniform_30min_power_series_exact_integration(self):
-        # 2000W steady power for 2 hours (1800s interval)
-        # 2000W * 7200s = 14.4 MJ = 4.0 kWh
         ts = np.array([0, 1800, 3600, 5400, 7200], dtype=float)
         pw = np.array([2000.0, 2000.0, 2000.0, 2000.0, 2000.0], dtype=float)
 
@@ -162,21 +156,10 @@ class TestDynamicGapHandling:
         assert gaps == 0
 
     def test_abnormal_gap_omission(self):
-        # Normal 15-min interval, but there is a 4-hour blackout/gap between sample 2 and 3
-        # Timestamps: 0, 900, 1800, 1800 + 14400 (16200), 17100
         ts = np.array([0, 900, 1800, 16200, 17100], dtype=float)
         pw = np.array([1000.0, 1000.0, 1000.0, 1000.0, 1000.0], dtype=float)
 
-        # Nominal dt is 900s. Gap threshold is max(300, 900 * 3) = 2700s.
-        # dt = 14400s > 2700s, so this gap should be omitted.
         kwh, segments, gaps = integrate_power_series(ts, pw)
-
-        # Expected integrated energy:
-        # segment 1 (0 to 900s): 1000 * 900 / 3.6e6 = 0.25 kWh
-        # segment 2 (900 to 1800s): 1000 * 900 / 3.6e6 = 0.25 kWh
-        # segment 3 (gap 1800 to 16200s): omitted!
-        # segment 4 (16200 to 17100s): 1000 * 900 / 3.6e6 = 0.25 kWh
-        # Total = 0.75 kWh (NOT 4.75 kWh if gap was interpolated)
         assert pytest.approx(kwh, 1e-4) == 0.75
         assert segments == 3
         assert gaps == 1
