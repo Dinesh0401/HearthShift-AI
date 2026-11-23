@@ -20,7 +20,7 @@ class RiskSensitivePassiveAdvisor(BaseAdvisor):
         alpha_quantile: float = 0.05,  # 95% conservative lower bound (z ~ 1.645)
         c_min_paise: float = 3000.0,   # Minimum noticeable benefit: ₹30.00
         lambda_discomfort_paise: float = 20000.0,
-        d_max_conservative: float = 1.8,
+        d_max_conservative: float = 1.0,  # Safe threshold protecting sensitive households
     ):
         super().__init__('B8_RiskPassive')
         self.z_alpha = 1.645
