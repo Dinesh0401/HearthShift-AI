@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { db } from '../../lib/db';
-import type { SavingsRecord } from '../../types/contracts';
+import type { SavingsRecord, SavingsBasis } from '../../types/contracts';
 import { useLanguage } from '../../locales/i18n';
-import { Award, CheckCircle2, TrendingUp, Calendar, Trash2 } from 'lucide-react';
+import { Award, CheckCircle2, TrendingUp, Calendar, Trash2, ShieldAlert, Info } from 'lucide-react';
 
 interface SavingsLedgerProps {
   refreshTrigger?: number;
@@ -38,7 +38,46 @@ export const SavingsLedger: React.FC<SavingsLedgerProps> = ({ refreshTrigger = 0
     }
   };
 
-  const totalVerifiedSavingsInr = records.reduce((sum, r) => sum + (r.verified_actual_savings ?? r.estimated_savings), 0);
+  // Strictly distinguish between formally verified savings (counterfactual-adjusted) and estimated/user-reported
+  const verifiedRecords = records.filter((r) => r.basis === 'measurement_verified' && r.verified);
+  const totalVerifiedSavingsInr = verifiedRecords.reduce(
+    (sum, r) => sum + (r.verified_actual_savings ?? 0),
+    0
+  );
+
+  const totalTrackedImpactInr = records.reduce(
+    (sum, r) => sum + (r.verified_actual_savings ?? r.estimated_savings),
+    0
+  );
+
+  const renderProvenanceBadge = (basis: SavingsBasis, verified: boolean) => {
+    if (basis === 'measurement_verified' && verified) {
+      return (
+        <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-800 border border-emerald-300">
+          🟢 {t('verifiedSavingsBreakdown')}
+        </span>
+      );
+    }
+    if (basis === 'meter_observed') {
+      return (
+        <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-purple-50 text-purple-700 border border-purple-200">
+          🟣 {t('meterObservedBreakdown')}
+        </span>
+      );
+    }
+    if (basis === 'user_reported') {
+      return (
+        <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-blue-50 text-blue-700 border border-blue-200">
+          🔵 {t('provenanceUserReported')}
+        </span>
+      );
+    }
+    return (
+      <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-50 text-amber-700 border border-amber-200">
+        🟡 {t('provenanceSimulated')}
+      </span>
+    );
+  };
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -56,16 +95,30 @@ export const SavingsLedger: React.FC<SavingsLedgerProps> = ({ refreshTrigger = 0
 
       <div className="p-6 space-y-6">
         {/* Top Summary Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="p-4 bg-emerald-50/60 rounded-xl border border-emerald-100 flex items-center gap-4">
             <div className="p-3 bg-emerald-600 text-white rounded-xl">
               <TrendingUp className="w-6 h-6" />
             </div>
             <div>
-              <p className="text-xs font-semibold text-emerald-900">{t('totalVerifiedSavings')}</p>
+              <p className="text-xs font-semibold text-emerald-900">{t('trackedSavingsImpact')}</p>
               <p className="text-2xl font-bold font-mono text-emerald-700">
+                ₹{totalTrackedImpactInr.toFixed(2)}
+              </p>
+              <p className="text-[10px] text-emerald-600 mt-0.5">Estimated & user-reported</p>
+            </div>
+          </div>
+
+          <div className="p-4 bg-teal-50/60 rounded-xl border border-teal-100 flex items-center gap-4">
+            <div className="p-3 bg-teal-600 text-white rounded-xl">
+              <Award className="w-6 h-6" />
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-teal-900">{t('totalVerifiedSavings')}</p>
+              <p className="text-2xl font-bold font-mono text-teal-700">
                 ₹{totalVerifiedSavingsInr.toFixed(2)}
               </p>
+              <p className="text-[10px] text-teal-600 mt-0.5">IPMVP counterfactual adjusted</p>
             </div>
           </div>
 
@@ -78,7 +131,17 @@ export const SavingsLedger: React.FC<SavingsLedgerProps> = ({ refreshTrigger = 0
               <p className="text-2xl font-bold font-mono text-blue-700">
                 {records.length}
               </p>
+              <p className="text-[10px] text-blue-600 mt-0.5">Actions logged</p>
             </div>
+          </div>
+        </div>
+
+        {/* Scientific M&V Disclaimer Box */}
+        <div className="p-4 bg-amber-50/60 border border-amber-200 rounded-xl text-xs text-amber-900 flex items-start gap-3">
+          <Info className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+          <div className="space-y-1">
+            <p className="font-semibold text-amber-950">{t('counterfactualNoticeTitle')}</p>
+            <p className="text-amber-800 leading-relaxed">{t('counterfactualNotice')}</p>
           </div>
         </div>
 
@@ -115,9 +178,7 @@ export const SavingsLedger: React.FC<SavingsLedgerProps> = ({ refreshTrigger = 0
                       ₹{(r.verified_actual_savings ?? r.estimated_savings).toFixed(2)}
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-blue-50 text-blue-700 border border-blue-200">
-                        {r.basis === 'user_reported' ? t('provenanceUserReported') : r.basis === 'measured' ? t('provenanceMeterVerified') : t('provenanceSimulated')}
-                      </span>
+                      {renderProvenanceBadge(r.basis, r.verified)}
                     </td>
                     <td className="px-4 py-3 text-right whitespace-nowrap">
                       <button
