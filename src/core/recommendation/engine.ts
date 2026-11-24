@@ -166,6 +166,11 @@ export function generateHouseholdRecommendation(
         ta: `மின் கட்டணச் சேமிப்பு: இரு மாதத்திற்கு சுமார் ${act.deltaKwh} யூனிட் குறைப்பதன் மூலம் குறைந்தது ₹${lowerBoundInr.toFixed(2)} உறுதியான பணச்சேமிப்பு கிடைக்கும்.`,
       };
 
+  const advisoryAssumption: LocalizedString = {
+    en: 'Advisory Guidance: Manual household control only. Savings are mathematical simulations under stated tariff schedules and do not represent guaranteed physical outcomes.',
+    ta: 'ஆலோசனை வழிகாட்டல் மட்டுமே: சாதனங்களை நீங்களே கைமுறையாக இயக்க வேண்டும். சேமிப்பு என்பது மின்கட்டண மாதிரி அடிப்படையிலானது.',
+  };
+
   const rec: Recommendation = {
     id: `rec_${act.id}_${Date.now()}`,
     created_at: new Date().toISOString(),
@@ -177,7 +182,7 @@ export function generateHouseholdRecommendation(
       estimated_effort: act.estimatedEffort,
     },
     savings_estimate: savingsEstimate,
-    assumptions: act.assumptions,
+    assumptions: [...act.assumptions, advisoryAssumption],
     confidence_level: decision.confidenceLevel,
     decision_outcome: 'recommend',
     explanation,
