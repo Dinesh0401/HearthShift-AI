@@ -131,6 +131,8 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
         await db.savings.add({
           id: `sav_${Date.now()}`,
           recommendation_id: rec.id,
+          action_id: rec.id,
+          action_title: rec.action.title,
           period_start: new Date().toISOString().slice(0, 10),
           period_end: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10),
           estimated_savings: rec.savings_estimate.point_estimate,

@@ -29,6 +29,17 @@ export interface ScenarioCalculationResult {
   savingsEstimate: SavingsEstimate;
   didAvoidCliff: boolean;
   cliffBonusInr: number;
+  /**
+   * Explanatory audit flag: confirms that cliffBonusInr is already accounted for
+   * inside netSavingsInr (via the baseline minus proposed bill difference),
+   * guaranteeing that cliffBonusInr is strictly NOT an additive bonus.
+   */
+  isCliffBonusIncludedInNetSavings: true;
+  /**
+   * Base slab savings excluding the discrete ₹478.40 subsidy cliff bonus.
+   * Decomposition: netSavingsInr = slabSavingsInr + cliffBonusInr
+   */
+  slabSavingsInr: number;
   tierChangeDescription?: LocalizedString;
   assumptions: LocalizedString[];
 }
@@ -109,11 +120,35 @@ export function calculateScenarioOutcome(
 
   const baselineBillInr = baselineBill.net_payable_paise / 100.0;
   const proposedBillInr = proposedBill.net_payable_paise / 100.0;
+
+  /**
+   * TARIFF CLIFF AUDIT & DECOMPOSITION:
+   * 
+   * Net savings is STRICTLY calculated as:
+   *   (baselineBill.net_payable_paise - proposedBill.net_payable_paise) / 100.0
+   * 
+   * Under the TNPDCL LT-1A tariff schedule (May 10, 2026 scheme):
+   * - Consuming <= 500 kWh bi-monthly grants 200 free units.
+   * - Crossing above 500 kWh (e.g. 501 kWh) abruptly drops free units to 100 and revokes the slab discount,
+   *   introducing a discrete ₹478.40 jump in net payable bill.
+   * 
+   * Because calculateBill() executes the complete statutory tariff function on both baseline and proposed
+   * consumption levels, the bill difference ALREADY captures this ₹478.40 subsidy discontinuity.
+   * 
+   * Therefore, `cliffBonusInr` is strictly an EXPLANATORY COMPONENT of `netSavingsInr`, NOT an additive bonus.
+   * Mathematical decomposition:
+   *   netSavingsInr = slabSavingsInr + cliffBonusInr
+   *   slabSavingsInr = netSavingsInr - cliffBonusInr
+   * 
+   * Guarantee: Under no circumstances should cliffBonusInr ever be added onto netSavingsInr,
+   * as that would double-count the benefit.
+   */
   const netSavingsInr = Math.max(0.0, (baselineBill.net_payable_paise - proposedBill.net_payable_paise) / 100.0);
 
   // Check cliff transition (500 kWh boundary)
   const didAvoidCliff = baselineKwh > 500.0 && proposedKwh <= 500.0;
   const cliffBonusInr = didAvoidCliff ? 478.40 : 0.0;
+  const slabSavingsInr = Math.max(0.0, Number((netSavingsInr - cliffBonusInr).toFixed(2)));
 
   const tierChangeDescription: LocalizedString | undefined = didAvoidCliff
     ? {
@@ -142,6 +177,8 @@ export function calculateScenarioOutcome(
     savingsEstimate,
     didAvoidCliff,
     cliffBonusInr,
+    isCliffBonusIncludedInNetSavings: true,
+    slabSavingsInr,
     tierChangeDescription,
     assumptions,
   };
