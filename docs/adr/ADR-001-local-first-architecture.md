@@ -13,7 +13,7 @@ At the same time, households need an accessible solution that runs on existing l
 
 ## Decision
 We adopt a **Local-First Progressive Web App (PWA)** architecture:
-1. All raw interval readings, historical bills, preference parameters, and recommendation logs are parsed, stored, and evaluated entirely within the client's browser environment using Web Workers, IndexedDB, and WebAssembly/JavaScript.
+1. All raw interval readings, historical bills, preference parameters, and recommendation logs are parsed, stored, and evaluated entirely within the client's browser environment using Web Workers, IndexedDB, and pure client-side TypeScript/JavaScript (V8/SpiderMonkey runtime).
 2. The remote backend serves strictly static assets (HTML/JS/CSS) and versioned public tariff schedules. Zero user energy readings or feedback tokens are accepted or ingested by any server.
 3. The app is fully functional offline after initial load.
 

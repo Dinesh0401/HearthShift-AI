@@ -14,7 +14,7 @@ Generative AI and Large Language Models (LLMs) are frequently misapplied to nume
 
 ## Decision
 We enforce a strict architectural rule:
-1. **Zero Remote LLM Calls for Numerical Logic:** All tariff calculations, cost simulations, EVSI calculations, and recommendation generation are executed strictly by deterministic TypeScript / WebAssembly algorithms locally in the client.
+1. **Zero Remote LLM Calls for Numerical Logic:** All tariff calculations, cost simulations, EVSI calculations, and recommendation generation are executed strictly by deterministic TypeScript algorithms locally in the client runtime.
 2. **Constrained Role for Language Models:** If an on-device lightweight LLM or localized template engine is used in future versions, its role is strictly restricted to formatting natural-language explanations and localization strings. It is never supplied raw energy data or entrusted with mathematical calculations.
 
 ## Consequences
