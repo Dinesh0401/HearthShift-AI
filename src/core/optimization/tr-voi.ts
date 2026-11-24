@@ -112,8 +112,12 @@ export const PHYSICAL_ACTION_CATALOG: ClientEnergyAction[] = [
     estimatedEffort: 'minimal',
     assumptions: [
       {
-        en: 'Assumes inverter AC running 6-8 hours daily during warm months.',
-        ta: 'கோடைக் காலத்தில் ஏசி தினமும் 6 முதல் 8 மணி நேரம் இயங்குவதாகக் கணிக்கப்படுகிறது.',
+        en: 'Physical model: 1.5-ton inverter AC (COP ~ 3.5, 1200W rated), ~4% compressor duty reduction per 0.5°C over 6-8h daily runtime across 60 days.',
+        ta: 'இயற்பியல் மாதிரி: 1.5 டன் இன்வெர்ட்டர் ஏசி, தினமும் 6-8 மணி நேர இயக்கத்தில் 0.5°C உயர்வுக்கு ~4% மின் சேமிப்பு (இரு மாதத்திற்கு ~15 யூனிட்).',
+      },
+      {
+        en: 'Advisory only: Thermostat must be adjusted manually by household. Does not control physical appliance.',
+        ta: 'வழிகாட்டல் மட்டுமே: ஏசி வெப்பநிலையை நீங்களே கைமுறையாக மாற்ற வேண்டும்; தானியங்கி கட்டுப்பாடு இல்லை.',
       },
     ],
   },
@@ -135,8 +139,12 @@ export const PHYSICAL_ACTION_CATALOG: ClientEnergyAction[] = [
     estimatedEffort: 'moderate',
     assumptions: [
       {
-        en: 'Assumes ceiling fan provides supplementary convective cooling.',
-        ta: 'சீலிங் ஃபேன் போதுமான காற்றோட்டத்தை வழங்குவதாகக் கொள்ளப்படுகிறது.',
+        en: 'Physical model: ~8-10% compressor duty reduction over 60-day cycle with supplementary ceiling fan airflow (~30W).',
+        ta: 'இயற்பியல் மாதிரி: ஃபேன் காற்றுடன் ஏசியை 24°C-ல் இயக்குவதன் மூலம் ~8-10% சுழற்சி மின் சேமிப்பு (இரு மாதத்திற்கு ~35 யூனிட்).',
+      },
+      {
+        en: 'Advisory only: Manual adjustment. Comfort bounds depend on room insulation and occupant heat tolerance.',
+        ta: 'வழிகாட்டல் மட்டுமே: அறையின் வெப்பத் தாங்குதிறன் மற்றும் தனிநபர் விருப்பத்தைப் பொறுத்தது.',
       },
     ],
   },
@@ -158,8 +166,12 @@ export const PHYSICAL_ACTION_CATALOG: ClientEnergyAction[] = [
     estimatedEffort: 'significant',
     assumptions: [
       {
-        en: 'Requires household tolerance for 25°C indoor temperature.',
-        ta: 'வீட்டிலுள்ளோர் 25°C வெப்பநிலையை ஏற்கத் தயாராக இருக்க வேண்டும்.',
+        en: 'Physical model: ~16-18% compressor duty reduction over 60-day cycle (~70 kWh), high impact for 500 kWh cliff avoidance.',
+        ta: 'இயற்பியல் மாதிரி: ~16-18% ஏசி சுழற்சி மின் சேமிப்பு (~70 யூனிட்), 500 யூனிட் கட்டண உயர்வைத் தவிர்க்க மிகச் சிறந்தது.',
+      },
+      {
+        en: 'Advisory only: Requires household tolerance for 25°C indoor temperature.',
+        ta: 'வழிகாட்டல் மட்டுமே: வீட்டிலுள்ளோர் 25°C வெப்பநிலையை ஏற்கத் தயாராக இருக்க வேண்டும்.',
       },
     ],
   },
@@ -181,8 +193,12 @@ export const PHYSICAL_ACTION_CATALOG: ClientEnergyAction[] = [
     estimatedEffort: 'significant',
     assumptions: [
       {
-        en: 'Room insulation retains residual cooling for at least 45 minutes.',
-        ta: 'அறைக்குள்ளே குளுமை குறைந்தது 45 நிமிடங்கள் நீடிக்கும் என எதிர்பார்க்கப்படுகிறது.',
+        en: 'Physical model: 1.5 kW compressor avoided for 1 hour daily across 60 days (90 kWh total reduction).',
+        ta: 'இயற்பியல் மாதிரி: தினமும் 1 மணி நேரம் ஏசி அணைக்கப்படுவதால் 1.5 kW மின் சுமை தவிர்க்கப்படுகிறது (இரு மாதத்திற்கு 90 யூனிட்).',
+      },
+      {
+        en: 'Advisory only: Assumes adequate building thermal envelope retaining residual cooling for 45-60 minutes.',
+        ta: 'வழிகாட்டல் மட்டுமே: அறையின் குளுமை 45 முதல் 60 நிமிடங்கள் வரை நீடிக்க வேண்டும்.',
       },
     ],
   },
@@ -204,8 +220,12 @@ export const PHYSICAL_ACTION_CATALOG: ClientEnergyAction[] = [
     estimatedEffort: 'minimal',
     assumptions: [
       {
-        en: 'Assumes 2 kW immersion/geyser running for morning baths.',
-        ta: 'காலை நேர குளியலுக்கு 2 kW வாட்டர் ஹீட்டர் பயன்பாடு உள்ளதாகக் கணிக்கப்படுகிறது.',
+        en: 'Physical model: 2 kW geyser element runtime reduced by ~10 minutes per bath cycle over 60 days (~20 kWh).',
+        ta: 'இயற்பியல் மாதிரி: 2 kW வாட்டர் ஹீட்டர் தினமும் ~10 நிமிடங்கள் குறைவாக இயங்குவது (இரு மாதத்திற்கு ~20 யூனிட்).',
+      },
+      {
+        en: 'Advisory only: Manual timer shutoff. Does not affect thermostat safety cutoff.',
+        ta: 'வழிகாட்டல் மட்டுமே: பயன்பாட்டு நேரக் குறைப்பு மட்டுமே; பாதுகாப்பு தெர்மோஸ்டாட் அல்ல.',
       },
     ],
   },
@@ -227,8 +247,12 @@ export const PHYSICAL_ACTION_CATALOG: ClientEnergyAction[] = [
     estimatedEffort: 'minimal',
     assumptions: [
       {
-        en: 'Continuous vampire draw of ~15-25W across entertainment devices.',
-        ta: 'சாதனங்கள் அணைக்கப்பட்ட நிலையிலும் 15-25 வாட்ஸ் மின்சாரம் உறிஞ்சப்படுவதைக் குறிக்கிறது.',
+        en: 'Physical model: ~15-20W combined vampire draw powered down 7-8 hours overnight x 60 days (~6.0 kWh net savings).',
+        ta: 'இயற்பியல் மாதிரி: இரவு 8 மணி நேரம் 15-20 வாட்ஸ் வீண் மின்சாரம் அணைக்கப்படுவது (இரு மாதத்திற்கு ~6 யூனிட்).',
+      },
+      {
+        en: 'Advisory only: Manual switch off via extension cord or wall socket.',
+        ta: 'வழிகாட்டல் மட்டுமே: சுவிட்ச் போர்டில் நேரடியாக அணைக்க வேண்டும்.',
       },
     ],
   },
@@ -250,8 +274,12 @@ export const PHYSICAL_ACTION_CATALOG: ClientEnergyAction[] = [
     estimatedEffort: 'moderate',
     assumptions: [
       {
-        en: 'Pure load shifting; yields zero direct monetary savings under flat/tiered non-TOU tariffs.',
-        ta: 'இது நேர மாற்ற நடவடிக்கை; அடுக்கு மின்கட்டணத்தில் இதற்கு நேரடி பணச்சேமிப்பு கிடைக்காது.',
+        en: 'Physical invariant: Pure load shift of 1.2-1.5 kWh laundry cycle. Under non-TOU tariffs (like TNPDCL LT-1A), yields EXACTLY ₹0.00 monetary savings.',
+        ta: 'இயற்பியல் விதி: அடுக்கு கட்டணத்தில் நேர மாற்றத்திற்கு பணச்சேமிப்பு கிடைக்காது (0 ரூபாய் சேமிப்பு).',
+      },
+      {
+        en: 'Grid benefit only: Reduces local transformer strain during evening peak (18:00-22:00) without changing consumer electricity bill.',
+        ta: 'மின் கட்டமைப்பு உதவி மட்டுமே: நுகர்வோர் பில் தொகையில் மாற்றமில்லை.',
       },
     ],
   },
