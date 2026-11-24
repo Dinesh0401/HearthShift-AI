@@ -12,7 +12,8 @@ import type {
   Recommendation, 
   SavingsEstimate, 
   AdaptiveQuestion,
-  DecisionOutcome
+  DecisionOutcome,
+  LocalizedString
 } from '../../types/contracts';
 import { 
   decideTrVoi, 

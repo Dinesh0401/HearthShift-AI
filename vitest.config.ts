@@ -4,5 +4,6 @@ export default defineConfig({
   test: {
     include: ['tests/unit/**/*.{test,spec}.ts', 'tests/integration/**/*.{test,spec}.ts'],
     exclude: ['tests/e2e/**', 'node_modules/**'],
+    fileParallelism: false,
   },
 });
