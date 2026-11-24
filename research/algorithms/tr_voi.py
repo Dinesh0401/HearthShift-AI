@@ -79,23 +79,17 @@ class ThresholdAwareRobustVOIAdvisor(BaseAdvisor):
             bill_act = calculate_bill(max(0.0, baseline_kwh - action.delta_kwh), tariff).net_payable_paise
             return float(bill_sq - bill_act), 0.0
 
-        # Numerical integration over 5 Gauss-Hermite quadrature nodes around baseline
-        # (Exact integration capturing the ₹478.40 cliff jump at 500/501 kWh)
-        weights = [0.01995, 0.39362, 0.94531, 0.39362, 0.01995]
-        nodes = [-2.02018, -0.95857, 0.0, 0.95857, 2.02018]
-        norm_weights = np.array(weights) / sum(weights)
-
-        samples = [baseline_kwh + self.consumption_sigma * n for n in nodes]
-        savings_samples = []
-        for s in samples:
-            s_kwh = max(10.0, s)
-            b_sq = calculate_bill(s_kwh, tariff).net_payable_paise
-            b_act = calculate_bill(max(0.0, s_kwh - action.delta_kwh), tariff).net_payable_paise
-            savings_samples.append(float(b_sq - b_act))
-
-        mean_savings = float(np.dot(norm_weights, savings_samples))
-        var_savings = float(np.dot(norm_weights, (np.array(savings_samples) - mean_savings)**2))
-        return mean_savings, float(np.sqrt(max(0.0, var_savings)))
+        # Analytical piecewise normal integration matching simulator.numerical_quadrature & TypeScript
+        from simulator.numerical_quadrature import exact_piecewise_tariff_moments
+        post_kwh = max(0.0, baseline_kwh - action.delta_kwh)
+        base_m = exact_piecewise_tariff_moments(baseline_kwh, self.consumption_sigma, tariff)
+        post_m = exact_piecewise_tariff_moments(post_kwh, self.consumption_sigma, tariff)
+        mean_savings = max(0.0, base_m['mean_bill_paise'] - post_m['mean_bill_paise'])
+        var_savings = max(
+            0.0,
+            base_m['std_bill_paise'] ** 2 + post_m['std_bill_paise'] ** 2 - 2.0 * 0.9 * base_m['std_bill_paise'] * post_m['std_bill_paise']
+        )
+        return float(mean_savings), float(np.sqrt(var_savings))
 
     def _evaluate_action_welfare(
         self,
