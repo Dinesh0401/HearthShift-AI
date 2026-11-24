@@ -1,0 +1,696 @@
+{
+  "version": "1.0.0",
+  "tariff_id": "in-tnpdcl-lt1a-may2026",
+  "tariff_bills": [
+    {
+      "kwh": 0,
+      "gross_energy_charges_paise": 0,
+      "total_subsidy_deductions_paise": 0,
+      "net_payable_paise": 0,
+      "net_payable_inr": 0.0
+    },
+    {
+      "kwh": 50,
+      "gross_energy_charges_paise": 23500,
+      "total_subsidy_deductions_paise": 23500,
+      "net_payable_paise": 0,
+      "net_payable_inr": 0.0
+    },
+    {
+      "kwh": 100,
+      "gross_energy_charges_paise": 47000,
+      "total_subsidy_deductions_paise": 47000,
+      "net_payable_paise": 0,
+      "net_payable_inr": 0.0
+    },
+    {
+      "kwh": 200,
+      "gross_energy_charges_paise": 94000,
+      "total_subsidy_deductions_paise": 94000,
+      "net_payable_paise": 0,
+      "net_payable_inr": 0.0
+    },
+    {
+      "kwh": 300,
+      "gross_energy_charges_paise": 141000,
+      "total_subsidy_deductions_paise": 94000,
+      "net_payable_paise": 47000,
+      "net_payable_inr": 470.0
+    },
+    {
+      "kwh": 400,
+      "gross_energy_charges_paise": 188000,
+      "total_subsidy_deductions_paise": 94000,
+      "net_payable_paise": 94000,
+      "net_payable_inr": 940.0
+    },
+    {
+      "kwh": 450,
+      "gross_energy_charges_paise": 219500,
+      "total_subsidy_deductions_paise": 94000,
+      "net_payable_paise": 125500,
+      "net_payable_inr": 1255.0
+    },
+    {
+      "kwh": 500,
+      "gross_energy_charges_paise": 251000,
+      "total_subsidy_deductions_paise": 94000,
+      "net_payable_paise": 157000,
+      "net_payable_inr": 1570.0
+    },
+    {
+      "kwh": 501,
+      "gross_energy_charges_paise": 251840,
+      "total_subsidy_deductions_paise": 47000,
+      "net_payable_paise": 204840,
+      "net_payable_inr": 2048.4
+    },
+    {
+      "kwh": 505,
+      "gross_energy_charges_paise": 255200,
+      "total_subsidy_deductions_paise": 47000,
+      "net_payable_paise": 208200,
+      "net_payable_inr": 2082.0
+    },
+    {
+      "kwh": 520,
+      "gross_energy_charges_paise": 267800,
+      "total_subsidy_deductions_paise": 47000,
+      "net_payable_paise": 220800,
+      "net_payable_inr": 2208.0
+    },
+    {
+      "kwh": 600,
+      "gross_energy_charges_paise": 335000,
+      "total_subsidy_deductions_paise": 47000,
+      "net_payable_paise": 288000,
+      "net_payable_inr": 2880.0
+    },
+    {
+      "kwh": 800,
+      "gross_energy_charges_paise": 524000,
+      "total_subsidy_deductions_paise": 47000,
+      "net_payable_paise": 477000,
+      "net_payable_inr": 4770.0
+    },
+    {
+      "kwh": 1000,
+      "gross_energy_charges_paise": 734000,
+      "total_subsidy_deductions_paise": 47000,
+      "net_payable_paise": 687000,
+      "net_payable_inr": 6870.0
+    }
+  ],
+  "piecewise_normal_moments": [
+    {
+      "mu": 250.0,
+      "sigma": 0.0,
+      "mean_bill_paise": 23500.0,
+      "std_bill_paise": 0.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "mu": 250.0,
+      "sigma": 5.0,
+      "mean_bill_paise": 23500.0,
+      "std_bill_paise": 2350.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "mu": 250.0,
+      "sigma": 8.0,
+      "mean_bill_paise": 23500.0,
+      "std_bill_paise": 3760.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "mu": 250.0,
+      "sigma": 12.0,
+      "mean_bill_paise": 23500.02,
+      "std_bill_paise": 5639.92,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "mu": 380.0,
+      "sigma": 0.0,
+      "mean_bill_paise": 84600.0,
+      "std_bill_paise": 0.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "mu": 380.0,
+      "sigma": 5.0,
+      "mean_bill_paise": 84600.01,
+      "std_bill_paise": 2350.03,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "mu": 380.0,
+      "sigma": 8.0,
+      "mean_bill_paise": 84602.57,
+      "std_bill_paise": 3768.2,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "mu": 380.0,
+      "sigma": 12.0,
+      "mean_bill_paise": 84638.07,
+      "std_bill_paise": 5735.64,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "mu": 480.0,
+      "sigma": 0.0,
+      "mean_bill_paise": 144400.0,
+      "std_bill_paise": 0.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "mu": 480.0,
+      "sigma": 5.0,
+      "mean_bill_paise": 144401.5,
+      "std_bill_paise": 3167.49,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "mu": 480.0,
+      "sigma": 8.0,
+      "mean_bill_paise": 144695.22,
+      "std_bill_paise": 6910.92,
+      "cliff_crossing_prob": 0.0062
+    },
+    {
+      "mu": 480.0,
+      "sigma": 12.0,
+      "mean_bill_paise": 146696.11,
+      "std_bill_paise": 15321.68,
+      "cliff_crossing_prob": 0.0478
+    },
+    {
+      "mu": 495.0,
+      "sigma": 0.0,
+      "mean_bill_paise": 153850.0,
+      "std_bill_paise": 0.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "mu": 495.0,
+      "sigma": 5.0,
+      "mean_bill_paise": 161394.28,
+      "std_bill_paise": 19608.14,
+      "cliff_crossing_prob": 0.1587
+    },
+    {
+      "mu": 495.0,
+      "sigma": 8.0,
+      "mean_bill_paise": 166623.35,
+      "std_bill_paise": 25215.36,
+      "cliff_crossing_prob": 0.266
+    },
+    {
+      "mu": 495.0,
+      "sigma": 12.0,
+      "mean_bill_paise": 170324.03,
+      "std_bill_paise": 29343.51,
+      "cliff_crossing_prob": 0.3385
+    },
+    {
+      "mu": 500.0,
+      "sigma": 0.0,
+      "mean_bill_paise": 157000.0,
+      "std_bill_paise": 0.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "mu": 500.0,
+      "sigma": 5.0,
+      "mean_bill_paise": 180918.89,
+      "std_bill_paise": 26526.79,
+      "cliff_crossing_prob": 0.5
+    },
+    {
+      "mu": 500.0,
+      "sigma": 8.0,
+      "mean_bill_paise": 181170.22,
+      "std_bill_paise": 28418.03,
+      "cliff_crossing_prob": 0.5
+    },
+    {
+      "mu": 500.0,
+      "sigma": 12.0,
+      "mean_bill_paise": 181505.33,
+      "std_bill_paise": 31006.04,
+      "cliff_crossing_prob": 0.5
+    },
+    {
+      "mu": 501.0,
+      "sigma": 0.0,
+      "mean_bill_paise": 204840.0,
+      "std_bill_paise": 0.0,
+      "cliff_crossing_prob": 1.0
+    },
+    {
+      "mu": 501.0,
+      "sigma": 5.0,
+      "mean_bill_paise": 185387.45,
+      "std_bill_paise": 26257.03,
+      "cliff_crossing_prob": 0.5793
+    },
+    {
+      "mu": 501.0,
+      "sigma": 8.0,
+      "mean_bill_paise": 184248.15,
+      "std_bill_paise": 28340.2,
+      "cliff_crossing_prob": 0.5497
+    },
+    {
+      "mu": 501.0,
+      "sigma": 12.0,
+      "mean_bill_paise": 183804.54,
+      "std_bill_paise": 31000.94,
+      "cliff_crossing_prob": 0.5332
+    },
+    {
+      "mu": 505.0,
+      "sigma": 0.0,
+      "mean_bill_paise": 208200.0,
+      "std_bill_paise": 0.0,
+      "cliff_crossing_prob": 1.0
+    },
+    {
+      "mu": 505.0,
+      "sigma": 5.0,
+      "mean_bill_paise": 200830.68,
+      "std_bill_paise": 19994.83,
+      "cliff_crossing_prob": 0.8413
+    },
+    {
+      "mu": 505.0,
+      "sigma": 8.0,
+      "mean_bill_paise": 195970.71,
+      "std_bill_paise": 25677.74,
+      "cliff_crossing_prob": 0.734
+    },
+    {
+      "mu": 505.0,
+      "sigma": 12.0,
+      "mean_bill_paise": 192858.69,
+      "std_bill_paise": 29859.83,
+      "cliff_crossing_prob": 0.6615
+    },
+    {
+      "mu": 520.0,
+      "sigma": 0.0,
+      "mean_bill_paise": 220800.0,
+      "std_bill_paise": 0.0,
+      "cliff_crossing_prob": 1.0
+    },
+    {
+      "mu": 520.0,
+      "sigma": 5.0,
+      "mean_bill_paise": 220798.52,
+      "std_bill_paise": 4214.48,
+      "cliff_crossing_prob": 1.0
+    },
+    {
+      "mu": 520.0,
+      "sigma": 8.0,
+      "mean_bill_paise": 220511.51,
+      "std_bill_paise": 8331.34,
+      "cliff_crossing_prob": 0.9938
+    },
+    {
+      "mu": 520.0,
+      "sigma": 12.0,
+      "mean_bill_paise": 218603.82,
+      "std_bill_paise": 17016.99,
+      "cliff_crossing_prob": 0.9522
+    },
+    {
+      "mu": 650.0,
+      "sigma": 0.0,
+      "mean_bill_paise": 335250.0,
+      "std_bill_paise": 0.0,
+      "cliff_crossing_prob": 1.0
+    },
+    {
+      "mu": 650.0,
+      "sigma": 5.0,
+      "mean_bill_paise": 335250.0,
+      "std_bill_paise": 4725.0,
+      "cliff_crossing_prob": 1.0
+    },
+    {
+      "mu": 650.0,
+      "sigma": 8.0,
+      "mean_bill_paise": 335250.0,
+      "std_bill_paise": 7560.0,
+      "cliff_crossing_prob": 1.0
+    },
+    {
+      "mu": 650.0,
+      "sigma": 12.0,
+      "mean_bill_paise": 335250.0,
+      "std_bill_paise": 11339.98,
+      "cliff_crossing_prob": 1.0
+    }
+  ],
+  "bayesian_updates": [
+    {
+      "initial_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ],
+      "feature_index": 0,
+      "response": 1,
+      "expected_mu": [
+        0.6,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "expected_sigma": [
+        0.2,
+        0.4,
+        0.4,
+        0.3
+      ]
+    },
+    {
+      "initial_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ],
+      "feature_index": 0,
+      "response": -1,
+      "expected_mu": [
+        1.6,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "expected_sigma": [
+        0.2,
+        0.4,
+        0.4,
+        0.3
+      ]
+    },
+    {
+      "initial_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ],
+      "feature_index": 0,
+      "response": 0,
+      "expected_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "expected_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ]
+    },
+    {
+      "initial_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ],
+      "feature_index": 1,
+      "response": 1,
+      "expected_mu": [
+        1.0,
+        0.6,
+        1.0,
+        1.0
+      ],
+      "expected_sigma": [
+        0.4,
+        0.2,
+        0.4,
+        0.3
+      ]
+    },
+    {
+      "initial_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ],
+      "feature_index": 1,
+      "response": -1,
+      "expected_mu": [
+        1.0,
+        1.6,
+        1.0,
+        1.0
+      ],
+      "expected_sigma": [
+        0.4,
+        0.2,
+        0.4,
+        0.3
+      ]
+    },
+    {
+      "initial_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ],
+      "feature_index": 1,
+      "response": 0,
+      "expected_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "expected_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ]
+    },
+    {
+      "initial_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ],
+      "feature_index": 2,
+      "response": 1,
+      "expected_mu": [
+        1.0,
+        1.0,
+        0.6,
+        1.0
+      ],
+      "expected_sigma": [
+        0.4,
+        0.4,
+        0.2,
+        0.3
+      ]
+    },
+    {
+      "initial_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ],
+      "feature_index": 2,
+      "response": -1,
+      "expected_mu": [
+        1.0,
+        1.0,
+        1.6,
+        1.0
+      ],
+      "expected_sigma": [
+        0.4,
+        0.4,
+        0.2,
+        0.3
+      ]
+    },
+    {
+      "initial_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ],
+      "feature_index": 2,
+      "response": 0,
+      "expected_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "expected_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ]
+    },
+    {
+      "initial_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ],
+      "feature_index": 3,
+      "response": 1,
+      "expected_mu": [
+        1.0,
+        1.0,
+        1.0,
+        0.6
+      ],
+      "expected_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.15
+      ]
+    },
+    {
+      "initial_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ],
+      "feature_index": 3,
+      "response": -1,
+      "expected_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.6
+      ],
+      "expected_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.15
+      ]
+    },
+    {
+      "initial_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ],
+      "feature_index": 3,
+      "response": 0,
+      "expected_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "expected_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ]
+    }
+  ]
+}

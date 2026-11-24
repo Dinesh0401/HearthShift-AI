@@ -101,6 +101,19 @@ def exact_piecewise_tariff_moments(
     Computes exact analytic expectation and variance of electricity bill under X ~ N(mu, sigma^2).
     Zero quadrature error.
     """
+    if sigma <= 1e-4:
+        from simulator.tariffs import calculate_bill, create_tnpdcl_lt1a_may2026_tariff
+        t_plan = tariff or create_tnpdcl_lt1a_may2026_tariff()
+        bill = calculate_bill(mu, t_plan)
+        return {
+            'mean_bill_paise': float(bill.net_payable_paise),
+            'mean_bill_inr': float(bill.net_payable_paise / 100.0),
+            'std_bill_paise': 0.0,
+            'std_bill_inr': 0.0,
+            'cliff_crossing_prob': 1.0 if mu > 500.0 else 0.0,
+            'coverage_prob': 1.0,
+        }
+
     segments = get_tnpdcl_may2026_linear_segments()
 
     total_mean_paise = 0.0
