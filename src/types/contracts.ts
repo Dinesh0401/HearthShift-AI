@@ -315,7 +315,8 @@ export type RecommendationType =
 export type SavingsBasis = 
   | 'simulated'
   | 'user_reported'
-  | 'measured';
+  | 'meter_observed'
+  | 'measurement_verified';
 
 export type ConfidenceLevel = 
   | 'high'
@@ -411,18 +412,50 @@ export interface Scenario {
 }
 
 // ══════════════════════════════════════════════════════════
-// 9. Savings Evidence Tracker
+// 9. Savings Evidence Tracker & Provenance
 // ══════════════════════════════════════════════════════════
+
+/**
+ * Counterfactual details for measurement-verified savings records,
+ * enforcing physical controls against confounding factors like weather and occupancy changes.
+ */
+export interface MeasurementVerificationDetails {
+  /** ISO 8601 baseline start date (e.g. '2026-04-01') */
+  baseline_period_start: string;
+  /** ISO 8601 baseline end date (e.g. '2026-04-30') */
+  baseline_period_end: string;
+  /** Baseline period counterfactual consumption in kWh */
+  baseline_kwh: number;
+  /** ISO 8601 post-intervention observation start date (e.g. '2026-05-01') */
+  observed_period_start: string;
+  /** ISO 8601 post-intervention observation end date (e.g. '2026-05-31') */
+  observed_period_end: string;
+  /** Observed consumption during intervention period in kWh */
+  observed_kwh: number;
+  /** Mathematical counterfactual model applied */
+  counterfactual_method: 'weather_adjusted_cooling_degree_day' | 'same_day_of_week_control' | 'pre_post_simple' | string;
+  /** Whether weather normalization (e.g. CDD regression) was applied */
+  weather_normalized: boolean;
+  /** Whether occupancy control / home activity presence was verified */
+  occupancy_verified: boolean;
+  /** Stated caveats or confounding limitations in the causal claim */
+  limitations: string[];
+  /** Empirical or posterior uncertainty bound in INR (+/-) */
+  uncertainty_inr: number;
+}
 
 export interface SavingsRecord {
   id: string;
   recommendation_id: string;
+  action_id?: string;
+  action_title?: LocalizedString;
   period_start: string;
   period_end: string;
   estimated_savings: number;
   verified_actual_savings?: number;
   basis: SavingsBasis;
   verified: boolean;
+  verification_details?: MeasurementVerificationDetails;
   notes?: string;
 }
 
