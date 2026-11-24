@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { db } from '../../lib/db';
 import type { SavingsRecord, SavingsBasis } from '../../types/contracts';
 import { useLanguage } from '../../locales/i18n';
-import { Award, CheckCircle2, TrendingUp, Calendar, Trash2, ShieldAlert, Info } from 'lucide-react';
+import { Award, CheckCircle2, TrendingUp, Calendar, Trash2, Info } from 'lucide-react';
 
 interface SavingsLedgerProps {
   refreshTrigger?: number;
