@@ -79,7 +79,7 @@ export const translations = {
     deleteConfirmMsg: 'Are you sure you want to delete all local energy data? This cannot be undone.',
     deleteSuccessMsg: 'All household data was permanently wiped from IndexedDB.',
     networkAuditTitle: 'Telemetry & Network Audit',
-    networkAuditPassing: 'Verified: 0 external telemetry requests made. All calculations executed via local WebAssembly / JavaScript runtime.',
+    networkAuditPassing: 'Verified: 0 external telemetry requests made. All calculations executed via local browser JavaScript / TypeScript runtime in IndexedDB.',
 
     // Simulator
     simulatorTitle: 'Interactive Counterfactual Scenario Simulator',
