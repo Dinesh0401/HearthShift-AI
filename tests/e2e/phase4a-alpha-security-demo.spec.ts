@@ -198,7 +198,7 @@ test.describe('HearthShift AI — Phase 4A Alpha Security, Same-Origin Privacy, 
       await expect(page.getByText('EVSI Decision Gate Active')).toBeVisible();
       await page.getByRole('button', { name: /Yes \/ Comfortable/i }).click();
     }
-    await expect(page.getByText('Modeled Estimate').first()).toBeVisible();
+    await expect(page.getByText('Modeled Estimate', { exact: true }).first()).toBeVisible();
     await expect(page.getByText('95% Modeled Comfort Bound')).toBeVisible();
     await expect(page.getByText('Conservative Model Lower Bound (5th %ile)')).toBeVisible();
     await page.getByRole('button', { name: /Tried It!/i }).click();

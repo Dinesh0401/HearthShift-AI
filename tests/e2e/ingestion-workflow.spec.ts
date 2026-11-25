@@ -47,7 +47,7 @@ test.describe('HearthShift AI — Full Ingestion & Privacy Verification Workflow
     ).toBeVisible();
 
     // Verify Deterministic Tariff Headroom Card & ₹478.40 Cliff Warning
-    await expect(page.getByText(/TNPDCL LT-1A/i).first()).toBeVisible();
+    await expect(page.getByRole('heading', { name: /TNPDCL LT-1A Domestic/i })).toBeVisible();
     await expect(page.getByText('Cliff Cost Delta').first()).toBeVisible();
     await expect(page.getByText('+₹478.40').first()).toBeVisible();
 

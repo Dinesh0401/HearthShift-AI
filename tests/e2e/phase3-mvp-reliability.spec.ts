@@ -142,7 +142,7 @@ test.describe('HearthShift AI — Phase 3.1 Production MVP Reliability & Parity 
 
     // Recommendation card is displayed
     await expect(page.getByText(/95% Modeled Comfort Bound/i)).toBeVisible();
-    await expect(page.getByText('Modeled Estimate').first()).toBeVisible();
+    await expect(page.getByText('Modeled Estimate', { exact: true }).first()).toBeVisible();
     await expect(page.getByText(/Regulatory Savings Rationale/i)).toBeVisible();
     await expect(page.getByText(/Explicit Model Assumptions/i)).toBeVisible();
     await expect(page.getByText(/Advisory Guidance: Manual household control only/i)).toBeVisible();
