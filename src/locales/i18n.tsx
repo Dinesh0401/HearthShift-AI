@@ -11,7 +11,22 @@ export const translations = {
     appDescription: 'Decision-Aware, Privacy-Minimal Household Assistant · 100% Local IndexedDB Processing',
     privacyBadge: '100% On-Device · Zero External Telemetry · IndexedDB',
     offlineStatus: 'Local Execution Safe',
-    
+
+    // Region & Tariff Selector
+    selectTariffRegion: 'Supported Tariff Region & Schedule',
+    supportedRegionsNote: 'Supported schedules: Tamil Nadu TNPDCL LT-1A (May 2026, 2025–2026, 2024–2025 ref) plus illustrative India Flat and Pilot Time-of-Use references. Other states/utilities are not yet modeled.',
+    tariffVerificationNote: 'Verify against your printed utility receipt before acting: statutory slabs, mid-cycle proration, fixed charges, and welfare eligibility rules may change by regulatory order.',
+
+    // Safe Demo Mode
+    loadDemoBtn: 'Load Safe Demo Dataset (Synthetic)',
+    clearDemoBtn: 'Exit & Clear Demo Data',
+    demoModeBannerTitle: 'SYNTHETIC DEMO MODE — Simulated Sample Household (Not Real Utility Data)',
+    demoModeBannerDesc: 'Displaying 3 synthetic bi-monthly bills (445 / 492 / 508 kWh) and 192 hourly intervals (8 days) for exploration. Savings ledger remains empty so zero fake actual savings are invented.',
+
+    // Alpha Disclaimer
+    alphaDisclaimerTitle: 'Experimental Research Alpha — Advisory Models Only',
+    alphaDisclaimerDesc: 'HearthShift AI is an experimental research alpha. Outputs are modeled estimates—not utility-certified billing statements, guaranteed physical savings, or IPMVP Option C verified outcomes. It does not automate or control physical appliances.',
+
     // Tabs
     tabBills: '📋 Bills & Slab Analysis',
     tabImport: '📥 Smart Meter CSV Import',
@@ -20,7 +35,7 @@ export const translations = {
     tabRecommendations: '💡 Smart Recommendations',
     tabSavings: '📊 Savings Ledger',
     tabPrivacy: '🛡️ Privacy & Storage',
-    
+
     // Headroom Card
     activeTariff: 'Active Tariff Plan',
     tariffDescription: 'Tamil Nadu Domestic LT-1A (Bi-monthly)',
@@ -31,10 +46,10 @@ export const translations = {
     cliffWarningText: 'Consuming 501 units instead of 500 units abruptly disqualifies your household from the 200 free units subsidy, jumping your bill by ₹478.40 (₹1,570.00 → ₹2,048.40) for just ONE single extra unit!',
     safeHeadroom: 'Safe Slab Headroom',
     unitsRemaining: 'units remaining before ₹478.40 subsidy cliff',
-    
+
     // Capabilities
     capabilityStatus: 'System Capability Status',
-    
+
     // Bill Form
     addBillTitle: 'Manual Electricity Bill Entry',
     addBillSubtitle: 'Enter historical utility bills from your TANGEDCO/TNPDCL receipt. Processed strictly on-device.',
@@ -45,7 +60,7 @@ export const translations = {
     tariffSelection: 'Tariff Schedule',
     saveBillBtn: 'Save Bill Locally',
     billSavedSuccess: 'Bill successfully recorded to local IndexedDB.',
-    
+
     // Bill Table
     historyTitle: 'Historical Electricity Bills & Deterministic Breakdown',
     noBillsYet: 'No electricity bills recorded yet. Add a bill above to track your bi-monthly expenditure and slab headroom.',
@@ -57,7 +72,7 @@ export const translations = {
     colNet: 'Net Payable',
     colActions: 'Actions',
     deleteBtn: 'Delete',
-    
+
     // Interval Chart
     intervalChartTitle: 'Empirical Interval Load Profile',
     intervalChartSubtitle: 'Interval-by-interval power and energy consumption visualization.',
@@ -68,10 +83,12 @@ export const translations = {
     timeAxis: 'Timestamp',
     energyAxis: 'Energy (kWh)',
     powerAxis: 'Active Power (W)',
-    
-    // Privacy
+
+    // Privacy & Storage Limitations
     privacyTitle: 'Privacy-First Architecture & Data Sovereign Controls',
     privacyDescription: 'Every byte of your household energy data is stored strictly in your browser IndexedDB. No cloud accounts, no remote database synchronization, and no third-party telemetry.',
+    storageLimitationsTitle: 'Browser Storage Limitations & Device Risks',
+    storageLimitationsDesc: 'Your records live exclusively in local browser IndexedDB: (1) browsers may evict site data under severe disk pressure unless granted persistent storage; (2) Private/Incognito sessions wipe IndexedDB when closed; (3) local records and JSON exports are stored unencrypted at rest—avoid shared or untrusted devices unless you purge data afterward.',
     exportBtn: 'Export All Data (JSON)',
     exportDesc: 'Download your full IndexedDB database in human-readable JSON format for audit or backup.',
     deleteBtnTitle: 'Delete All My Data',
@@ -83,11 +100,11 @@ export const translations = {
 
     // Simulator
     simulatorTitle: 'Interactive Counterfactual Scenario Simulator',
-    simulatorSubtitle: 'Test how adjusting your thermostat, curtailing runtime, or eliminating standby changes your bi-monthly bill.',
+    simulatorSubtitle: 'Test how adjusting your thermostat, curtailing runtime, or eliminating standby changes your modeled bill.',
     baselineConsumption: 'Baseline Consumption',
     counterfactualConsumption: 'Counterfactual Consumption',
     totalUnitsSaved: 'Units Reduced',
-    estimatedSavings: 'Estimated Net Savings',
+    estimatedSavings: 'Modeled Net Savings',
     baselineBill: 'Baseline Bill',
     proposedBill: 'Proposed Bill',
     acThermostat: 'AC Thermostat Adjustment',
@@ -95,24 +112,26 @@ export const translations = {
     waterHeaterTimer: 'Trim Water Heater Duration (15-20m)',
     standbyPower: 'Eliminate Entertainment Center Standby',
     laundryShift: 'Shift Laundry to Morning (Non-TOU note: zero direct savings)',
-    cliffAvoidedAlert: '₹478.40 SUBSIDY CLIFF JUMP AVOIDED! Eligibility for 200 Free Units Protected!',
+    laundryShiftTou: 'Shift Laundry from Evening Peak (19:00) to Morning Off-Peak (07:00)',
+    cliffAvoidedAlert: 'TARIFF CLIFF JUMP AVOIDED! Eligibility Threshold Protected!',
     assumptionsTitle: 'Explicit Model Assumptions',
 
     // Recommendations
     recommendationsTitle: 'SPARE-HEM Decision-Aware Recommendations',
-    recommendationsSubtitle: 'Conservative, chance-constrained recommendations evaluated under your active statutory tariff.',
-    noRecommendations: 'No active recommendations available. The algorithm abstained to protect against comfort violations or insufficient savings.',
+    recommendationsSubtitle: 'Conservative, chance-constrained modeled recommendations evaluated under your selected tariff.',
+    noRecommendations: 'No active recommendations available. The algorithm abstained to protect against comfort violations or insufficient modeled savings.',
     abstentionTitle: 'Conservative Abstention Active',
-    abstentionReason: 'TR-VOI evaluated candidate actions and determined that none reliably guarantee savings above ₹30.00 while maintaining 95% comfort safety under your consumption volatility.',
-    conservativeLowerBoundBadge: '95% Conservative Lower Bound',
-    expectedSavingsLabel: 'Expected Net Savings',
-    lowerBoundLabel: 'Guaranteed Lower Bound',
+    abstentionReason: 'TR-VOI evaluated candidate actions and determined that none meet the modeled ₹30.00 benefit hurdle while preserving the 95% modeled comfort bound under consumption volatility.',
+    modeledEstimateBadge: 'Modeled Estimate',
+    conservativeLowerBoundBadge: '95% Modeled Comfort Bound',
+    expectedSavingsLabel: 'Modeled Expected Savings',
+    lowerBoundLabel: 'Conservative Model Lower Bound (5th %ile)',
     effortLabel: 'Effort Required',
     feedbackUseful: '👍 Useful',
     feedbackImpractical: '👎 Impractical',
     feedbackTriedIt: '⭐ Tried It!',
     feedbackRecorded: 'Feedback recorded locally. Local preferences updated.',
-    actionCompleted: 'Action logged to your Savings Evidence Ledger.',
+    actionCompleted: 'Action logged as unverified user-reported entry in Savings Ledger.',
     provenanceSimulated: 'Simulated',
     provenanceUserReported: 'User Reported',
     provenanceMeterObserved: 'Meter Observed',
@@ -121,28 +140,29 @@ export const translations = {
 
     // Adaptive Question
     adaptiveQuestionTitle: 'Single-Question Preference Check',
-    adaptiveQuestionSubtitle: 'Answering this single question provides the mathematical confidence needed to unlock higher savings.',
+    adaptiveQuestionSubtitle: 'Answering this single question reduces preference uncertainty under the modeled EVSI decision gate.',
     btnFlexible: 'Yes / Comfortable',
     btnSensitive: 'No / Inflexible',
     btnSkip: 'Skip for now',
 
     // Savings Ledger
     savingsLedgerTitle: 'Savings Evidence Ledger',
-    savingsLedgerSubtitle: 'Track cumulative confirmed savings over historical billing cycles.',
-    totalVerifiedSavings: 'Cumulative Verified Savings',
-    trackedSavingsImpact: 'Tracked Household Savings Impact',
-    totalCompletedActions: 'Completed Efficiency Actions',
-    verifiedSavingsBreakdown: 'Measurement Verified',
+    savingsLedgerSubtitle: 'Track logged household actions with explicit 4-tier provenance; formal whole-facility M&V is not yet IPMVP-certified.',
+    totalVerifiedSavings: 'Formally M&V-Verified Savings',
+    trackedSavingsImpact: 'Tracked Modeled & Reported Impact',
+    totalCompletedActions: 'Logged Efficiency Actions',
+    verifiedSavingsBreakdown: 'Measurement Verified (Formal M&V Req.)',
     estimatedSavingsBreakdown: 'Estimated / User Reported',
     meterObservedBreakdown: 'Meter Observed',
-    breakdownVerifiedSubtitle: 'Weather-normalized & occupancy-verified counterfactuals',
+    breakdownVerifiedSubtitle: 'Requires whole-facility M&V & baseline controls (Not IPMVP-certified)',
     breakdownEstimatedSubtitle: 'Simulated models, self-reported actions & unadjusted meter observations',
-    counterfactualNoticeTitle: 'Rigorous 4-State Savings Provenance & Counterfactual Controls',
-    counterfactualNotice: '"Meter Observed" reflects a raw unadjusted consumption change from meter readings. In contrast, "Measurement Verified" requires strict counterfactual controls (weather normalization and occupancy verification) to eliminate external confounders and establish true causal savings.',
-    noSavingsYet: 'No completed actions logged yet. When you click "Tried It" on a recommendation, it will be tracked here.',
+    mvRequiredNote: 'Requires whole-facility M&V & baseline controls (Not IPMVP-certified)',
+    counterfactualNoticeTitle: '4-State Savings Provenance & M&V Scope (Not IPMVP-Certified)',
+    counterfactualNotice: '"User Reported" and "Meter Observed" entries are unadjusted observations, not verified causal savings. Formal Measurement Verification requires an approved whole-facility M&V plan, multi-cycle baseline horizon, routine (weather/CDD) + non-routine (occupancy/appliance) adjustments, and uncertainty bounds — this alpha tool is not yet IPMVP Option C certified.',
+    noSavingsYet: 'No completed actions logged yet. When you click "Tried It" on a recommendation, it will be tracked here as unverified user-reported activity.',
     recordDate: 'Recorded Date',
     recordAction: 'Action Adopted',
-    recordSavings: 'Savings Impact',
+    recordSavings: 'Modeled / Logged Impact',
     recordBasis: 'Verification Basis',
     counterfactualMethod: 'Method',
     uncertaintyBound: 'Uncertainty',
@@ -153,7 +173,22 @@ export const translations = {
     appDescription: 'முடிவு-அடிப்படையிலான, குறைவான தகவல் கேட்கும் மின்சார உதவியாளர் · 100% உள்ளூர் IndexedDB இயக்கம்',
     privacyBadge: '100% உங்கள் சாதனத்தில் மட்டும் · வெளி சேவையகங்களுக்கு தகவல் செல்லாது · IndexedDB',
     offlineStatus: 'இணையமில்லா இயக்கம் தயார்',
-    
+
+    // Region & Tariff Selector
+    selectTariffRegion: 'ஆதரிக்கப்படும் மின்கட்டண பகுதி & அட்டவணை',
+    supportedRegionsNote: 'ஆதரிக்கப்படும் அட்டவணைகள்: தமிழ்நாடு TNPDCL LT-1A (மே 2026, 2025–2026, 2024–2025) மற்றும் பொது நிலையான / நேர-அடிப்படை (TOU) மாதிரிகள். பிற மாநில மின்வாரியங்கள் இன்னும் இணைக்கப்படவில்லை.',
+    tariffVerificationNote: 'செயல்படும் முன் உங்கள் அச்சிடப்பட்ட மின்கட்டண ரசீதைச் சரிபார்க்கவும்: அரசு ஆணைகளுக்கு ஏற்ப அடுக்கு கட்டணம் மற்றும் மானிய விதிகள் மாறக்கூடும்.',
+
+    // Safe Demo Mode
+    loadDemoBtn: 'மாதிரி சோதனைத் தரவை ஏற்றுக (செயற்கை)',
+    clearDemoBtn: 'வெளியேறி மாதிரித் தரவை அழி',
+    demoModeBannerTitle: 'செயற்கை மாதிரி முறைமை — உருவகப்படுத்தப்பட்ட மாதிரி வீடு (உண்மையான மின் தரவு அல்ல)',
+    demoModeBannerDesc: 'ஆய்விற்காக 3 செயற்கை இரு-மாத பில்கள் (445 / 492 / 508 kWh) மற்றும் 192 மணிநேர அளவீடுகள் (8 நாட்கள்) காட்டப்படுகின்றன. போலியான சேமிப்பைத் தவிர்க்க சேமிப்புப் பதிவேடு காலியாக உள்ளது.',
+
+    // Alpha Disclaimer
+    alphaDisclaimerTitle: 'சோதனை ஆய்வு ஆல்ஃபா பதிப்பு — ஆலோசனை மாதிரிகள் மட்டுமே',
+    alphaDisclaimerDesc: 'HearthShift AI ஒரு சோதனை ஆய்வு ஆல்ஃபா பதிப்பாகும். இதன் முடிவுகள் மாதிரி மதிப்பீடுகள் மட்டுமே—உறுதியளிக்கப்பட்ட சேமிப்பு அல்லது IPMVP Option C சான்றளிக்கப்பட்ட அளவீடுகள் அல்ல. சாதனங்களைத் தானாகக் கட்டுப்படுத்தாது.',
+
     // Tabs
     tabBills: '📋 மின்கட்டணங்கள் & அடுக்கு ஆய்வு',
     tabImport: '📥 ஸ்மார்ட் மீட்டர் CSV பதிவேற்றம்',
@@ -162,7 +197,7 @@ export const translations = {
     tabRecommendations: '💡 நுண்ணறிவு பரிந்துரைகள்',
     tabSavings: '📊 சேமிப்பு விவரப் பதிவேடு',
     tabPrivacy: '🛡️ அந்தரங்கம் & தரவு மேலாண்மை',
-    
+
     // Headroom Card
     activeTariff: 'செயலில் உள்ள மின்கட்டண திட்டம்',
     tariffDescription: 'தமிழ்நாடு வீட்டு உபயோகம் LT-1A (இரு மாத கட்டணம்)',
@@ -173,10 +208,10 @@ export const translations = {
     cliffWarningText: '500 யூனிட்டுக்கு பதிலாக 501 யூனிட் பயன்படுத்தினால், 200 இலவச யூனிட் மானியம் ரத்தாகி, ஒரே ஒரு கூடுதல் யூனிட்டுக்காக கட்டணம் ₹478.40 உயரும் (₹1,570.00 → ₹2,048.40)!',
     safeHeadroom: 'பாதுகாப்பான பயன்பாட்டு இடைவெளி',
     unitsRemaining: 'யூனிட்டுகள் ₹478.40 கட்டண உயர்வுக்கு முன் மீதமுள்ளன',
-    
+
     // Capabilities
     capabilityStatus: 'கணினி திறன் நிலை',
-    
+
     // Bill Form
     addBillTitle: 'மின்சார கட்டண கைமுறை உள்ளீடு',
     addBillSubtitle: 'உங்கள் TANGEDCO/TNPDCL மின்கட்டண ரசீதை உள்ளிடுங்கள். முற்றிலும் உங்கள் சாதனத்திலேயே சேமிக்கப்படும்.',
@@ -187,7 +222,7 @@ export const translations = {
     tariffSelection: 'கட்டண அட்டவணை',
     saveBillBtn: 'உள்ளூரில் சேமி',
     billSavedSuccess: 'மின்கட்டண விவரம் உங்கள் கணினியின் IndexedDB-யில் வெற்றிகரமாக சேமிக்கப்பட்டது.',
-    
+
     // Bill Table
     historyTitle: 'முந்தைய மின்கட்டணங்கள் & துல்லிய விவரம்',
     noBillsYet: 'இதுவரை மின்கட்டணங்கள் சேமிக்கப்படவில்லை. உங்கள் இரு மாத நுகர்வை அறிய மேலே கட்டணத்தை சேர்க்கவும்.',
@@ -199,7 +234,7 @@ export const translations = {
     colNet: 'செலுத்த வேண்டிய நிகரத் தொகை',
     colActions: 'செயல்கள்',
     deleteBtn: 'நீக்கு',
-    
+
     // Interval Chart
     intervalChartTitle: 'உண்மையான கால இடைவெளி பயன்பாட்டு வரைபடம்',
     intervalChartSubtitle: 'ஒவ்வொரு நேர இடைவெளியின் மின்திறன் மற்றும் ஆற்றல் பயன்பாடு.',
@@ -210,10 +245,12 @@ export const translations = {
     timeAxis: 'நேரம்',
     energyAxis: 'ஆற்றல் (kWh)',
     powerAxis: 'மின்திறன் (W)',
-    
-    // Privacy
+
+    // Privacy & Storage Limitations
     privacyTitle: 'அந்தரங்க பாதுகாப்பு & பயனர் தரவு உரிமை',
     privacyDescription: 'உங்கள் வீட்டு மின்சாரத் தரவு முழுமையாக உங்கள் உலாவி IndexedDB-யிலேயே இருக்கும். கிளவுட் கணக்குகள் இல்லை, வெளி தொலைத்தொடர்பு இல்லை.',
+    storageLimitationsTitle: 'உலாவி சேமிப்பக வரம்புகள் & பகிர்ந்த சாதன அபாயங்கள்',
+    storageLimitationsDesc: 'உங்கள் தரவு முழுவதும் உங்கள் உலாவியின் IndexedDB-யில் மட்டுமே உள்ளது: (1) வட்டு இடப் பற்றாக்குறையில் உலாவி தரவை அழிக்கக்கூடும்; (2) Private/Incognito சாளரத்தை மூடும்போது தரவு அழிந்துவிடும்; (3) உள்ளூர் IndexedDB மற்றும் JSON காப்புப் பிரதி குறியாக்கம் (encryption) இன்றி சேமிக்கப்படுகின்றன—பகிர்ந்த சாதனங்களில் பயன்படுத்திய பின் தரவை நீக்கவும்.',
     exportBtn: 'அனைத்து தரவுகளையும் பதிவிறக்கு (JSON)',
     exportDesc: 'உங்கள் IndexedDB தரவுத்தளத்தை JSON வடிவில் முழுமையாக தணிக்கைக்காக பதிவிறக்கவும்.',
     deleteBtnTitle: 'அனைத்து தரவுகளையும் அழி',
@@ -225,11 +262,11 @@ export const translations = {
 
     // Simulator
     simulatorTitle: 'ஊடாடும் மாதிரி உருவகப்படுத்துதல்',
-    simulatorSubtitle: 'ஏசி வெப்பநிலை மாற்றம், இயங்கும் நேரக் குறைப்பு, ஸ்டாண்ட்பை அணைத்தல் ஆகியவை இரு மாதக் கட்டணத்தை எவ்வாறு மாற்றுகின்றன எனப் பாருங்கள்.',
+    simulatorSubtitle: 'ஏசி வெப்பநிலை மாற்றம், இயங்கும் நேரக் குறைப்பு, ஸ்டாண்ட்பை அணைத்தல் ஆகியவை மாதிரி கட்டணத்தை எவ்வாறு மாற்றுகின்றன எனப் பாருங்கள்.',
     baselineConsumption: 'தற்போதைய நுகர்வு',
     counterfactualConsumption: 'திட்டமிடப்பட்ட புதிய நுகர்வு',
     totalUnitsSaved: 'குறைக்கப்பட்ட யூனிட்கள்',
-    estimatedSavings: 'எதிர்பார்க்கப்படும் பணச்சேமிப்பு',
+    estimatedSavings: 'மாதிரி பணச்சேமிப்பு',
     baselineBill: 'தற்போதைய கட்டணம்',
     proposedBill: 'புதிய கட்டணம்',
     acThermostat: 'ஏசி வெப்பநிலை மாற்றம்',
@@ -237,54 +274,57 @@ export const translations = {
     waterHeaterTimer: 'வாட்டர் ஹீட்டர் நேரக் குறைப்பு (15-20 நிமி)',
     standbyPower: 'டிவி மற்றும் சாதனங்களின் இரவு நேர ஸ்டாண்ட்பை அணைத்தல்',
     laundryShift: 'துவைக்கும் நேரத்தை காலைக்கு மாற்றுதல் (நேரடி கட்டண சேமிப்பில்லை)',
-    cliffAvoidedAlert: '₹478.40 கட்டண எல்லை உயர்வு வெற்றிகரமாக தவிர்க்கப்பட்டது! 200 இலவச யூனிட் மானியம் பாதுகாக்கப்பட்டது!',
+    laundryShiftTou: 'துவைக்கும் நேரத்தை மாலையிலிருந்து (19:00) காலைக்கு (07:00) மாற்றுதல்',
+    cliffAvoidedAlert: 'கட்டண எல்லை உயர்வு வெற்றிகரமாக தவிர்க்கப்பட்டது! தகுதி எல்லை பாதுகாக்கப்பட்டது!',
     assumptionsTitle: 'வெளிப்படையான மாதிரி அனுமானங்கள்',
 
     // Recommendations
     recommendationsTitle: 'SPARE-HEM நுண்ணறிவுப் பரிந்துரைகள்',
-    recommendationsSubtitle: 'உங்கள் சட்டப்பூர்வ மின்கட்டண விதிகளுக்குட்பட்ட, வசதிக் குறைபாடற்ற பாதுகாப்பான பரிந்துரைகள்.',
-    noRecommendations: 'தற்போது புதிய பரிந்துரைகள் இல்லை. வசதிக் குறைபாட்டைத் தவிர்க்க அல்லது போதிய பணச்சேமிப்பு இல்லாததால் அல்காரிதம் பரிந்துரையைத் தவிர்த்துள்ளது.',
+    recommendationsSubtitle: 'நீங்கள் தேர்ந்தெடுத்த மின்கட்டண விதிகளுக்குட்பட்ட, வசதிக் குறைபாடற்ற மாதிரிப் பரிந்துரைகள்.',
+    noRecommendations: 'தற்போது புதிய பரிந்துரைகள் இல்லை. வசதிக் குறைபாட்டைத் தவிர்க்க அல்லது போதிய மாதிரி சேமிப்பு இல்லாததால் அல்காரிதம் பரிந்துரையைத் தவிர்த்துள்ளது.',
     abstentionTitle: 'பாதுகாப்பான தவிர்ப்பு அமலில் உள்ளது',
-    abstentionReason: 'TR-VOI அல்காரிதம் அனைத்து நடவடிக்கைகளையும் மதிப்பீடு செய்து, ₹30-க்கு மேல் உறுதியான சேமிப்பு மற்றும் 95% வசதிப் பாதுகாப்பு கிடைக்காவிட்டால் பரிந்துரைக்காமல் தவிர்க்கிறது.',
-    conservativeLowerBoundBadge: '95% உறுதியான குறைந்தபட்ச சேமிப்பு',
-    expectedSavingsLabel: 'எதிர்பார்க்கப்படும் நிகர சேமிப்பு',
-    lowerBoundLabel: 'உறுதிசெய்யப்பட்ட குறைந்தபட்ச சேமிப்பு',
+    abstentionReason: 'TR-VOI அல்காரிதம் அனைத்து நடவடிக்கைகளையும் மதிப்பீடு செய்து, உங்கள் நுகர்வு மாறுபாட்டில் 95% வசதிப் பாதுகாப்பு மாதிரி வரம்புடன் ₹30.00-க்கு மேல் மாதிரி அடிப்படையிலான சேமிப்பு கிடைக்காவிட்டால் பரிந்துரைக்காமல் தவிர்க்கிறது.',
+    modeledEstimateBadge: 'மாதிரி மதிப்பீடு',
+    conservativeLowerBoundBadge: '95% வசதிப் பாதுகாப்பு மாதிரி வரம்பு',
+    expectedSavingsLabel: 'மாதிரி எதிர்பார்க்கப்படும் சேமிப்பு',
+    lowerBoundLabel: 'மாதிரி குறைந்தபட்ச சேமிப்பு மதிப்பீடு (5%)',
     effortLabel: 'தேவைப்படும் முயற்சி',
     feedbackUseful: '👍 பயனுள்ளது',
     feedbackImpractical: '👎 நடைமுறைக்கு ஒத்துவராது',
     feedbackTriedIt: '⭐ செய்து பார்த்தேன்!',
     feedbackRecorded: 'உங்கள் கருத்து உள்ளூரில் பதிவு செய்யப்பட்டது. உங்கள் விருப்பத்தேர்வு புதுப்பிக்கப்பட்டது.',
-    actionCompleted: 'நடவடிக்கை உங்கள் சேமிப்புப் பதிவேட்டில் பதிவு செய்யப்பட்டது.',
+    actionCompleted: 'சரிபார்க்கப்படாத பயனர் பதிவாக சேமிப்புப் பதிவேட்டில் சேர்க்கப்பட்டது.',
     provenanceSimulated: 'மாதிரி கணிப்பு',
-    provenanceUserReported: 'பயனர் உறுதிசெய்தது',
+    provenanceUserReported: 'பயனர் குறிப்பிட்டது',
     provenanceMeterObserved: 'மீட்டர் அளவீடு',
-    provenanceMeasurementVerified: 'அளவீடு சரிபார்க்கப்பட்டது',
+    provenanceMeasurementVerified: 'அளவீட்டு சரிபார்ப்பு',
     provenanceMeterVerified: 'மீட்டர் மூலம் சரிபார்க்கப்பட்டது',
 
     // Adaptive Question
     adaptiveQuestionTitle: 'ஒற்றைக் கேள்வி விருப்பத்தேர்வு சோதனை',
-    adaptiveQuestionSubtitle: 'இந்த ஒரு கேள்விக்கு பதிலளிப்பதன் மூலம் கூடுதல் கணிதத் துல்லியத்துடன் அதிக சேமிப்பைப் பெறலாம்.',
+    adaptiveQuestionSubtitle: 'இந்த ஒரு கேள்விக்கு பதிலளிப்பதன் மூலம் EVSI மாதிரி முடிவின் நிச்சயமற்ற தன்மையைக் குறைக்கலாம்.',
     btnFlexible: 'ஆம் / சம்மதம்',
     btnSensitive: 'இல்லை / மாற்ற இயலாது',
     btnSkip: 'இப்போது வேண்டாம்',
 
     // Savings Ledger
     savingsLedgerTitle: 'சேமிப்பு விவரப் பதிவேடு',
-    savingsLedgerSubtitle: 'முந்தைய கட்டண சுழற்சிகளில் நீங்கள் செய்த உறுதிசெய்யப்பட்ட உண்மையான சேமிப்பைக் கண்காணியுங்கள்.',
-    totalVerifiedSavings: 'மொத்த உறுதிசெய்யப்பட்ட சேமிப்பு',
-    trackedSavingsImpact: 'கண்காணிக்கப்படும் வீட்டுச் சேமிப்புத் தாக்கம்',
-    totalCompletedActions: 'முடிக்கப்பட்ட மின்சேமிப்பு நடவடிக்கைகள்',
-    verifiedSavingsBreakdown: 'அளவீட்டு முறைப்படி உறுதிசெய்யப்பட்டது',
-    estimatedSavingsBreakdown: 'கணிப்பு / பயனர் குறிப்பிட்டது',
+    savingsLedgerSubtitle: 'பதிவு செய்யப்பட்ட நடவடிக்கைகளை 4-நிலை சான்றுடன் கண்காணியுங்கள்; முறையான முழு-வீட்டு M&V இன்னும் IPMVP சான்றிதழ் பெறவில்லை.',
+    totalVerifiedSavings: 'முறையான M&V சரிபார்க்கப்பட்ட சேமிப்பு',
+    trackedSavingsImpact: 'கண்காணிக்கப்படும் மாதிரி & பயனர் சேமிப்பு',
+    totalCompletedActions: 'பதிவு செய்யப்பட்ட நடவடிக்கைகள்',
+    verifiedSavingsBreakdown: 'அளவீட்டு சரிபார்ப்பு (முறையான M&V தேவை)',
+    estimatedSavingsBreakdown: 'மாதிரி / பயனர் குறிப்பிட்டது',
     meterObservedBreakdown: 'மீட்டர் அளவீடு',
-    breakdownVerifiedSubtitle: 'வானிலை மற்றும் ஆட்கள் இருப்பு சரிபார்க்கப்பட்ட எதிர்நிலை கட்டுப்பாடுகள்',
+    breakdownVerifiedSubtitle: 'முழு-வீட்டு M&V மற்றும் அடிப்படைக் கட்டுப்பாடுகள் தேவை (IPMVP சான்றிதழ் பெறாதது)',
     breakdownEstimatedSubtitle: 'மாதிரி கணிப்புகள், சுய அறிக்கைகள் & சரிசெய்யப்படாத நேரடி அளவீடுகள்',
-    counterfactualNoticeTitle: 'துல்லியமான 4-நிலை சான்று மாதிரி & எதிர்நிலை கட்டுப்பாடுகள்',
-    counterfactualNotice: '"மீட்டர் அளவீடு" என்பது மீட்டரிலிருந்து பெறப்பட்ட நேரடி சரிசெய்யப்படாத நுகர்வு மாற்றமாகும். ஆனால் "அளவீடு சரிபார்க்கப்பட்டது" என்பது வானிலை மாறுபாடுகள் மற்றும் ஆட்கள் இருப்பை ஆய்வு செய்து உண்மையான காரண-சேமிப்பை உறுதிப்படுத்தும் எதிர்நிலை கட்டுப்பாட்டு முறையாகும்.',
-    noSavingsYet: 'இதுவரை நடவடிக்கைகள் பதிவு செய்யப்படவில்லை. பரிந்துரைகளில் "செய்து பார்த்தேன்" என்பதைக் கிளிக் செய்யும்போது இங்கு பதிவாகும்.',
+    mvRequiredNote: 'முழு-வீட்டு M&V மற்றும் அடிப்படைக் கட்டுப்பாடுகள் தேவை (IPMVP சான்றிதழ் பெறாதது)',
+    counterfactualNoticeTitle: '4-நிலை சேமிப்பு சான்று & M&V வரம்பு (IPMVP சான்றிதழ் பெறாதது)',
+    counterfactualNotice: '"பயனர் குறிப்பிட்டது" மற்றும் "மீட்டர் அளவீடு" ஆகியவை சரிசெய்யப்படாத பதிவுகள் மட்டுமே, உறுதிப்படுத்தப்பட்ட சேமிப்பு அல்ல. முறையான அளவீட்டு சரிபார்ப்புக்கு (Measurement Verification) அங்கீகரிக்கப்பட்ட முழு-வீட்டு M&V திட்டம், பல-சுழற்சி அடிப்படைத் தரவு, வழக்கமான (வானிலை/CDD) + வழக்கத்திற்கு மாறான (ஆட்கள் இருப்பு/சாதன மாற்றம்) சரிசெய்தல்கள் மற்றும் நிச்சயமற்ற வரம்புகள் தேவை — இந்த ஆல்ஃபா பதிப்பு இன்னும் IPMVP Option C சான்றிதழ் பெறவில்லை.',
+    noSavingsYet: 'இதுவரை நடவடிக்கைகள் பதிவு செய்யப்படவில்லை. பரிந்துரைகளில் "செய்து பார்த்தேன்" என்பதைக் கிளிக் செய்யும்போது இங்கு சரிபார்க்கப்படாத பயனர் பதிவாக சேர்க்கப்படும்.',
     recordDate: 'பதிவு செய்யப்பட்ட தேதி',
     recordAction: 'மேற்கொள்ளப்பட்ட நடவடிக்கை',
-    recordSavings: 'சேமிப்புத் தொகை',
+    recordSavings: 'மாதிரி / பதிவு சேமிப்பு',
     recordBasis: 'சான்று அடிப்படை',
     counterfactualMethod: 'முறை',
     uncertaintyBound: 'நிச்சயமற்ற தன்மை',
