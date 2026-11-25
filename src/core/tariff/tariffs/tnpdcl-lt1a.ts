@@ -348,3 +348,82 @@ export const GENERIC_TOU_TARIFF_INR: TariffPlan = {
     monthly_amount_paise: 0,
   },
 };
+
+export interface SupportedTariffCatalogEntry {
+  plan: TariffPlan;
+  regionLabel: { en: string; ta: string };
+  verificationStatus: 'statutory_consumer_payable' | 'historical_baseline' | 'generic_reference';
+  regulatoryNote: { en: string; ta: string };
+}
+
+export const SUPPORTED_TARIFF_CATALOG: SupportedTariffCatalogEntry[] = [
+  {
+    plan: TNPDCL_LT1A_MAY_2026_SCHEME,
+    regionLabel: {
+      en: 'Tamil Nadu (TNPDCL) — Domestic LT-1A (May 2026 Scheme)',
+      ta: 'தமிழ்நாடு (TNPDCL) — வீட்டு உபயோகம் LT-1A (மே 2026 திட்டம்)',
+    },
+    verificationStatus: 'statutory_consumer_payable',
+    regulatoryNote: {
+      en: 'Effective May 10, 2026 under GoTN G.O. (Ms) No. 50 & TNERC Order No. 6 of 2025 consumer-payable slabs (200 free units <= 500 kWh; ₹478.40 subsidy cliff at 501 kWh).',
+      ta: 'மே 10, 2026 முதல் அரசாணை G.O.(Ms) எண் 50 & TNERC ஆணை எண் 6/2025 படி (<= 500 யூனிட்களுக்கு 200 இலவச யூனிட்; 501 யூனிட்டில் ₹478.40 மானிய இழப்பு எல்லை).',
+    },
+  },
+  {
+    plan: TNPDCL_LT1A_2025_2026,
+    regionLabel: {
+      en: 'Tamil Nadu (TNPDCL) — Domestic LT-1A (2025–2026 Order)',
+      ta: 'தமிழ்நாடு (TNPDCL) — வீட்டு உபயோகம் LT-1A (2025–2026 ஆணை)',
+    },
+    verificationStatus: 'statutory_consumer_payable',
+    regulatoryNote: {
+      en: 'Effective July 1, 2025 – May 9, 2026 under TNERC Order No. 6 of 2025 consumer-payable slabs (100 free units universal + 101–200 @ ₹2.35/kWh up to 500 kWh).',
+      ta: 'ஜூலை 1, 2025 – மே 9, 2026 வரை TNERC ஆணை எண் 6/2025 படி (100 இலவச யூனிட் + 101–200 யூனிட்கள் ₹2.35/kWh).',
+    },
+  },
+  {
+    plan: TNPDCL_LT1A_2024_2025,
+    regionLabel: {
+      en: 'Tamil Nadu (TNPDCL) — Historical Baseline (2024–2025 Ref)',
+      ta: 'தமிழ்நாடு (TNPDCL) — முந்தைய அடிப்படை அட்டவணை (2024–2025)',
+    },
+    verificationStatus: 'historical_baseline',
+    regulatoryNote: {
+      en: 'Historical baseline model (₹4.50/₹2.25 slabs, 100 free units, ₹233.00 jump at 501 kWh) retained for retrospective historical bill checks.',
+      ta: 'முந்தைய ஆண்டு மின்கட்டணங்களைச் சரிபார்க்க உதவும் அடிப்படை அட்டவணை (₹4.50/₹2.25).',
+    },
+  },
+  {
+    plan: GENERIC_FLAT_TARIFF_INR,
+    regionLabel: {
+      en: 'India General — Standard Flat Rate Reference (₹5.00/kWh)',
+      ta: 'இந்தியா பொது — நிலையான கட்டண மாதிரி (₹5.00/kWh)',
+    },
+    verificationStatus: 'generic_reference',
+    regulatoryNote: {
+      en: 'Illustrative flat monthly tariff (₹5.00/kWh + ₹50/mo fixed + 5% duty, no TOU or subsidy cliff) for regions outside Tamil Nadu.',
+      ta: 'தமிழ்நாட்டிற்கு வெளியேயான பகுதிகளுக்கான பொது நிலையான கட்டண மாதிரி (₹5.00/kWh + ₹50 நிலைக்கட்டணம் + 5% வரி).',
+    },
+  },
+  {
+    plan: GENERIC_TOU_TARIFF_INR,
+    regionLabel: {
+      en: 'Pilot Reference — Time-of-Use (Peak ₹10 / Off-Peak ₹5)',
+      ta: 'முன்னோட்ட மாதிரி — நேர அடிப்படையிலான கட்டணம் (Peak ₹10 / Off-Peak ₹5)',
+    },
+    verificationStatus: 'generic_reference',
+    regulatoryNote: {
+      en: 'Reference Time-of-Use (TOU) tariff enabling genuine monetary savings from shifting flexible loads from evening peak (18:00–22:00) to off-peak hours.',
+      ta: 'நேர அடிப்படையிலான (TOU) கட்டண மாதிரி; மாலை நேர உச்ச கட்டணத்திலிருந்து காலை/இரவு நேரத்திற்கு மாற்றுவதால் சேமிப்பு கிடைக்கும்.',
+    },
+  },
+];
+
+/**
+ * Resolves a supported TariffPlan by ID, defaulting safely to the active TNPDCL May 2026 schedule.
+ */
+export function getTariffPlanById(tariffId?: string): TariffPlan {
+  if (!tariffId) return TNPDCL_LT1A_MAY_2026_SCHEME;
+  const found = SUPPORTED_TARIFF_CATALOG.find((entry) => entry.plan.id === tariffId);
+  return found ? found.plan : TNPDCL_LT1A_MAY_2026_SCHEME;
+}
