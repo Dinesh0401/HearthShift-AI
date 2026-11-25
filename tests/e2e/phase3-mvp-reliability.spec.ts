@@ -159,7 +159,6 @@ test.describe('HearthShift AI — Phase 3.1 Production MVP Reliability & Parity 
     // ══════════════════════════════════════════════════════════
     // Seed extra verified records into IndexedDB so all 4 provenance tiers are audited
     await page.evaluate(async () => {
-      // @ts-expect-error - IndexedDB direct transaction
       const request = window.indexedDB.open('HearthShiftDB');
       await new Promise((resolve) => {
         request.onsuccess = () => {
