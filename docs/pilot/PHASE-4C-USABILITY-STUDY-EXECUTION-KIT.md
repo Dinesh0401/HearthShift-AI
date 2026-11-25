@@ -4,7 +4,7 @@
 **Version:** 2.0.0 (Phase 4C-A Complete Pre-Recruitment Kit)  
 **Date:** November 25, 2026  
 **Target Live URL:** `https://hearthshift-ai.pages.dev/` (`v0.1.0-alpha`)  
-**Companion Specifications:** [`USABILITY-STUDY-PROTOCOL.md`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/docs/pilot/USABILITY-STUDY-PROTOCOL.md) · [`REGULATORY-SOURCE-TRACEABILITY.md`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/docs/pilot/REGULATORY-SOURCE-TRACEABILITY.md) · [`FIELD-PILOT-PROTOCOL.md`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/docs/pilot/FIELD-PILOT-PROTOCOL.md) · [`stage1_usability_scoring.py`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/research/experiments/stage1_usability_scoring.py)
+**Companion Specifications:** [`PHASE-4C-B0-OVERSIGHT-SUBMISSION-PACKAGE.md`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/docs/pilot/PHASE-4C-B0-OVERSIGHT-SUBMISSION-PACKAGE.md) · [`USABILITY-STUDY-PROTOCOL.md`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/docs/pilot/USABILITY-STUDY-PROTOCOL.md) · [`REGULATORY-SOURCE-TRACEABILITY.md`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/docs/pilot/REGULATORY-SOURCE-TRACEABILITY.md) · [`FIELD-PILOT-PROTOCOL.md`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/docs/pilot/FIELD-PILOT-PROTOCOL.md) · [`stage1_usability_scoring.py`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/research/experiments/stage1_usability_scoring.py)
 
 > [!CAUTION]
 > **HARD PRE-RECRUITMENT & SAFETY STOP BOUNDARY**
@@ -83,7 +83,7 @@
 | :---: | :--- | :--- |
 | **1** | *"Take a minute to read the top of the screen and the Alpha disclosure. Tell me in your own words what this site does, what it does NOT do, and where entered data is saved."* | States advisory-only, no appliance control, browser-profile local storage (not cloud), no offline caching. |
 | **2** | *"Switch the language if you prefer Tamil, and look at the capability status box on the left. Why does it say Basic Mode right now?"* | Identifies `BASIC MODE` and explains hourly load analysis is locked until interval CSV data exists. |
-| **3** | *"Under Bills & Slab Analysis, enter a synthetic bi-monthly bill from `2026-05-01` to `2026-06-30` for `512` kWh (leave Consumer Ref blank or put `SAMPLE-01`) and save it."* *(Follow immediately with SEQ #1.)* | Saves `512 kWh` cleanly without validation stall; table shows `₹2,140.80` modeled bill. |
+| **3** | *"Under Bills & Slab Analysis, enter a synthetic bi-monthly bill from `2026-05-01` to `2026-06-30` for `512` kWh (leave Consumer Ref blank or put `SAMPLE-01`) and save it."* *(Follow immediately with SEQ #1.)* | Saves `512 kWh` cleanly without validation stall; table shows `₹2,140.80` modeled bill *(>500 kWh yields identical payable under pre/post-May-10 rules; see Oversight Packet Section 9.2)*. |
 | **4** | *"Look at the Tariff Plan summary card on the right. What happens if a home uses 501 kWh instead of 500 kWh?"* | Explains losing 200 free units / `₹478.40` bill jump (`₹1,570` → `₹2,048.40`) above `500 kWh`. |
 | **5** | *"Now open Smart Meter CSV Import, upload the synthetic 8-day CSV sample file, inspect the preview, and confirm saving."* *(Follow with SEQ #2.)* | Uploads synthetic CSV cleanly (`192` readings) and clicks confirm. |
 | **6** | *"Open Load Curves & Intervals. Tell me what changed compared to earlier when you only had a manual bill."* | Notes hourly chart is now unlocked and distinguishes measured intervals from monthly totals. |
@@ -91,6 +91,8 @@
 | **8** | *"Open Smart Recommendations. If a question popup appears, answer or skip it as you choose. Read the main card and explain Expected Savings vs Conservative Lower Bound (`Q0.05`) and the assumptions."* | Identifies recommendation (or abstention), reads assumptions, distinguishes expected vs conservative bound (`modeled`, not guaranteed). |
 | **9** | *"Try clicking `Tried It!`, then check Savings Ledger. Why does it show User Reported instead of Measurement Verified, and what is the M&V notice saying?"* | Recognizes `User Reported` ≠ verified M&V/IPMVP Option C savings. |
 | **10** | *"Open Privacy & Storage (and optionally inspect Alpha Feedback). Check what Export JSON and Delete All My Data do, explain what happens if you had kept data after closing this tab, then wipe the test data and reload the page."* | Exports or describes unencrypted JSON risk, confirms browser-profile persistence across tab closes, wipes cleanly, confirms reset after reload. |
+
+> **Safe Demo & Mid-Cycle Straddle Disclaimer (Read Aloud When Exploring Demo Mode or `<= 500 kWh` Cycles):** Safe Demo Bills 1 & 2 (`Jan–Apr 2026`, `445` / `492 kWh`) apply the May 10, 2026 scheme (`₹1,223.50` / `₹1,519.60`) uniformly for synthetic illustration (`₹235.00` lower than historical pre-May-10 receipts). Any real household bill spanning `2026-05-10` with `101–500 kWh` is excluded from unadjusted INR savings comparisons; verify against printed TNPDCL bills.
 
 ---
 
