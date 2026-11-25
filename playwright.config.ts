@@ -7,13 +7,13 @@ export default defineConfig({
   workers: 1,
   reporter: 'list',
   use: {
-    baseURL: 'http://127.0.0.1:3000',
+    baseURL: 'http://127.0.0.1:3008',
     trace: 'off',
   },
   webServer: {
-    command: 'npx next start -p 3000',
-    url: 'http://127.0.0.1:3000',
-    reuseExistingServer: true,
+    command: 'npx next start -p 3008',
+    url: 'http://127.0.0.1:3008',
+    reuseExistingServer: false,
     timeout: 60 * 1000,
   },
   projects: [

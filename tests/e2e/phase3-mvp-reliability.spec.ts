@@ -20,8 +20,8 @@ test.describe('HearthShift AI — Phase 3.1 Production MVP Reliability & Parity 
     page.on('request', (request) => {
       const url = request.url();
       if (
-        !url.startsWith('http://localhost:3000') &&
-        !url.startsWith('http://127.0.0.1:3000') &&
+        !url.startsWith('http://localhost:3008') &&
+        !url.startsWith('http://127.0.0.1:3008') &&
         !url.startsWith('data:') &&
         !url.startsWith('blob:')
       ) {

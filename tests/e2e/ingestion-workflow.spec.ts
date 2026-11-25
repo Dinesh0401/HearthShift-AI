@@ -21,8 +21,8 @@ test.describe('HearthShift AI — Full Ingestion & Privacy Verification Workflow
       const url = request.url();
       // Allow internal Next.js assets on localhost
       if (
-        !url.startsWith('http://localhost:3000') &&
-        !url.startsWith('http://127.0.0.1:3000') &&
+        !url.startsWith('http://localhost:3008') &&
+        !url.startsWith('http://127.0.0.1:3008') &&
         !url.startsWith('data:') &&
         !url.startsWith('blob:')
       ) {
