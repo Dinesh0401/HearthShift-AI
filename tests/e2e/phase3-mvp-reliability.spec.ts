@@ -37,14 +37,14 @@ test.describe('HearthShift AI — Phase 3.1 Production MVP Reliability & Parity 
     await expect(page.locator('h1')).toContainText('HearthShift AI');
     await expect(page.getByText('100% On-Device · Zero External Telemetry · IndexedDB')).toBeVisible();
 
-    // Verify all 7 navigation tabs exist
-    const billsTab = page.getByRole('button', { name: /Bills & Slab Analysis/i });
-    const importTab = page.getByRole('button', { name: /Smart Meter CSV Import/i });
-    const intervalsTab = page.getByRole('button', { name: /Load Curves & Intervals/i });
-    const simulatorTab = page.getByRole('button', { name: /Scenario Simulator/i });
-    const recsTab = page.getByRole('button', { name: /Smart Recommendations/i });
-    const savingsTab = page.getByRole('button', { name: /Savings Ledger/i });
-    const privacyTab = page.getByRole('button', { name: /Privacy & Storage/i });
+    // Verify all 7 navigation tabs exist (WAI-ARIA role="tab")
+    const billsTab = page.getByRole('tab', { name: /Bills & Slab Analysis/i });
+    const importTab = page.getByRole('tab', { name: /Smart Meter CSV Import/i });
+    const intervalsTab = page.getByRole('tab', { name: /Load Curves & Intervals/i });
+    const simulatorTab = page.getByRole('tab', { name: /Scenario Simulator/i });
+    const recsTab = page.getByRole('tab', { name: /Smart Recommendations/i });
+    const savingsTab = page.getByRole('tab', { name: /Savings Ledger/i });
+    const privacyTab = page.getByRole('tab', { name: /Privacy & Storage/i });
 
     await expect(billsTab).toBeVisible();
     await expect(importTab).toBeVisible();
@@ -75,9 +75,9 @@ test.describe('HearthShift AI — Phase 3.1 Production MVP Reliability & Parity 
     await expect(page.getByText('505.0')).toBeVisible();
 
     // Baseline 505 kWh with default actions (-15 kWh AC, -6 kWh Standby = 484 kWh) crosses below 500 kWh cliff!
-    // Verify the Cliff Avoidance Alert is rendered
+    // Verify the Cliff Avoidance Alert is rendered dynamically
     await expect(
-      page.getByText(/₹478\.40 SUBSIDY CLIFF JUMP AVOIDED!/i)
+      page.getByText(/₹478\.40 TARIFF CLIFF JUMP AVOIDED!/i)
     ).toBeVisible();
 
     // Interact with simulator controls:
@@ -141,8 +141,8 @@ test.describe('HearthShift AI — Phase 3.1 Production MVP Reliability & Parity 
     }
 
     // Recommendation card is displayed
-    await expect(page.getByText(/95% Conservative Lower Bound/i)).toBeVisible();
-    await expect(page.getByText('Simulated').first()).toBeVisible();
+    await expect(page.getByText(/95% Modeled Comfort Bound/i)).toBeVisible();
+    await expect(page.getByText('Modeled Estimate').first()).toBeVisible();
     await expect(page.getByText(/Regulatory Savings Rationale/i)).toBeVisible();
     await expect(page.getByText(/Explicit Model Assumptions/i)).toBeVisible();
     await expect(page.getByText(/Advisory Guidance: Manual household control only/i)).toBeVisible();
@@ -152,12 +152,12 @@ test.describe('HearthShift AI — Phase 3.1 Production MVP Reliability & Parity 
 
     // Click "Tried It!" button to log adopted action to savings ledger
     await page.getByRole('button', { name: /Tried It!/i }).click();
-    await expect(page.getByText(/Action logged to your Savings Evidence Ledger/i)).toBeVisible();
+    await expect(page.getByText(/Action logged as unverified user-reported entry in Savings Ledger/i)).toBeVisible();
 
     // ══════════════════════════════════════════════════════════
     // 7. Savings Evidence Ledger & 4 Provenance Badges
     // ══════════════════════════════════════════════════════════
-    // Seed extra verified records into IndexedDB so all 4 provenance tiers are audited
+    // Seed extra records into IndexedDB so all 4 provenance tiers are audited in UI
     await page.evaluate(async () => {
       const request = window.indexedDB.open('HearthShiftDB');
       await new Promise((resolve) => {
@@ -166,7 +166,7 @@ test.describe('HearthShift AI — Phase 3.1 Production MVP Reliability & Parity 
           const tx = db.transaction(['savings'], 'readwrite');
           const store = tx.objectStore('savings');
 
-          // Measurement Verified record (IPMVP-compliant counterfactual)
+          // Formal M&V candidate record (not IPMVP-certified)
           store.put({
             id: 'sav_verified_mv',
             recommendation_id: 'rec_mv_01',
@@ -177,7 +177,7 @@ test.describe('HearthShift AI — Phase 3.1 Production MVP Reliability & Parity 
             verified_actual_savings: 395.5,
             basis: 'measurement_verified',
             verified: true,
-            notes: 'Counterfactual Normalized AC Setpoint +1°C (IPMVP Option C)',
+            notes: 'Counterfactual Normalized AC Setpoint +1°C (Pre-Pilot M&V Candidate)',
           });
 
           // Meter Observed record (raw interval meter delta)
@@ -216,18 +216,18 @@ test.describe('HearthShift AI — Phase 3.1 Production MVP Reliability & Parity 
     await savingsTab.click();
 
     // Verify 3 Top Summary Metrics
-    await expect(page.getByText('Tracked Household Savings Impact')).toBeVisible();
-    await expect(page.getByText('Cumulative Verified Savings')).toBeVisible();
-    await expect(page.getByText('Completed Efficiency Actions')).toBeVisible();
+    await expect(page.getByText('Tracked Modeled & Reported Impact')).toBeVisible();
+    await expect(page.getByText('Formally M&V-Verified Savings')).toBeVisible();
+    await expect(page.getByText('Logged Efficiency Actions')).toBeVisible();
 
-    // Verify IPMVP Counterfactual Disclaimer Banner
-    await expect(page.getByText('Rigorous 4-State Savings Provenance & Counterfactual Controls')).toBeVisible();
+    // Verify M&V Counterfactual Scope Notice (honest non-IPMVP disclosure)
+    await expect(page.getByText('4-State Savings Provenance & M&V Scope (Not IPMVP-Certified)')).toBeVisible();
     await expect(
-      page.getByText(/requires strict counterfactual controls \(weather normalization and occupancy verification\)/i)
+      page.getByText(/not yet IPMVP Option C certified/i)
     ).toBeVisible();
 
     // Verify provenance badges in the table
-    await expect(page.getByText('🟢 Measurement Verified').first()).toBeVisible();
+    await expect(page.getByText(/🟢 Measurement Verified/).first()).toBeVisible();
     await expect(page.getByText('🔵 User Reported').first()).toBeVisible();
     await expect(page.getByText('🟣 Meter Observed').first()).toBeVisible();
     await expect(page.getByText('🟡 Simulated').first()).toBeVisible();
@@ -243,7 +243,7 @@ test.describe('HearthShift AI — Phase 3.1 Production MVP Reliability & Parity 
     // Assert Tamil app header and ledger titles
     await expect(page.getByText('ஹார்த்ஷிஃப்ட் AI').first()).toBeVisible();
     await expect(page.getByText('சேமிப்பு விவரப் பதிவேடு').first()).toBeVisible();
-    await expect(page.getByText('மொத்த உறுதிசெய்யப்பட்ட சேமிப்பு').first()).toBeVisible();
+    await expect(page.getByText('முறையான M&V சரிபார்க்கப்பட்ட சேமிப்பு').first()).toBeVisible();
 
     // Take Audit Screenshot 4: Tamil Interface
     await page.screenshot({ path: 'tests/e2e/screenshots/tamil-interface.png' });

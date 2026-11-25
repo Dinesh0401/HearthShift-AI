@@ -47,7 +47,7 @@ test.describe('HearthShift AI — Full Ingestion & Privacy Verification Workflow
     ).toBeVisible();
 
     // Verify Deterministic Tariff Headroom Card & ₹478.40 Cliff Warning
-    await expect(page.getByText('TNPDCL LT-1A (2026 Scheme)').first()).toBeVisible();
+    await expect(page.getByText(/TNPDCL LT-1A/i).first()).toBeVisible();
     await expect(page.getByText('Cliff Cost Delta').first()).toBeVisible();
     await expect(page.getByText('+₹478.40').first()).toBeVisible();
 
@@ -84,7 +84,7 @@ test.describe('HearthShift AI — Full Ingestion & Privacy Verification Workflow
     // ══════════════════════════════════════════════════════════
     // 5. Verify Scientific Gating on Interval Load Curve (Basic Mode)
     // ══════════════════════════════════════════════════════════
-    await page.getByRole('button', { name: /Load Curves & Intervals/i }).click();
+    await page.getByRole('tab', { name: /Load Curves & Intervals/i }).click();
 
     // Verify interval chart is explicitly gated with scientific justification banner
     await expect(
@@ -99,7 +99,7 @@ test.describe('HearthShift AI — Full Ingestion & Privacy Verification Workflow
     // ══════════════════════════════════════════════════════════
     // 6. Smart-Meter CSV Ingestion Workflow
     // ══════════════════════════════════════════════════════════
-    await page.getByRole('button', { name: /Smart Meter CSV Import/i }).click();
+    await page.getByRole('tab', { name: /Smart Meter CSV Import/i }).click();
 
     // Upload sample interval CSV (hourly readings)
     const sampleCsv = `timestamp,kwh
@@ -149,7 +149,7 @@ test.describe('HearthShift AI — Full Ingestion & Privacy Verification Workflow
     // ══════════════════════════════════════════════════════════
     // 9. Data Sovereign Purge ("Delete All My Data")
     // ══════════════════════════════════════════════════════════
-    await page.getByRole('button', { name: /Privacy & Storage/i }).click();
+    await page.getByRole('tab', { name: /Privacy & Storage/i }).click();
 
     // Verify network telemetry audit banner
     await expect(
@@ -170,7 +170,7 @@ test.describe('HearthShift AI — Full Ingestion & Privacy Verification Workflow
 
     // Reload page and verify system returns to clean initial state with zero bills
     await page.reload();
-    await page.getByRole('button', { name: /Bills & Slab Analysis/i }).click();
+    await page.getByRole('tab', { name: /Bills & Slab Analysis/i }).click();
     await expect(page.getByText('BASIC MODE').first()).toBeVisible();
     await expect(page.getByText('No electricity bills recorded yet.')).toBeVisible();
 

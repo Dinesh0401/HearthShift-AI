@@ -40,7 +40,7 @@ test.describe('HearthShift AI — Data Integrity, Mobile Layout, and Validation 
     // ══════════════════════════════════════════════════════════
     // 3. REFIT Power Ingestion Verification (Watts -> Trapezoidal kWh)
     // ══════════════════════════════════════════════════════════
-    await page.getByRole('button', { name: /Smart Meter CSV Import/i }).click();
+    await page.getByRole('tab', { name: /Smart Meter CSV Import/i }).click();
 
     const refitPowerCsv = `Time,Unix,Aggregate
 2014-04-01 00:00:00,1396310400,1500
@@ -69,7 +69,7 @@ test.describe('HearthShift AI — Data Integrity, Mobile Layout, and Validation 
     // ══════════════════════════════════════════════════════════
     // 4. Privacy Purge & Audit Verification
     // ══════════════════════════════════════════════════════════
-    await page.getByRole('button', { name: /Privacy & Storage/i }).click();
+    await page.getByRole('tab', { name: /Privacy & Storage/i }).click();
     await page.getByRole('button', { name: 'Delete All My Data' }).click();
     await page.getByRole('button', { name: 'Yes, Delete Everything' }).click();
     await expect(page.getByText('All household data was permanently wiped from IndexedDB.')).toBeVisible();
