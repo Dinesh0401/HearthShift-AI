@@ -11,7 +11,7 @@ export default defineConfig({
     trace: 'off',
   },
   webServer: {
-    command: 'npx next start -p 3008',
+    command: 'node ./node_modules/next/dist/bin/next start -p 3008',
     url: 'http://127.0.0.1:3008',
     reuseExistingServer: false,
     timeout: 60 * 1000,
