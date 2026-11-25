@@ -258,3 +258,4 @@ test.describe('HearthShift AI — Phase 4A Alpha Security, Same-Origin Privacy, 
     expect(consoleCspErrors).toEqual([]);
   });
 });
+
