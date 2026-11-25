@@ -2,7 +2,7 @@
  * HearthShift AI — Manual Electricity Bill Ingestion Module
  * 
  * Validates manual utility bill entries, verifies date ranges,
- * checks against tariff definitions, and provides safe defaults.
+ * checks against the selected tariff definition, and provides safe defaults.
  * Stores records strictly on-device in IndexedDB.
  * 
  * @module core/ingestion/manual-bill
@@ -11,7 +11,7 @@
 import type { MonthlyBillEntry } from '../../types/contracts';
 import { db, type StoredBillEntry } from '../../lib/db';
 import { calculateBill } from '../tariff/calculator';
-import { TNPDCL_LT1A_2024_2025 } from '../tariff/tariffs/tnpdcl-lt1a';
+import { getTariffPlanById, TNPDCL_LT1A_2026_MAY10 } from '../tariff/tariffs/tnpdcl-lt1a';
 
 export interface ManualBillInput {
   billing_period_start: string; // ISO 8601 date YYYY-MM-DD
@@ -32,6 +32,45 @@ export interface BillValidationResult {
   bill_entry?: MonthlyBillEntry;
 }
 
+const MAX_PLAUSIBLE_HOUSEHOLD_KWH = 100000;
+const MAX_BILL_AMOUNT_INR = 2000000;
+const MAX_REFERENCE_LENGTH = 64;
+
+/**
+ * Strips angle brackets and ASCII control characters from optional text fields
+ * to maintain clean storage and prevent CSV/HTML injection in exports.
+ */
+function sanitizePlainTextInput(raw: string, maxLength: number): string {
+  const cleaned = Array.from(raw)
+    .filter((ch) => {
+      const code = ch.charCodeAt(0);
+      return code >= 0x20 && code !== 0x7f && ch !== '<' && ch !== '>';
+    })
+    .join('')
+    .trim();
+  return cleaned.slice(0, maxLength);
+}
+
+/**
+ * Validates strict YYYY-MM-DD calendar dates without silent rollover (e.g. rejects 2026-02-30).
+ */
+function parseStrictIsoDate(dateStr: string): Date | null {
+  const match = dateStr.trim().match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) return null;
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  const dt = new Date(Date.UTC(year, month - 1, day));
+  if (
+    dt.getUTCFullYear() !== year ||
+    dt.getUTCMonth() !== month - 1 ||
+    dt.getUTCDate() !== day
+  ) {
+    return null;
+  }
+  return dt;
+}
+
 /**
  * Validates a manual bill entry with comprehensive domain integrity checks.
  * Pure function: no database writes or side effects.
@@ -48,22 +87,23 @@ export function validateManualBill(input: ManualBillInput): BillValidationResult
     errors.billing_period_end = 'Billing period end date is required.';
   }
 
-  const startDate = new Date(input.billing_period_start);
-  const endDate = new Date(input.billing_period_end);
+  const startDate = input.billing_period_start ? parseStrictIsoDate(input.billing_period_start) : null;
+  const endDate = input.billing_period_end ? parseStrictIsoDate(input.billing_period_end) : null;
   const now = new Date();
+  const todayUtc = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 23, 59, 59));
 
-  if (isNaN(startDate.getTime())) {
-    errors.billing_period_start = 'Invalid start date format. Expected YYYY-MM-DD.';
+  if (input.billing_period_start && !startDate) {
+    errors.billing_period_start = 'Invalid start date format. Expected valid calendar YYYY-MM-DD.';
   }
-  if (isNaN(endDate.getTime())) {
-    errors.billing_period_end = 'Invalid end date format. Expected YYYY-MM-DD.';
+  if (input.billing_period_end && !endDate) {
+    errors.billing_period_end = 'Invalid end date format. Expected valid calendar YYYY-MM-DD.';
   }
 
-  if (!errors.billing_period_start && !errors.billing_period_end) {
+  if (startDate && endDate && !errors.billing_period_start && !errors.billing_period_end) {
     if (startDate > endDate) {
       errors.billing_period_end = 'End date cannot be earlier than start date.';
     }
-    if (endDate > now) {
+    if (endDate > todayUtc) {
       errors.billing_period_end = 'Billing period end date cannot be in the future.';
     }
 
@@ -76,31 +116,36 @@ export function validateManualBill(input: ManualBillInput): BillValidationResult
   }
 
   // 2. Consumption Validation
-  if (typeof input.total_units_kwh !== 'number' || isNaN(input.total_units_kwh)) {
-    errors.total_units_kwh = 'Consumption must be a valid number.';
+  if (typeof input.total_units_kwh !== 'number' || isNaN(input.total_units_kwh) || !isFinite(input.total_units_kwh)) {
+    errors.total_units_kwh = 'Consumption must be a valid finite number.';
   } else if (input.total_units_kwh < 0) {
     errors.total_units_kwh = 'Consumption cannot be negative.';
+  } else if (input.total_units_kwh > MAX_PLAUSIBLE_HOUSEHOLD_KWH) {
+    errors.total_units_kwh = `Consumption cannot exceed ${MAX_PLAUSIBLE_HOUSEHOLD_KWH.toLocaleString()} kWh for a residential meter.`;
   } else if (input.total_units_kwh > 50000) {
     warnings.push('Consumption exceeds 50,000 kWh. Please confirm this is a domestic household reading.');
   }
 
   // 3. Amount Validation (if provided)
   if (input.total_amount !== undefined) {
-    if (typeof input.total_amount !== 'number' || isNaN(input.total_amount)) {
-      errors.total_amount = 'Bill amount must be a valid number.';
+    if (typeof input.total_amount !== 'number' || isNaN(input.total_amount) || !isFinite(input.total_amount)) {
+      errors.total_amount = 'Bill amount must be a valid finite number.';
     } else if (input.total_amount < 0) {
       errors.total_amount = 'Bill amount cannot be negative.';
+    } else if (input.total_amount > MAX_BILL_AMOUNT_INR) {
+      errors.total_amount = `Bill amount exceeds residential sanity limit (₹${MAX_BILL_AMOUNT_INR.toLocaleString()}).`;
     }
   }
+
+  // 4. Resolve Authoritative Tariff Plan
+  const resolvedTariffId = input.tariff_id ?? TNPDCL_LT1A_2026_MAY10.id;
+  const tariff = getTariffPlanById(resolvedTariffId);
 
   let calculatedAmount: number | undefined = undefined;
   let amountDiscrepancy: number | undefined = undefined;
 
-  // 4. Tariff comparison (if valid)
   if (Object.keys(errors).length === 0) {
     try {
-      // Use default tariff for verification
-      const tariff = TNPDCL_LT1A_2024_2025;
       const calculation = calculateBill(input.total_units_kwh, tariff);
       calculatedAmount = calculation.net_payable;
 
@@ -108,7 +153,7 @@ export function validateManualBill(input: ManualBillInput): BillValidationResult
         amountDiscrepancy = Math.round((input.total_amount - calculatedAmount) * 100) / 100;
         if (Math.abs(amountDiscrepancy) > 50) {
           warnings.push(
-            `Entered bill amount (₹${input.total_amount.toFixed(2)}) differs from calculated tariff charge (₹${calculatedAmount.toFixed(2)}) by ₹${Math.abs(amountDiscrepancy).toFixed(2)}. This may be due to arrears, delayed payment surcharges, or adjustments.`
+            `Entered bill amount (₹${input.total_amount.toFixed(2)}) differs from calculated '${tariff.name}' charge (₹${calculatedAmount.toFixed(2)}) by ₹${Math.abs(amountDiscrepancy).toFixed(2)}. This may be due to arrears, delayed payment surcharges, or adjustments.`
           );
         }
       }
@@ -118,16 +163,19 @@ export function validateManualBill(input: ManualBillInput): BillValidationResult
   }
 
   const isValid = Object.keys(errors).length === 0;
+  const sanitizedRef = input.bill_reference_no
+    ? sanitizePlainTextInput(input.bill_reference_no, MAX_REFERENCE_LENGTH)
+    : undefined;
 
   const billEntry: MonthlyBillEntry | undefined = isValid
     ? {
-        billing_period_start: input.billing_period_start,
-        billing_period_end: input.billing_period_end,
+        billing_period_start: input.billing_period_start.trim(),
+        billing_period_end: input.billing_period_end.trim(),
         total_units_kwh: input.total_units_kwh,
         total_amount: input.total_amount,
-        currency: input.currency ?? 'INR',
-        tariff_id: input.tariff_id ?? 'in-tnpdcl-lt1a-2024',
-        bill_reference_no: input.bill_reference_no?.trim(),
+        currency: tariff.currency ?? input.currency ?? 'INR',
+        tariff_id: tariff.id,
+        bill_reference_no: sanitizedRef || undefined,
       }
     : undefined;
 
