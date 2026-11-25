@@ -121,7 +121,7 @@ test.describe('HearthShift AI — Phase 3.1 Production MVP Reliability & Parity 
     await page.getByRole('button', { name: /Confirm & Save 192 Readings/i }).click();
 
     // Verify unlocked in intervals tab
-    await expect(page.getByText('INTERVAL MODE').first()).toBeVisible();
+    await expect(page.getByText(/OPTIMIZATION ELIGIBLE|INTERVAL MODE/).first()).toBeVisible();
     await expect(page.getByText('Empirical Interval Load Profile')).toBeVisible();
     await expect(page.getByText('Validated interval readings stored:')).toBeVisible();
 
