@@ -117,19 +117,19 @@ test.describe('HearthShift AI — Phase 4A Alpha Security, Same-Origin Privacy, 
     const mayJunRow = page.getByRole('row', { name: /2026-05-01 → 2026-06-30/i });
     await expect(mayJunRow).toContainText('508 kWh');
     await expect(mayJunRow).toContainText('in-tnpdcl-lt1a-may2026');
-    await expect(mayJunRow).toContainText('₹2,107.20');
+    await expect(mayJunRow).toContainText('₹2107.20');
     await expect(mayJunRow).toContainText(/Crosses May 10, 2026 policy date/i);
 
     const marAprRow = page.getByRole('row', { name: /2026-03-01 → 2026-04-30/i });
     await expect(marAprRow).toContainText('492 kWh');
     await expect(marAprRow).toContainText('in-tnpdcl-lt1a-2025');
-    await expect(marAprRow).toContainText('₹1,754.60');
+    await expect(marAprRow).toContainText('₹1754.60');
     await expect(marAprRow).not.toContainText(/Crosses May 10, 2026/i);
 
     const janFebRow = page.getByRole('row', { name: /2026-01-01 → 2026-02-28/i });
     await expect(janFebRow).toContainText('445 kWh');
     await expect(janFebRow).toContainText('in-tnpdcl-lt1a-2025');
-    await expect(janFebRow).toContainText('₹1,458.50');
+    await expect(janFebRow).toContainText('₹1458.50');
     await expect(janFebRow).not.toContainText(/Crosses May 10, 2026/i);
 
     // Modern counterfactuals remain on May 2026 schedule distinct from Jan–Apr historical receipts
