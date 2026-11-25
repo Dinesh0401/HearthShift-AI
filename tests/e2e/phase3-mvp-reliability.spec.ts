@@ -244,7 +244,7 @@ test.describe('HearthShift AI — Phase 3.1 Production MVP Reliability & Parity 
     // Assert Tamil app header and ledger titles
     await expect(page.getByText('ஹார்த்ஷிஃப்ட் AI').first()).toBeVisible();
     await expect(page.getByText('சேமிப்பு விவரப் பதிவேடு').first()).toBeVisible();
-    await expect(page.getByText('உறுதிசெய்யப்பட்ட திரள் சேமிப்பு').first()).toBeVisible();
+    await expect(page.getByText('மொத்த உறுதிசெய்யப்பட்ட சேமிப்பு').first()).toBeVisible();
 
     // Take Audit Screenshot 4: Tamil Interface
     await page.screenshot({ path: 'tests/e2e/screenshots/tamil-interface.png' });
