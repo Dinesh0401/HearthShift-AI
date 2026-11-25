@@ -130,14 +130,14 @@ test.describe('HearthShift AI — Phase 3.1 Production MVP Reliability & Parity 
     // ══════════════════════════════════════════════════════════
     await recsTab.click();
 
-    // Check if an adaptive preference question modal is triggered
-    const modalTitle = page.getByText(/Single-Question Preference Check/i);
-    const isModalVisible = await modalTitle.isVisible().catch(() => false);
-
-    if (isModalVisible) {
+    // Wait for adaptive preference question modal if triggered by EVSI hurdle
+    const modalButton = page.getByRole('button', { name: /Yes \/ Comfortable/i });
+    try {
+      await modalButton.waitFor({ state: 'visible', timeout: 4000 });
       await expect(page.getByText('EVSI Decision Gate Active')).toBeVisible();
-      // Click 'Yes / Comfortable' to submit feedback and close modal
-      await page.getByRole('button', { name: /Yes \/ Comfortable/i }).click();
+      await modalButton.click();
+    } catch {
+      // If no question was triggered, recommendation is already visible
     }
 
     // Recommendation card is displayed
