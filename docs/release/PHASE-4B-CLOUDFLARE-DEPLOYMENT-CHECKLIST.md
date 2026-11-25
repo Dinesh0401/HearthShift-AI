@@ -10,17 +10,19 @@
 
 | Setting / Artifact | Exact Value / Repository Path | Status |
 | :--- | :--- | :--- |
-| **Deployment Integration** | **GitHub → Cloudflare Pages** (`Dinesh0401/HearthShift-AI`, automatic previews) | Preferred |
+| **Deployment Integration** | **GitHub → Cloudflare Pages** (`Continue to Pages` — NOT Workers `wrangler deploy`) | Preferred |
+| **Project Name** | `hearthshift-ai` *(or `hearthshift-ai-pages` if `hearthshift-ai` Worker name is in use)* | Operator Selects |
 | **Framework Preset** | Next.js (Static HTML Export) (`output: 'export'` in [`next.config.mjs`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/next.config.mjs)) | Ready |
-| **Build Command** | `npm run build:static` *(sets `NEXT_STATIC_EXPORT=true` cleanly cross-platform)* | Verified |
+| **Build Command** | `npm run build:static` *(sets `NEXT_STATIC_EXPORT=true` & `NEXT_TELEMETRY_DISABLED=1`)* | Verified |
 | **Build Output Directory** | `out` | Verified (`npm run verify:static`) |
+| **Deploy Command** | *(None — leave blank in Cloudflare Pages)* | Verified |
 | **Production Branch** | `main` | Verified (`origin/main` pushed) |
 | **Response Headers Rule File** | [`public/_headers`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/public/_headers) → copied to `out/_headers` | Verified (8 security headers) |
 | **Cloudflare Web Analytics** | **DISABLED** (must remain disabled in Cloudflare Dashboard to preserve zero telemetry & `connect-src 'self'`) | Operator Check Required |
-| **Zero-Secret Env Vars** | [`/.env.example`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/.env.example): `NEXT_PUBLIC_APP_ENV=production`, `NEXT_PUBLIC_DEMO_ENABLED=true` | Zero Secrets Confirmed |
+| **Zero-Secret Env Vars** | [`/.env.example`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/.env.example): `NEXT_PUBLIC_APP_ENV=production`, `NEXT_PUBLIC_DEMO_ENABLED=true`, `NEXT_TELEMETRY_DISABLED=1` | Zero Secrets Confirmed |
 
 > [!WARNING]
-> Do **not** create a separate Wrangler Direct Upload project unless explicitly desired—use **Cloudflare Pages → Connect to Git (`Dinesh0401/HearthShift-AI`)** so every branch/PR generates a preview deployment URL automatically before updating `main`.
+> Do **not** deploy via Cloudflare's **Workers** build flow (`npx wrangler deploy` detects `.next` instead of `out/`), and do **not** create a Direct Upload project. Select **Workers & Pages → Create application → Looking to deploy Pages? Get started → Connect to Git (`Dinesh0401/HearthShift-AI`)**.
 
 ---
 

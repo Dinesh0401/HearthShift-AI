@@ -81,12 +81,15 @@ Managed HTTPS edge hosting eliminates Node.js server maintenance and guarantees 
    npm run verify:static
    npm run test:e2e:static
    ```
-2. **Cloudflare Pages Project Settings (GitHub Integration):**
+2. **Cloudflare Pages Project Settings (GitHub Integration — NOT Workers):**
+   - In **Workers & Pages → Create application**, scroll to **Looking to deploy Pages? → Get started** (**Continue to Pages** → **Connect to Git**). Do **not** deploy via the Workers (`npx wrangler deploy`) wizard, which targets `.next` instead of static `out/`.
+   - **Project Name:** `hearthshift-ai` *(or `hearthshift-ai-pages` if `hearthshift-ai` already exists as a Worker)*
    - **Framework Preset:** Next.js (Static HTML Export)
    - **Production Branch:** `main`
-   - **Build Command:** `npm run build:static`
-   - **Build Output / Publish Directory:** `out`
-   - **Environment Variables:** `NEXT_PUBLIC_APP_ENV=production`, `NEXT_PUBLIC_DEMO_ENABLED=true` (`build:static` already sets `NEXT_STATIC_EXPORT=true` cross-platform)
+   - **Build Command:** `npm run build:static` *(sets `NEXT_STATIC_EXPORT=true` and `NEXT_TELEMETRY_DISABLED=1`)*
+   - **Build Output Directory:** `out`
+   - **Deploy Command:** *(Leave blank / none — not required in Pages)*
+   - **Environment Variables:** `NEXT_PUBLIC_APP_ENV=production`, `NEXT_PUBLIC_DEMO_ENABLED=true`, `NEXT_TELEMETRY_DISABLED=1`
    - **Platform Analytics:** Ensure **Cloudflare Web Analytics** is **Disabled** so zero injected analytics beacons violate `connect-src 'self'` or `script-src 'self' 'unsafe-inline'`.
 3. **Preview -> Production Verification (Requires Authorized Operator Login):**
    - Push changes to a preview branch / PR or `main`, inspect the Cloudflare Pages **Preview HTTPS URL** (`curl -sI <PREVIEW_URL>/` + `E2E_BASE_URL=<PREVIEW_URL> npx playwright test`), and only promote/verify Production once Preview checks pass.

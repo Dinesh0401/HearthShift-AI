@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build --webpack",
-    "build:static": "node -e \"process.env.NEXT_STATIC_EXPORT='true'; require('node:child_process').execSync('npm run build', {stdio:'inherit'});\"",
+    "build:static": "node -e \"process.env.NEXT_STATIC_EXPORT='true'; process.env.NEXT_TELEMETRY_DISABLED='1'; require('node:child_process').execSync('npm run build', {stdio:'inherit'});\"",
     "verify:static": "node scripts/verify-static-export.mjs",
     "start": "next start",
     "lint": "eslint . --ext .ts,.tsx",
