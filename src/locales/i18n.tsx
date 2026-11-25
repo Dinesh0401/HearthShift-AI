@@ -23,9 +23,29 @@ export const translations = {
     demoModeBannerTitle: 'SYNTHETIC DEMO MODE — Simulated Sample Household (Not Real Utility Data)',
     demoModeBannerDesc: 'Displaying 3 synthetic bi-monthly bills (445 / 492 / 508 kWh) and 192 hourly intervals (8 days) for exploration. Savings ledger remains empty so zero fake actual savings are invented.',
 
-    // Alpha Disclaimer
+    // Alpha Disclaimer & Public Alpha Presentation
     alphaDisclaimerTitle: 'Experimental Research Alpha — Advisory Models Only',
     alphaDisclaimerDesc: 'HearthShift AI is an experimental research alpha. Outputs are modeled estimates—not utility-certified billing statements, guaranteed physical savings, or IPMVP Option C verified outcomes. It does not automate or control physical appliances.',
+    howItWorksTitle: 'How HearthShift Works · Local-First & Mode-Gated Decisions',
+    howItWorksStep1: '1. Ingest on-device: Enter utility bills (or optional CSV smart-meter logs). Raw data remains strictly inside your browser IndexedDB.',
+    howItWorksStep2: '2. Capability gating: Bills-only mode tracks deterministic slab headroom and avoids fabricating intra-day schedules. Importing interval logs unlocks TR-VOI modeling.',
+    howItWorksStep3: '3. Conservative bounds & provenance: Actions show modeled expected INR vs 5th-percentile bounds (Q0.05) and separate Simulated, User-Reported, Meter-Observed, and formal M&V records.',
+    howItWorksBoundaries: 'Note: manifest.json provides metadata only—Service Worker offline page caching is not implemented yet in v0.1.0-alpha.',
+    openChangelogBtn: 'v0.1.0-alpha Changelog',
+    changelogTitle: 'Release Changelog & Known Scope',
+    changelogSubtitle: 'HearthShift AI Public Alpha Release Notes',
+    openFeedbackBtn: 'Alpha Feedback (Zero-Telemetry)',
+    feedbackModalTitle: 'Send Alpha Feedback (Zero Household Data)',
+    feedbackPrivacyBanner: 'Privacy Lock: This draft generator NEVER reads IndexedDB bills, interval CSVs, or consumer references. Nothing is sent automatically over the network.',
+    feedbackCategoryLabel: 'Feedback Topic',
+    feedbackNotesPlaceholder: 'Describe clarity issues, tariff requests, or UI bugs (never enter meter/account numbers)...',
+    feedbackPreviewLabel: 'Scrubbed JSON Draft Preview (0 Household Records Included)',
+    feedbackCopyBtn: 'Copy Scrubbed Draft',
+    feedbackCopiedMsg: 'Draft Copied!',
+    feedbackDownloadBtn: 'Download Draft (.json)',
+    feedbackExternalLabel: 'External submission is strictly manual: copying or downloading stays local. Only clicking Open GitHub Issue opens github.com with this previewed draft.',
+    feedbackGithubBtn: 'Open GitHub Issue',
+    closeModalBtn: 'Close',
 
     // Tabs
     tabBills: '📋 Bills & Slab Analysis',
@@ -172,7 +192,7 @@ export const translations = {
     appSubtitle: 'தனிநபர் அந்தரங்க-பாதுகாப்பு வீட்டு மின்சார நுண்ணறிவு',
     appDescription: 'முடிவு-அடிப்படையிலான, குறைவான தகவல் கேட்கும் மின்சார உதவியாளர் · 100% உள்ளூர் IndexedDB இயக்கம்',
     privacyBadge: '100% உங்கள் சாதனத்தில் மட்டும் · வெளி சேவையகங்களுக்கு தகவல் செல்லாது · IndexedDB',
-    offlineStatus: 'இணையமில்லா இயக்கம் தயார்',
+    offlineStatus: 'உள்ளூர் உலாவி இயக்கம்',
 
     // Region & Tariff Selector
     selectTariffRegion: 'ஆதரிக்கப்படும் மின்கட்டண பகுதி & அட்டவணை',
@@ -185,9 +205,29 @@ export const translations = {
     demoModeBannerTitle: 'செயற்கை மாதிரி முறைமை — உருவகப்படுத்தப்பட்ட மாதிரி வீடு (உண்மையான மின் தரவு அல்ல)',
     demoModeBannerDesc: 'ஆய்விற்காக 3 செயற்கை இரு-மாத பில்கள் (445 / 492 / 508 kWh) மற்றும் 192 மணிநேர அளவீடுகள் (8 நாட்கள்) காட்டப்படுகின்றன. போலியான சேமிப்பைத் தவிர்க்க சேமிப்புப் பதிவேடு காலியாக உள்ளது.',
 
-    // Alpha Disclaimer
+    // Alpha Disclaimer & Public Alpha Presentation
     alphaDisclaimerTitle: 'சோதனை ஆய்வு ஆல்ஃபா பதிப்பு — ஆலோசனை மாதிரிகள் மட்டுமே',
     alphaDisclaimerDesc: 'HearthShift AI ஒரு சோதனை ஆய்வு ஆல்ஃபா பதிப்பாகும். இதன் முடிவுகள் மாதிரி மதிப்பீடுகள் மட்டுமே—உறுதியளிக்கப்பட்ட சேமிப்பு அல்லது IPMVP Option C சான்றளிக்கப்பட்ட அளவீடுகள் அல்ல. சாதனங்களைத் தானாகக் கட்டுப்படுத்தாது.',
+    howItWorksTitle: 'HearthShift செயல்படும் விதம் · உள்ளூர் & சான்று-அடிப்படை முடிவுகள்',
+    howItWorksStep1: '1. சாதனத்திற்குள் தரவு: மின்கட்டண பில் (அல்லது CSV) தரவை உள்ளிடுங்கள். அனைத்துத் தரவும் உங்கள் உலாவி IndexedDB-யிலேயே இருக்கும்.',
+    howItWorksStep2: '2. திறன் கட்டுப்பாடு: பில் தரவு மட்டும் உள்ளபோது அடுக்கு எல்லை கண்காணிக்கப்படும்; நேர அட்டவணைகள் போலியாகக் கணிக்கப்படாது.',
+    howItWorksStep3: '3. பாதுகாப்பான வரம்புகள்: பரிந்துரைகள் மாதிரி சேமிப்பையும் 5% குறைந்தபட்ச வரம்பையும் (Q0.05) சான்று வகைகளையும் தனித்தனியாகக் காட்டுகின்றன.',
+    howItWorksBoundaries: 'குறிப்பு: manifest.json மெட்டாடேட்டா மட்டுமே—Service Worker ஆஃப்லைன் கேச்சிங் v0.1.0-alpha-வில் இன்னும் இல்லை.',
+    openChangelogBtn: 'v0.1.0-alpha மாற்றப் பதிவேடு',
+    changelogTitle: 'வெளியீட்டு வரலாறு & வரம்புகள்',
+    changelogSubtitle: 'HearthShift AI பொது ஆல்ஃபா குறிப்புகள்',
+    openFeedbackBtn: 'ஆல்ஃபா கருத்து (தரவு அனுப்பாது)',
+    feedbackModalTitle: 'ஆல்ஃபா கருத்துப் படிவம் (தனிநபர் தரவு இன்றி)',
+    feedbackPrivacyBanner: 'அந்தரங்கப் பாதுகாப்பு: இந்தப் படிவம் உங்கள் IndexedDB கட்டணங்கள் அல்லது ஸ்மார்ட் மீட்டர் அளவீடுகளைப் படிக்காது. தானாக எதுவும் இணையத்தில் அனுப்பப்படாது.',
+    feedbackCategoryLabel: 'கருத்து வகை',
+    feedbackNotesPlaceholder: 'கருத்துகள் அல்லது பிழைகளை இங்கே எழுதவும் (கணக்கு எண் வேண்டாம்)...',
+    feedbackPreviewLabel: 'தணிக்கை செய்யப்பட்ட JSON மாதிரி (0 வீட்டுப் பதிவுகள்)',
+    feedbackCopyBtn: 'நகலெடு (Copy)',
+    feedbackCopiedMsg: 'நகலெடுக்கப்பட்டது!',
+    feedbackDownloadBtn: 'பதிவிறக்கு (.json)',
+    feedbackExternalLabel: 'அனுப்புவது முற்றிலும் உங்கள் விருப்பம் மட்டுமே: நகலெடுத்தல்/பதிவிறக்கம் உள்ளூரிலேயே நிகழும்.',
+    feedbackGithubBtn: 'GitHub Issue திறக்க',
+    closeModalBtn: 'மூடு',
 
     // Tabs
     tabBills: '📋 மின்கட்டணங்கள் & அடுக்கு ஆய்வு',
