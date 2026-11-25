@@ -1,4 +1,7 @@
-/** @type {import('next').NextConfig} */
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const isStaticExport = process.env.NEXT_STATIC_EXPORT === 'true';
 
 const cspHeader = [
@@ -16,9 +19,13 @@ const cspHeader = [
   "frame-ancestors 'none'",
 ].join('; ');
 
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  turbopack: {
+    root: __dirname,
+  },
   ...(isStaticExport ? { output: 'export' } : {}),
   ...(!isStaticExport
     ? {
