@@ -18,11 +18,11 @@
   "dependencies": {
     "dexie": "^4.0.8",
     "lucide-react": "^0.460.0",
-    "next": "^14.2.18",
+    "next": "^16.4.6",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "recharts": "^2.13.3",
-    "zod": "^3.23.8"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@playwright/test": "^1.49.0",
