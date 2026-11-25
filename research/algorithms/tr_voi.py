@@ -222,7 +222,7 @@ class ThresholdAwareRobustVOIAdvisor(BaseAdvisor):
                     mu[best_q.feature_index] = max(0.2, mu[best_q.feature_index] - 0.4)
                     sigma[best_q.feature_index] *= 0.5
                 elif obs.response_value == -1:
-                    mu[best_q.feature_index] = mu[best_q.feature_index] + 0.6
+                    mu[best_q.feature_index] = min(5.0, mu[best_q.feature_index] + 0.6)
                     sigma[best_q.feature_index] *= 0.5
 
         # Step 2: Tri-State Final Action Selection (Recommend vs. Abstain)
@@ -243,7 +243,7 @@ class ThresholdAwareRobustVOIAdvisor(BaseAdvisor):
                 best_decision_metric = decision_metric
                 best_action = a
 
-        # Step 3: Emit Decision (Recommend if welfare guaranteed > c_min, else Abstain)
+        # Step 3: Emit Decision (Recommend if lower-bound welfare > c_min, else Abstain)
         if best_action.id == 'null_action':
             decision_type = 'abstain'
         else:

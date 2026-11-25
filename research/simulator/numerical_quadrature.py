@@ -92,6 +92,41 @@ def get_tnpdcl_may2026_linear_segments() -> List[Dict[str, float]]:
     ]
 
 
+def get_tariff_linear_segments(tariff_id: str) -> Tuple[List[Dict[str, float]], Optional[float]]:
+    """
+    Returns (segments, cliff_threshold_kwh) matching TypeScript tr-voi.ts exactPiecewiseTariffMoments.
+    """
+    if tariff_id == 'in-tnpdcl-lt1a-may2026':
+        return get_tnpdcl_may2026_linear_segments(), 500.0
+    if tariff_id == 'in-tnpdcl-lt1a-2025':
+        return [
+            {'min': 0.0, 'max': 100.0, 'slope': 0.0, 'intercept': 0.0},
+            {'min': 100.0, 'max': 200.0, 'slope': 235.0, 'intercept': -23500.0},
+            {'min': 200.0, 'max': 400.0, 'slope': 470.0, 'intercept': -70500.0},
+            {'min': 400.0, 'max': 500.0, 'slope': 630.0, 'intercept': -134500.0},
+            {'min': 500.0, 'max': 600.0, 'slope': 840.0, 'intercept': -216000.0},
+            {'min': 600.0, 'max': 800.0, 'slope': 945.0, 'intercept': -279000.0},
+            {'min': 800.0, 'max': 1000.0, 'slope': 1050.0, 'intercept': -363000.0},
+            {'min': 1000.0, 'max': 3000.0, 'slope': 1155.0, 'intercept': -468000.0},
+        ], 500.0
+    if tariff_id == 'in-tnpdcl-lt1a-2024':
+        return [
+            {'min': 0.0, 'max': 100.0, 'slope': 0.0, 'intercept': 0.0},
+            {'min': 100.0, 'max': 200.0, 'slope': 225.0, 'intercept': -22500.0},
+            {'min': 200.0, 'max': 400.0, 'slope': 450.0, 'intercept': -67500.0},
+            {'min': 400.0, 'max': 500.0, 'slope': 600.0, 'intercept': -127500.0},
+            {'min': 500.0, 'max': 600.0, 'slope': 800.0, 'intercept': -205000.0},
+            {'min': 600.0, 'max': 800.0, 'slope': 900.0, 'intercept': -265000.0},
+            {'min': 800.0, 'max': 1000.0, 'slope': 1000.0, 'intercept': -345000.0},
+            {'min': 1000.0, 'max': 3000.0, 'slope': 1100.0, 'intercept': -445000.0},
+        ], 500.0
+    if tariff_id == 'generic-flat-inr':
+        return [{'min': 0.0, 'max': 5000.0, 'slope': 525.0, 'intercept': 5000.0}], None
+    if tariff_id == 'generic-tou-inr':
+        return [{'min': 0.0, 'max': 5000.0, 'slope': 700.0, 'intercept': 0.0}], None
+    return get_tnpdcl_may2026_linear_segments(), 500.0
+
+
 def exact_piecewise_tariff_moments(
     mu: float,
     sigma: float,
@@ -101,25 +136,28 @@ def exact_piecewise_tariff_moments(
     Computes exact analytic expectation and variance of electricity bill under X ~ N(mu, sigma^2).
     Zero quadrature error.
     """
+    t_plan = tariff or create_tnpdcl_lt1a_may2026_tariff()
+    segments, cliff_threshold = get_tariff_linear_segments(t_plan.id)
+
     if sigma <= 1e-4:
-        from simulator.tariffs import calculate_bill, create_tnpdcl_lt1a_may2026_tariff
-        t_plan = tariff or create_tnpdcl_lt1a_may2026_tariff()
-        bill = calculate_bill(mu, t_plan)
+        bill = calculate_bill(max(0.0, mu), t_plan)
         return {
             'mean_bill_paise': float(bill.net_payable_paise),
             'mean_bill_inr': float(bill.net_payable_paise / 100.0),
             'std_bill_paise': 0.0,
             'std_bill_inr': 0.0,
-            'cliff_crossing_prob': 1.0 if mu > 500.0 else 0.0,
+            'cliff_crossing_prob': 1.0 if (cliff_threshold is not None and mu > cliff_threshold) else 0.0,
             'coverage_prob': 1.0,
         }
-
-    segments = get_tnpdcl_may2026_linear_segments()
 
     total_mean_paise = 0.0
     total_second_moment_paise2 = 0.0
     total_prob = 0.0
-    cliff_cross_prob = max(0.0, 1.0 - standard_normal_cdf((500.0 - mu) / sigma))
+    cliff_cross_prob = (
+        max(0.0, 1.0 - standard_normal_cdf((cliff_threshold - mu) / sigma))
+        if cliff_threshold is not None
+        else 0.0
+    )
 
     for seg in segments:
         prob, val, val_sq = truncated_normal_segment_moments(
