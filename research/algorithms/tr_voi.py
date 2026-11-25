@@ -186,7 +186,7 @@ class ThresholdAwareRobustVOIAdvisor(BaseAdvisor):
 
                     # Hypothetical posterior given y = -1 (user is inflexible)
                     mu_neg = mu.copy()
-                    mu_neg[feat] = mu_neg[feat] + 0.6
+                    mu_neg[feat] = min(5.0, mu_neg[feat] + 0.6)
                     sigma_neg = sigma.copy()
                     sigma_neg[feat] *= 0.5
                     safe_neg = [

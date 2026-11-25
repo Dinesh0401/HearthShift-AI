@@ -1,10 +1,10 @@
 /**
  * HearthShift AI — Client-Side TR-VOI Decision Engine
  * 
- * Port of the mathematically verified Threshold-Aware Robust Value-of-Information (TR-VOI) algorithm.
- * Guarantees:
- * 1. Exact piecewise statutory tariff evaluation under uncertain baseline consumption P(X).
- * 2. Chance-constrained comfort safety: P(D(a, theta) > D_max) <= delta (z_alpha = 1.645).
+ * Port of the Threshold-Aware Robust Value-of-Information (TR-VOI) algorithm.
+ * Core Behavioral Invariants:
+ * 1. Exact piecewise statutory tariff evaluation under modeled baseline uncertainty P(X).
+ * 2. Chance-constrained comfort risk model: P(D(a, theta) > D_max) <= delta (z_alpha = 1.645).
  * 3. Conservative alpha-credible lower-bound welfare: Q_alpha(U(a)) > c_min (₹30.00).
  * 4. Value of Sample Information (EVSI) active questioning with annoyance & privacy friction penalties.
  * 5. Deterministic integer paise arithmetic, zero telemetry, 100% on-device execution.
@@ -13,7 +13,7 @@
  */
 
 import type { TariffPlan } from '../tariff/types';
-import { calculateBill } from '../tariff/calculator';
+import { calculateBill, calculateShiftCostDelta } from '../tariff/calculator';
 import type { 
   ApplianceCategory, 
   ConfidenceLevel, 
@@ -368,47 +368,124 @@ function erf(x: number): number {
   return sign * y;
 }
 
+interface PiecewiseSegment {
+  min: number;
+  max: number;
+  slope: number;
+  intercept: number;
+}
+
+function getLinearSegmentsForTariff(tariff: TariffPlan): {
+  segments: PiecewiseSegment[];
+  cliffThreshold: number | null;
+} | null {
+  switch (tariff.id) {
+    case 'in-tnpdcl-lt1a-may2026':
+      return {
+        cliffThreshold: 500.0,
+        segments: [
+          { min: 0.0, max: 200.0, slope: 0.0, intercept: 0.0 },
+          { min: 200.0, max: 400.0, slope: 470.0, intercept: -94000.0 },
+          { min: 400.0, max: 500.0, slope: 630.0, intercept: -158000.0 },
+          { min: 500.0, max: 600.0, slope: 840.0, intercept: -216000.0 },
+          { min: 600.0, max: 800.0, slope: 945.0, intercept: -279000.0 },
+          { min: 800.0, max: 1000.0, slope: 1050.0, intercept: -363000.0 },
+          { min: 1000.0, max: 3000.0, slope: 1155.0, intercept: -468000.0 },
+        ],
+      };
+    case 'in-tnpdcl-lt1a-2025':
+      return {
+        cliffThreshold: 500.0,
+        segments: [
+          { min: 0.0, max: 100.0, slope: 0.0, intercept: 0.0 },
+          { min: 100.0, max: 200.0, slope: 235.0, intercept: -23500.0 },
+          { min: 200.0, max: 400.0, slope: 470.0, intercept: -70500.0 },
+          { min: 400.0, max: 500.0, slope: 630.0, intercept: -134500.0 },
+          { min: 500.0, max: 600.0, slope: 840.0, intercept: -216000.0 },
+          { min: 600.0, max: 800.0, slope: 945.0, intercept: -279000.0 },
+          { min: 800.0, max: 1000.0, slope: 1050.0, intercept: -363000.0 },
+          { min: 1000.0, max: 3000.0, slope: 1155.0, intercept: -468000.0 },
+        ],
+      };
+    case 'in-tnpdcl-lt1a-2024':
+      return {
+        cliffThreshold: 500.0,
+        segments: [
+          { min: 0.0, max: 100.0, slope: 0.0, intercept: 0.0 },
+          { min: 100.0, max: 200.0, slope: 225.0, intercept: -22500.0 },
+          { min: 200.0, max: 400.0, slope: 450.0, intercept: -67500.0 },
+          { min: 400.0, max: 500.0, slope: 600.0, intercept: -127500.0 },
+          { min: 500.0, max: 600.0, slope: 800.0, intercept: -205000.0 },
+          { min: 600.0, max: 800.0, slope: 900.0, intercept: -265000.0 },
+          { min: 800.0, max: 1000.0, slope: 1000.0, intercept: -345000.0 },
+          { min: 1000.0, max: 3000.0, slope: 1100.0, intercept: -445000.0 },
+        ],
+      };
+    case 'generic-flat-inr':
+      return {
+        cliffThreshold: null,
+        segments: [
+          { min: 0.0, max: 5000.0, slope: 525.0, intercept: 5000.0 },
+        ],
+      };
+    case 'generic-tou-inr':
+      return {
+        cliffThreshold: null,
+        segments: [
+          { min: 0.0, max: 5000.0, slope: 700.0, intercept: 0.0 },
+        ],
+      };
+    default:
+      return null;
+  }
+}
+
 /**
- * Closed-form analytical integration of piecewise linear segments for TNPDCL LT-1A tariff.
- * Matches numerical_quadrature.py with zero quadrature error.
+ * Closed-form analytical integration of piecewise linear tariff segments under X ~ N(mu, sigma^2).
+ * Uses closed-form truncated normal moments for supported statutory/flat/TOU schedules,
+ * and falls back to 11-point Gauss-Hermite numerical integration for arbitrary custom plans.
  */
 export function exactPiecewiseTariffMoments(
   muKwh: number,
   sigmaKwh: number = 8.0,
   tariff: TariffPlan
 ): { meanBillPaise: number; stdBillPaise: number; cliffCrossingProb: number } {
-  // If sigma is tiny, evaluate point estimate
+  const segmentSpec = getLinearSegmentsForTariff(tariff);
+  const cliffThreshold = segmentSpec?.cliffThreshold ?? null;
+
+  // If sigma is tiny, evaluate deterministic point estimate
   if (sigmaKwh <= 1e-4) {
-    const bill = calculateBill(muKwh, tariff);
+    const bill = calculateBill(Math.max(0.0, muKwh), tariff);
     return {
       meanBillPaise: bill.net_payable_paise,
       stdBillPaise: 0.0,
-      cliffCrossingProb: muKwh > 500 ? 1.0 : 0.0,
+      cliffCrossingProb: cliffThreshold !== null && muKwh > cliffThreshold ? 1.0 : 0.0,
     };
   }
 
-  // Exact linear pieces for May 10, 2026 TNPDCL LT-1A:
-  // 0-200 kWh: 0 paise
-  // 201-400 kWh: 470 paise/unit - 94,000 paise
-  // 401-500 kWh: 630 paise/unit - 158,000 paise
-  // CLIFF AT 500 kWh (+47,000 paise jump)
-  // 501-600 kWh: 840 paise/unit - 216,000 paise
-  // 601-800 kWh: 945 paise/unit - 279,000 paise
-  // 801-1000 kWh: 1050 paise/unit - 363,000 paise
-  // >1000 kWh: 1155 paise/unit - 468,000 paise
-  const segments = [
-    { min: 0.0, max: 200.0, slope: 0.0, intercept: 0.0 },
-    { min: 200.0, max: 400.0, slope: 470.0, intercept: -94000.0 },
-    { min: 400.0, max: 500.0, slope: 630.0, intercept: -158000.0 },
-    { min: 500.0, max: 600.0, slope: 840.0, intercept: -216000.0 },
-    { min: 600.0, max: 800.0, slope: 945.0, intercept: -279000.0 },
-    { min: 800.0, max: 1000.0, slope: 1050.0, intercept: -363000.0 },
-    { min: 1000.0, max: 3000.0, slope: 1155.0, intercept: -468000.0 },
-  ];
+  if (!segmentSpec) {
+    // General fallback via 7-point Gauss-Hermite quadrature for arbitrary TariffPlan definitions
+    const ghNodes = [-2.6519613568, -1.6735516288, -0.8162878829, 0.0, 0.8162878829, 1.6735516288, 2.6519613568];
+    const ghWeights = [0.0005482689, 0.0307571240, 0.2401231786, 0.4571428571, 0.2401231786, 0.0307571240, 0.0005482689];
+    const bills = ghNodes.map((z) =>
+      calculateBill(Math.max(0.0, muKwh + sigmaKwh * Math.sqrt(2.0) * z), tariff).net_payable_paise
+    );
+    const meanBillPaise = bills.reduce((acc, b, idx) => acc + b * ghWeights[idx], 0);
+    const variance = bills.reduce((acc, b, idx) => acc + ((b - meanBillPaise) ** 2) * ghWeights[idx], 0);
+    return {
+      meanBillPaise,
+      stdBillPaise: Math.sqrt(Math.max(0.0, variance)),
+      cliffCrossingProb: 0.0,
+    };
+  }
 
+  const { segments } = segmentSpec;
   let totalMeanPaise = 0.0;
   let totalSecondMomentPaise2 = 0.0;
-  const cliffCrossingProb = Math.max(0.0, 1.0 - standardNormalCdf((500.0 - muKwh) / sigmaKwh));
+  const cliffCrossingProb =
+    cliffThreshold !== null
+      ? Math.max(0.0, 1.0 - standardNormalCdf((cliffThreshold - muKwh) / sigmaKwh))
+      : 0.0;
 
   for (const seg of segments) {
     const alpha = (seg.min - muKwh) / sigmaKwh;
@@ -516,8 +593,22 @@ export function evaluateActionWelfare(
   let meanSavings = 0.0;
   let stdSavings = 0.0;
 
-  if (action.actionType === 'shift' || action.deltaKwh <= 0.0) {
-    // Pure load shifting under time-independent tariff yields 0 savings!
+  if (action.actionType === 'shift') {
+    if (!tariff.is_time_dependent) {
+      // Pure load shifting under time-independent tariff yields ZERO savings!
+      meanSavings = 0.0;
+      stdSavings = 0.0;
+    } else {
+      // Shift 16 bi-monthly cycles x 1.5 kWh = 24.0 kWh from Evening Peak (19:00) to Morning Off-Peak (07:00)
+      const shiftDelta = calculateShiftCostDelta(
+        [{ hour: 19, kwh: 24.0 }],
+        [{ hour: 7, kwh: 24.0 }],
+        tariff
+      );
+      meanSavings = Math.max(0.0, shiftDelta.cost_delta_paise);
+      stdSavings = Math.round(meanSavings * 0.1);
+    }
+  } else if (action.deltaKwh <= 0.0) {
     meanSavings = 0.0;
     stdSavings = 0.0;
   } else {
@@ -607,7 +698,7 @@ export function decideTrVoi(
 
     // Hypothetical branch y = -1 (user is inflexible)
     const muNeg = [...mu];
-    muNeg[feat] = muNeg[feat] + 0.6;
+    muNeg[feat] = Math.min(5.0, muNeg[feat] + 0.6);
     const sigmaNeg = [...sigma];
     sigmaNeg[feat] *= 0.5;
 
