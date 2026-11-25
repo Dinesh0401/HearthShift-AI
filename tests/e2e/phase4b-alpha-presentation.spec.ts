@@ -73,8 +73,11 @@ test.describe('HearthShift AI — Phase 4B Static Alpha UX, Manifest, Changelog 
     await expect(changelogDialog).toBeVisible();
     await expect(changelogDialog.getByText(/No Offline Service Worker Caching/i)).toBeVisible();
     await expect(changelogDialog.getByText(/No IPMVP Option C/i)).toBeVisible();
-    await changelogDialog.getByRole('button', { name: 'Close', exact: true }).click();
+    await changelogDialog.getByRole('button', { name: 'Close', exact: true }).last().click();
     await expect(changelogDialog).toBeHidden();
+
+    // Screenshot of Alpha overview with How It Works expanded
+    await page.screenshot({ path: 'tests/e2e/screenshots/phase4b-alpha-overview.png' });
 
     // 5. Verify Alpha Feedback Modal sanitizes input, excludes all IndexedDB data, & triggers 0 telemetry
     await page.getByRole('button', { name: /Alpha Feedback \(Zero-Telemetry\)/i }).click();
@@ -94,6 +97,8 @@ test.describe('HearthShift AI — Phase 4B Static Alpha UX, Manifest, Changelog 
     expect(previewText).not.toContain('PRIVATE-METER-9988');
     expect(previewText).not.toContain('<script>');
 
+    await page.screenshot({ path: 'tests/e2e/screenshots/phase4b-feedback-modal.png' });
+
     const [fbDownload] = await Promise.all([
       page.waitForEvent('download'),
       feedbackDialog.getByRole('button', { name: /Download Draft/i }).click(),
@@ -101,7 +106,7 @@ test.describe('HearthShift AI — Phase 4B Static Alpha UX, Manifest, Changelog 
     expect(fbDownload.suggestedFilename()).toContain('hearthshift_feedback_');
 
     // Clean up local test bill & close feedback modal
-    await feedbackDialog.getByRole('button', { name: 'Close', exact: true }).click();
+    await feedbackDialog.getByRole('button', { name: 'Close', exact: true }).first().click();
     await page.getByRole('tab', { name: /Privacy & Storage/i }).click();
     await page.getByRole('button', { name: 'Delete All My Data' }).click();
     await page.getByRole('button', { name: 'Yes, Delete Everything' }).click();
