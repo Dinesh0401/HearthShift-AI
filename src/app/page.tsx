@@ -47,10 +47,16 @@ export default function DashboardPage() {
         setLatestUnits(latestBill.total_units_kwh);
       }
 
+      const pref = await db.preferences.get('default_household');
+      const constraints = pref?.comfort_constraints && pref.comfort_constraints.length > 0
+        ? pref.comfort_constraints
+        : (rCount >= 168 ? [{ id: 'default_c', type: 'temperature_bound' as const, description: 'Default AC comfort bounds', flexibility: 'medium' as const, confidence: 1.0 }] : []);
+
       const evalResult = evaluateCapabilityState({
         bills_count: bCount,
         readings_count: rCount,
         readings_span_days: spanDays,
+        comfort_constraints: constraints,
         active_tariff: TNPDCL_LT1A_2026_MAY10,
       });
 

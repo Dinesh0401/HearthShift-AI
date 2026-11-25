@@ -95,21 +95,21 @@ test.describe('HearthShift AI — Phase 3.1 Production MVP Reliability & Parity 
     await page.screenshot({ path: 'tests/e2e/screenshots/simulator-cliff.png' });
 
     // ══════════════════════════════════════════════════════════
-    // 5. Ingestion of 7-Day Empirical Interval Data (168 Hours)
+    // 5. Ingestion of 8-Day Empirical Interval Data (192 Hours)
     // ══════════════════════════════════════════════════════════
     await importTab.click();
 
-    // Build 168 hours (7 days) of hourly smart-meter readings
+    // Build 192 hours (8 days) of hourly smart-meter readings to exceed >= 7 full days
     let hourlyCsv = 'timestamp,kwh\n';
     const startDate = new Date('2026-05-01T00:00:00Z');
-    for (let h = 0; h < 168; h++) {
+    for (let h = 0; h < 192; h++) {
       const dt = new Date(startDate.getTime() + h * 3600 * 1000);
       const iso = dt.toISOString().replace('T', ' ').replace('.000Z', '');
       hourlyCsv += `${iso},0.35\n`;
     }
 
     await page.locator('input[type="file"]').setInputFiles({
-      name: 'smart_meter_7days.csv',
+      name: 'smart_meter_8days.csv',
       mimeType: 'text/csv',
       buffer: Buffer.from(hourlyCsv),
     });
@@ -118,7 +118,7 @@ test.describe('HearthShift AI — Phase 3.1 Production MVP Reliability & Parity 
     await expect(page.getByText('Resolution: hourly')).toBeVisible();
 
     // Commit readings to IndexedDB
-    await page.getByRole('button', { name: /Confirm & Save 168 Readings/i }).click();
+    await page.getByRole('button', { name: /Confirm & Save 192 Readings/i }).click();
 
     // Verify unlocked in intervals tab
     await expect(page.getByText('INTERVAL MODE').first()).toBeVisible();
