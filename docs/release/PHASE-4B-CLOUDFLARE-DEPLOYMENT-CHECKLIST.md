@@ -88,3 +88,16 @@ Then repeat Step B against the production HTTPS URL (`https://hearthshift-ai.pag
    npx wrangler pages deploy out --project-name hearthshift-ai --branch main
    ```
 3. **Post-Rollback Verification:** Re-run `curl -sI <PRODUCTION_URL>/` and `E2E_BASE_URL=<PRODUCTION_URL> npx playwright test`.
+
+---
+
+## 4. Phase 4B Gate Verification Ledger (`v0.1.0-alpha`)
+
+| Phase 4B Gate | Status | Exact Verified Local Evidence / Blocking Requirement |
+| :--- | :---: | :--- |
+| **Gate 1 — Reproducible Release Verification & CI** | **PASS (Local)** | Verified on final source (`5033071` baseline): `npm audit --omit=dev` (`0` vulns), `tsc --noEmit` (exit `0`), `eslint` (exit `0`), Vitest (`9/9` files, `83/83` tests), Pytest (`41/41` tests), and Playwright Next.js E2E (`5/5` passed in `19.5s`, **real exit code `0`** via `global-setup.ts` / `global-teardown.ts`). GitHub Actions CI added at [`.github/workflows/ci.yml`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/.github/workflows/ci.yml). |
+| **Gate 2 — Static Export (`out/`) Verification** | **PASS (Local)** | `npm run build:static` compiled cleanly; `npm run verify:static` verified `37` static files, `8` security headers in `out/_headers`, and `0` secrets; `npm run test:e2e:static` ran all `5/5` Playwright specs against `out/` via `scripts/serve-static-out.mjs` (`17.3s`, **real exit code `0`**). |
+| **Gate 3 — Cloudflare Pages Preparation** | **READY (Awaiting Auth)** | Build settings (`NEXT_STATIC_EXPORT=true npm run build` / `out/`), `_headers`, rollback procedure, and Wrangler preview → production steps prepared. Live deployment blocked pending operator Cloudflare login/credentials. |
+| **Gate 4 — Hosted Security & Privacy Validation** | **PENDING (Blocked on Gate 3)** | Awaits reachable preview/production HTTPS URL from Cloudflare Pages (`curl -sI` + Chromium DevTools telemetry inspection). |
+| **Gate 5 — Public Alpha Product Presentation** | **PASS (Local & Static)** | Added collapsible **How HearthShift Works** explanation, `v0.1.0-alpha` [`CHANGELOG.md`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/CHANGELOG.md) + Changelog modal, honest non-offline wording (explicitly disclosing no Service Worker caching yet), and zero-telemetry scrubbed feedback draft builder. |
+| **Gate 6 — Post-Deployment Acceptance** | **NOT STARTED** | No public HTTPS URL exists yet. Must not recruit study participants or initiate Phase 4C until Gate 3, Gate 4, and Gate 6 pass on a live URL. |
