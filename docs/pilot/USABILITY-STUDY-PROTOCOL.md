@@ -83,8 +83,8 @@ Every session records quantitative scores and verbatim observations across the *
   - `2 = Unassisted Success`: Participant completes the step independently using UI cues alone within task time, without moderator prompt.
   - `1 = Assisted Success`: Participant required a standardized neutral hint after $> 90\text{ s}$ stall before completing the step.
   - `0 = Failed / Abandoned`: Participant cannot complete the step or declines/abandons after standardized hint.
-- **Timing & Reporting:** Wall-clock seconds per step; report `Unassisted`, `Assisted`, and `Failed` counts separately with individual participant trajectories and exact 95% Clopper-Pearson intervals (`stage1_usability_scoring.py`).
-- **Stage 1 Benchmark:** Unassisted (`2`) completion $\ge 80\%$ across all participant-step attempts; zero tasks with $> 30\%$ failure (`0`) rate before Stage 2 launch.
+- **Timing & Reporting:** Wall-clock seconds per step; report **participant-level** unassisted (`2`) completion (`mean/SD`, `median/IQR`, and `/10` per participant across $N$ independent humans) as the primary metric alongside `Unassisted`, `Assisted`, and `Failed` counts per step (with exact 95% Clopper-Pearson intervals across $N$ independent participants per step) and an unpooled repeated-measures step tally (`stage1_usability_scoring.py` — never treating 10 correlated steps within one person as $N \times 10$ independent binomial trials). Missing / `N/A` question-burden probes (when EVSI does not trigger) are excluded with explicit `n/N` denominators.
+- **Stage 1 Benchmark:** Participant-level mean unassisted (`2`) completion $\ge 80\%$ across $N$ participants; zero steps with $> 30\%$ failure (`0`) rate before Stage 2 launch.
 
 ### Construct 2: Comprehension of Recommendations & Uncertainty Bounds ($Q_{0.05}$ vs. Expectation)
 Structured teach-back questions asked immediately after Steps 7 and 8 (scored `Correct`, `Partial`, `Incorrect`):
@@ -165,5 +165,12 @@ Stage 2 powered RCT recruitment ([`FIELD-PILOT-PROTOCOL.md`](file:///c:/Users/sj
 
 1. **Zero Unresolved S0 Defects & Zero S1 Blockers** remaining in the candidate Stage 2 build.
 2. **First-Attempt + Post-Debrief Safety Comprehension:** $100\%$ first-attempt and post-debrief pass on **SAF-1** and **SAF-2** (after any required UI copy remediation), and $\ge 90\%$ pass on **SAF-3** and **SAF-4**.
-3. **Workflow Viability:** Unassisted (`2`) completion $\ge 80\%$ across Steps 1–10; zero steps with $> 30\%$ failure (`0`); mean SUS $\ge 70$ (reported alongside median/IQR and individual scores).
-4. **Statistical Honesty & Small-Sample Boundaries:** Because $N = 5\text{--}10$ yields wide Binomial confidence intervals (e.g., $8/8 = 100\%$ has exact 95% Clopper-Pearson lower bound $63.1\%$), all Stage 1 reports must present individual participant observations, exact 95% Clopper-Pearson intervals, and clear disavowals against population-level usability, bill reduction, or energy-savings efficacy claims.
+3. **Workflow Viability:** Participant-level mean unassisted (`2`) completion $\ge 80\%$ across Steps 1–10 (reported alongside per-participant `/10` trajectories, exact 95% Clopper-Pearson intervals across $N$ independent people per step, and the unpooled repeated-measures step tally); zero steps with $> 30\%$ failure (`0`); mean SUS $\ge 70$ (reported alongside median/IQR and individual scores).
+4. **Statistical Honesty & Small-Sample Boundaries:** Because $N = 5\text{--}10$ yields wide Binomial confidence intervals (e.g., $8/8 = 100\%$ has exact 95% Clopper-Pearson lower bound $63.1\%$), all Stage 1 reports must present individual participant observations, exact 95% Clopper-Pearson intervals across $N$, and clear disavowals against population-level usability, bill reduction, or energy-savings efficacy claims.
+
+---
+
+## 6. Ethics & Governance Readiness Status (Gate 4)
+
+- **Submission Package Prepared (`docs/pilot/`):** Study protocol (`USABILITY-STUDY-PROTOCOL.md` v2.0.0), bilingual (`en`/`ta`) Participant Information Sheet & Consent Forms, eligibility/medical-equipment exclusion screen, access-restricted encrypted storage & 30-day raw-note purge SOP, withdrawal SOP, dual-stage safety debrief gate, and SHA-256 archived regulatory matrix (`REGULATORY-SOURCE-TRACEABILITY.md`).
+- **Current Authorization Status:** **`PENDING INSTITUTIONAL ETHICS / IRB SUBMISSION & APPROVAL — NO APPROVAL ID ISSUED YET. ZERO REAL PARTICIPANTS RECRUITED.`**

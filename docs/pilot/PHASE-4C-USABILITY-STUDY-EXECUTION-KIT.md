@@ -17,7 +17,7 @@
 
 ### 1.1 English Participant Information Summary
 - **Study Purpose:** You are invited to test an experimental household electricity website called **HearthShift AI (`v0.1.0-alpha`)** in a 45–60 minute guided usability session ($5$ to $10$ total participants). We are testing whether the screens, Tamil/English wording, charts, and safety warnings are clear and easy to follow—**not** whether the app actually lowers electricity bills.
-- **No Appliance Control & No Guarantee of Savings:** HearthShift AI cannot touch or control your air conditioner, geyser (water heater), or electricity meter. All rupee figures are modeled educational estimates based on Tamil Nadu **TNPDCL LT-1A** tariff schedules (`GoTN G.O. (Ms) No. 50` & `TNERC Tariff Order No. 6 of 2025`), not official utility quotes or guaranteed savings.
+- **No Appliance Control & No Guarantee of Savings:** HearthShift AI cannot touch or control your air conditioner, geyser (water heater), or electricity meter. All rupee figures are modeled educational estimates based on Tamil Nadu **TNPDCL LT-1A** consumer-payable schedules (**TNERC Order No. 6 of 2025**, **Order No. 4 of 2026**, **Order No. 5 of 2026**, & **GoTN G.O. (Ms) No. 50** — archived in [`regulatory-archive/`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/docs/pilot/regulatory-archive/INDEX.md)), not official utility quotes, tariff certification, or guaranteed savings.
 - **How Browser Storage Works (`IndexedDB` Profile Persistence):** Any bills or CSV samples entered during your session remain on this device inside the web browser's **`HearthShiftDB` (`IndexedDB`)**. **Important:** Data persists inside this **browser profile** even after closing the browser tab or restarting the browser, unless you use a Private/Incognito window, clear site data, or click **Privacy & Storage → Delete All My Data**.
 - **Shared-Device, Extension & Export Risks:** Never enter personal bills on a shared/public device unless you wipe `IndexedDB` afterward. Browser extensions with broad permissions (`<all_urls>`) can inspect open web-page data, and clicking **Export All Data (JSON)** saves an **unencrypted plaintext file** onto your device that you must safeguard yourself.
 - **Free-Text Feedback Privacy:** Although the feedback draft tool excludes structured database records (`bills`, `readings`, `preferences`, `savings`), free-text comments you type are **not** automatically redacted. You and the moderator will manually review any written feedback together to delete names, phone numbers, addresses, or meter numbers before saving or sharing.
@@ -127,9 +127,9 @@
 ### 5.3 Single Ease Question (SEQ) & Question-Burden (`QB`) Questionnaires
 - **SEQ-1 (Asked after Step 3 Manual Bill):** *"Overall, how difficult or easy was adding a bill?"* `1 (Very Difficult) — 2 — 3 — 4 — 5 — 6 — 7 (Very Easy)`: Score `[__]`
 - **SEQ-2 (Asked after Step 5 CSV Import):** *"Overall, how difficult or easy was importing interval data?"* `1 — 2 — 3 — 4 — 5 — 6 — 7`: Score `[__]`
-- **QB-1 (Intrusiveness):** *"How intrusive or annoying did the preference question popup feel?"* `1 (Not at all) — 2 — 3 — 4 — 5 (Very intrusive)`: Score `[__]` *(If no modal triggered cleanly during participant flow, record `N/A` and inspect Scenario/Preference toggle comfort separately.)*
-- **QB-2 (Effort):** *"How much mental effort did answering that question take?"* `1 (Minimal) — 2 — 3 — 4 — 5 (Exhausting)`: Score `[__]`
-- **QB Tolerance:** *"In one two-month billing cycle, what is the maximum number of quick preference questions like this you would tolerate before ignoring the app?"* Circle one: `0` / `1` / `2–3` / `4+`
+- **QB-1 (Intrusiveness):** *"How intrusive or annoying did the preference question popup feel?"* `1 (Not at all) — 2 — 3 — 4 — 5 (Very intrusive)`: Score `[__]` *(If no modal triggered during flow, record `"N/A"` on `qb_1`, `qb_2`, and `question_tolerance`—[`stage1_usability_scoring.py`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/research/experiments/stage1_usability_scoring.py) excludes `N/A` cleanly with explicit `n/N` denominators.)*
+- **QB-2 (Effort):** *"How much mental effort did answering that question take?"* `1 (Minimal) — 2 — 3 — 4 — 5 (Exhausting)`: Score `[__]` (or `"N/A"`)
+- **QB Tolerance:** *"In one two-month billing cycle, what is the maximum number of quick preference questions like this you would tolerate before ignoring the app?"* Circle one: `0` / `1` / `2–3` / `4+` / `N/A`
 - **Willingness (`1–5`):** *"If your household has this appliance, how willing would you be to try the top suggestion manually for one week?"* `1 — 2 — 3 — 4 — 5`: Score `[__]`
 
 ### 5.4 Standardized Brooke 10-Item System Usability Scale (`SUS`)
@@ -175,5 +175,18 @@ Run `research\.venv\Scripts\python.exe research/experiments/stage1_usability_sco
 **Stage 1 $\to$ Stage 2 Go/No-Go Criteria (`ALL` must pass post-remediation before RCT authorization):**
 - [ ] **Zero S0/S1 Defects:** `S0 = 0` and `S1 = 0` on candidate build.
 - [ ] **Safety First-Attempt + Post-Debrief:** `100%` first-attempt and post-debrief pass on **SAF-1** & **SAF-2** (after any required UI copy revision); `>= 90%` on **SAF-3** & **SAF-4**.
-- [ ] **Workflow & SUS:** Unassisted (`2`) step completion `>= 80%`, no step with failure (`0`) rate `> 30%`, mean `SUS >= 70`.
-- [ ] **Honest Small-$N$ Reporting:** Report individual scores + exact Clopper-Pearson 95% CIs; `0` energy-savings or bill-reduction claims.
+- [ ] **Workflow & SUS:** Participant-level mean unassisted (`2`) completion `>= 80%` across `/10` steps per participant (`mean/SD`, `median/IQR`), no step with failure (`0`) rate `> 30%`, mean `SUS >= 70`.
+- [ ] **Honest Small-$N$ Reporting:** Report individual scores, exact Clopper-Pearson 95% CIs per step across $N$ independent humans (never pooled within-participant binomial CIs), explicit `n/N` denominators for optional `QB` probes, and `0` energy-savings, bill-reduction, or utility-certification claims.
+
+---
+
+## 8. Gate 4: Institutional Ethics & Governance Submission Status
+
+| Submission Item | Verification Status | Reference Artifact |
+| :--- | :---: | :--- |
+| Stage 1 Human-Factors Protocol (`N = 5–10` formative study) | **Ready for Submission** | [`USABILITY-STUDY-PROTOCOL.md`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/docs/pilot/USABILITY-STUDY-PROTOCOL.md) |
+| Bilingual (`en`/`ta`) Information Sheet & Consent Forms | **Ready for Submission** | Sections `1` & `2` above |
+| Inclusion / Medical-Equipment Exclusion Screen | **Ready for Submission** | Section `3` above |
+| Feedback Retention, Access, Manual PII Review & Withdrawal SOP | **Ready for Submission** | Section `6` above + [`AlphaModals.tsx`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/src/components/alpha/AlphaModals.tsx) |
+| Browser-Profile `IndexedDB` Persistence & Unencrypted JSON Notices | **Implemented in Live UI (`en`/`ta`)** | [`i18n.tsx`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/src/locales/i18n.tsx) |
+| **Institutional Ethics / IRB Clearance ID** | **`PENDING APPROVAL — NONE ISSUED`** | **Recruitment & human data collection BLOCKED until approval** |

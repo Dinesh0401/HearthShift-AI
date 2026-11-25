@@ -2,18 +2,33 @@
 
 > [!CAUTION]
 > **SYNTHETIC PRE-STUDY EXAMPLE — NOT REAL PARTICIPANTS**
-> Generated solely to verify reproducible scoring and statistical uncertainty calculations from `research/fixtures/stage1_synthetic_usability_sessions.json`. Zero real households have been tested.
+> Generated solely to verify reproducible scoring and schema validation against `research/fixtures/stage1_synthetic_usability_sessions.json`. Zero real households have been tested.
 
 ---
 
-## 1. Cohort Scope & Small-Sample Uncertainty Warning
-- **Cohort Size ($N$):** `8` sessions
-- **Statistical Scope:** Cohort N=8 is strictly formative usability testing. Small-N metrics cannot establish population-wide statistical efficacy, bill reduction, or energy savings; inspect individual sessions and 95% Clopper-Pearson intervals.
+## 1. Cohort Scope & Inferential vs. Exploratory Boundaries
+- **Independent Participants ($N$):** `8`
+- **Epistemic Boundary:** Formative exploratory usability audit across N=8 independent participants. Within-participant task completions (10 tasks/participant) are correlated repeated measures and are summarized at the participant level before step-level breakdowns. Small-N intervals are exploratory uncertainty bounds only—never population-wide efficacy, tariff certification, or savings claims.
 
-## 2. 10-Step Task Outcomes (Strictly Separated: Unassisted vs. Assisted vs. Failed)
-- **Aggregate Step Attempts:** `80` — Unassisted (`2`): `75` (`93.8%`), Assisted (`1`): `4`, Failed (`0`): `1`
+## 2. Participant-Level Task Completion (Primary Descriptive Summary across N Independent People)
+- **Participant Unassisted Proportion (`/10` steps):** Mean `93.8%` (SD `7.4%`), Median `95.0%` (IQR `90.0%–100.0%`, Range `80.0%–100.0%`)
+- **Participants Completing All 10/10 Unassisted:** `4/8`
 
-| Step | Unassisted (`2`) | Assisted (`1`) | Failed (`0`) | Unassisted Rate (95% Clopper-Pearson CI) | Median Time (IQR) |
+| Participant | Locale | Device | Unassisted (`2`) | Assisted (`1`) | Failed (`0`) | Rate |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| `SYN-P01` | `en` | `desktop` | 10 | 0 | 0 | `100%` |
+| `SYN-P02` | `ta` | `mobile` | 9 | 1 | 0 | `90%` |
+| `SYN-P03` | `en` | `desktop` | 9 | 1 | 0 | `90%` |
+| `SYN-P04` | `ta` | `desktop` | 9 | 1 | 0 | `90%` |
+| `SYN-P05` | `en` | `mobile` | 10 | 0 | 0 | `100%` |
+| `SYN-P06` | `ta` | `mobile` | 8 | 1 | 1 | `80%` |
+| `SYN-P07` | `en` | `desktop` | 10 | 0 | 0 | `100%` |
+| `SYN-P08` | `ta` | `desktop` | 10 | 0 | 0 | `100%` |
+
+## 3. Step-by-Step Breakdown & Correlated Tally
+- **Repeated-Measures Attempt Tally (Correlated Within-Participant Steps — No Pooled Binomial CI):** `80` attempts — Unassisted (`2`): `75`, Assisted (`1`): `4`, Failed (`0`): `1`
+
+| Step | Unassisted (`2`) | Assisted (`1`) | Failed (`0`) | Exploratory Unassisted Rate Across N (95% Clopper-Pearson CI) | Median Time (IQR) |
 | :--- | :---: | :---: | :---: | :---: | :---: |
 | Step 1: Onboarding & Advisory Disclaimer Check | 8 | 0 | 0 | `100.0%` (`[63.1%, 100.0%]`) | 62.5s (57.2–69.0s) |
 | Step 2: Language Toggle & Capability Inspection | 8 | 0 | 0 | `100.0%` (`[63.1%, 100.0%]`) | 44.5s (39.5–46.8s) |
@@ -26,20 +41,20 @@
 | Step 9: Adaptive EVSI Modal & Provenance Ledger | 8 | 0 | 0 | `100.0%` (`[63.1%, 100.0%]`) | 73.0s (67.8–79.0s) |
 | Step 10: Privacy Export, Feedback Review & Wipe | 8 | 0 | 0 | `100.0%` (`[63.1%, 100.0%]`) | 73.5s (69.5–82.2s) |
 
-## 3. First-Attempt vs. Post-Debrief Safety Comprehension (`SAF-1` to `SAF-4`)
-*Initial misconceptions are logged BEFORE moderator explanation so UI copy flaws are never hidden.*
+## 4. First-Attempt vs. Post-Debrief Safety Comprehension (`SAF-1` to `SAF-4`)
+*Initial misconceptions BEFORE moderator debriefing are never overwritten or masked.*
 
-| Probe | First-Attempt Pass (95% CI) | Post-Debrief Pass (95% CI) | Initial Misconception Flagged? |
-| :--- | :---: | :---: | :---: |
-| **SAF-1** | `7/8` (`87.5%`, `[47.3%, 99.7%]`) | `8/8` (`100.0%`, `[63.1%, 100.0%]`) | YES (Remediation Triggered) |
-| **SAF-2** | `8/8` (`100.0%`, `[63.1%, 100.0%]`) | `8/8` (`100.0%`, `[63.1%, 100.0%]`) | No |
-| **SAF-3** | `7/8` (`87.5%`, `[47.3%, 99.7%]`) | `8/8` (`100.0%`, `[63.1%, 100.0%]`) | YES (Remediation Triggered) |
-| **SAF-4** | `8/8` (`100.0%`, `[63.1%, 100.0%]`) | `8/8` (`100.0%`, `[63.1%, 100.0%]`) | No |
+| Probe | First-Attempt Pass (Exploratory 95% CI) | Initial Misconceptions | Post-Debrief Pass (Exploratory 95% CI) | UI Remediation Triggered? |
+| :--- | :---: | :---: | :---: | :---: |
+| **SAF-1** | `7/8` (`87.5%`, `[47.3%, 99.7%]`) | `SYN-P04` | `8/8` (`100.0%`, `[63.1%, 100.0%]`) | YES |
+| **SAF-2** | `8/8` (`100.0%`, `[63.1%, 100.0%]`) | `None` | `8/8` (`100.0%`, `[63.1%, 100.0%]`) | No |
+| **SAF-3** | `7/8` (`87.5%`, `[47.3%, 99.7%]`) | `SYN-P02` | `8/8` (`100.0%`, `[63.1%, 100.0%]`) | YES |
+| **SAF-4** | `8/8` (`100.0%`, `[63.1%, 100.0%]`) | `None` | `8/8` (`100.0%`, `[63.1%, 100.0%]`) | No |
 
-## 4. Individual Participant Scores (Brooke SUS, SEQ, Question Burden)
-- **SUS Summary:** Mean `77.19` (SD `8.18`), Median `76.25` (IQR `72.5–80.62`, Range `65.0–92.5`)
-- **SEQ Median Ease (`1–7`):** Manual Bill = `6.0`, CSV Import = `5.0`
-- **Question Burden:** `QB-1` Mean `1.75`, `QB-2` Mean `1.88`, Low-Tolerance / High-Burden Share = `25.0%` (`c_ask` escalation triggered: `False`)
+## 5. Individual Brooke SUS Scores, SEQ & Question Burden (Explicit Denominators)
+- **SUS Summary (`N=8`):** Mean `77.19` (SD `8.18`), Median `76.25` (IQR `72.5–80.62`, Range `65.0–92.5`)
+- **SEQ Median Ease (`1–7`, `n=8/8`):** Manual Bill = `6.0`, CSV Import = `5.0`
+- **Question Burden (Missing / N/A Excluded from Denominator):** `QB-1` Mean `1.75 (n=8/8)`, `QB-2` Mean `1.88 (n=8/8)`, Evaluated `n=8/8`, Low-Tolerance / High-Burden = `2/8` (`25.0%`, `c_ask` escalation triggered: `False`)
 
 | Participant ID | Locale | Device | SUS Score |
 | :--- | :---: | :---: | :---: |
@@ -52,11 +67,11 @@
 | `SYN-P07` | `en` | `desktop` | `92.5` |
 | `SYN-P08` | `ta` | `desktop` | `75.0` |
 
-## 5. Defect Summary & Stage 1 -> Stage 2 Go/No-Go Check
+## 6. Defect Summary & Stage 1 -> Stage 2 Go/No-Go Check
 - **Defects:** `S0=0`, `S1=0`, `S2=2`, `S3=1`
 - **Zero S0/S1 Defects:** `True`
 - **SAF-1 & SAF-2 First-Attempt 100% (No UI Remediation Required):** `False`
 - **SAF-1 & SAF-2 Post-Debrief 100%:** `True`
-- **Unassisted Completion >= 80%:** `True`
+- **Participant Mean Unassisted Completion >= 80%:** `True`
 - **Mean SUS >= 70:** `True`
 - **Stage 2 Go Without Pre-RCT Copy Remediation:** `False`

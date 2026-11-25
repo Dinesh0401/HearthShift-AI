@@ -1,0 +1,1428 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta http-equiv="X-XSS-Protection" content="0">
+  
+  <!-- Favicons -->
+  <link href="/static/tnpdcl/assets/img/tangedco_icon.png" rel="icon">
+
+
+  <!-- Vendor CSS Files -->
+  <link href="/static/tnpdcl/assets/vendor/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/static/tnpdcl/assets/vendor/vendor/icofont/icofont.min.css" rel="stylesheet">
+  <link href="/static/tnpdcl/assets/vendor/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  
+  <link href="/static/tnpdcl/assets/vendor/vendor/ionicons/css/ionicons.min.css" rel="stylesheet">
+  <link href="/static/tnpdcl/assets/vendor/vendor/animate.css/animate.min.css" rel="stylesheet">
+  <link href="/static/tnpdcl/assets/vendor/vendor/venobox/venobox.css" rel="stylesheet">
+  <link href="/static/tnpdcl/assets/vendor/vendor/owl.carousel/assets/owl.carousel.css" rel="stylesheet">
+  <link href="/static/tnpdcl/assets/vendor/vendor/aos/aos.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="/static/tnpdcl/assets/css/jquery.bsPhotoGallery.css" rel="stylesheet">
+  <link href="/static/tnpdcl/assets/vendor/css/style2.css" rel="stylesheet">
+  <link href="/static/tnpdcl/assets/vendor/css/custom.css" rel="stylesheet">
+  
+  <style>
+.come-from-modal.left .modal-dialog,
+.come-from-modal.right .modal-dialog {
+    /* position: fixed; */
+    margin: auto;
+    width: 320px;
+    height: 100%;
+    -webkit-transform: translate3d(0%, 0, 0);
+    -ms-transform: translate3d(0%, 0, 0);
+    -o-transform: translate3d(0%, 0, 0);
+    transform: translate3d(0%, 0, 0);
+}
+
+.come-from-modal.left .modal-content,
+.come-from-modal.right .modal-content {
+    height: 100%;
+    overflow-y: hidden;
+    border-radius: 0px;
+}
+
+
+.come-from-modal.right.fade .modal-dialog {
+    /*right: -469px;*/
+    float: right;
+    -webkit-transition: opacity 0.3s linear, right 0.3s ease-out;
+    -moz-transition: opacity 0.3s linear, right 0.3s ease-out;
+    -o-transition: opacity 0.3s linear, right 0.3s ease-out;
+    transition: opacity 0.3s linear, right 0.3s ease-out;
+}
+
+.come-from-modal.right.fade.in .modal-dialog {
+    right: 0;
+}
+.modal-header{
+  background-color: #053671;
+  color: #fff;
+}
+.modal-content {
+    height: 100%;
+    /* overflow-y: hidden; */
+    border-radius: 0px;
+}
+.modal-body {
+    max-height: calc(165vh - 210px);
+    padding: 0rem 1rem 1rem 1rem;
+    /* overflow-y: scroll; 
+     overflow-x: hidden; */
+}
+
+#myModal {
+  padding-right: 0px !important;
+}
+
+
+
+.bottomright {
+  position: fixed;
+    bottom: 38px;
+    right: 11px;
+    font-size: 18px;
+    cursor: pointer;
+    opacity: 1;
+    z-index: 9;
+ 
+}
+.bottomright:hover {
+  opacity: 1;
+}
+.img{
+  width: 100%;
+    height: 100%;
+}
+.bs-example {
+    margin: 20px;
+  }
+
+  .accordion .fa {
+    margin-right: 0.5rem;
+  }
+
+.marquee {
+  margin: 20px;
+    height: 120px !important;
+  overflow: hidden;
+  position: relative;
+}
+
+.marquee div {
+  display: inline-block;
+  white-space: nowrap;
+  position: absolute;
+  animation: marquee 80s linear infinite; /* slower scroll */
+}
+
+.marquee span {
+  display: inline-block;
+  padding: 0 2rem; /* spacing between items */
+}
+
+.marquee__content:hover {
+  animation-play-state: paused !important; /* pause on hover */
+}
+
+@keyframes marquee {
+  0%   { left: 50%; }    /* start from middle */
+  100% { left: -100%; }  /* scroll fully left */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+  </style>
+
+<!--<script>
+  window.onscroll = function() {
+    var topHeader = document.getElementById("top-header");
+    var headerMain = document.getElementById("header");
+    
+    if (window.pageYOffset > topHeader.offsetHeight) {
+      headerMain.classList.add("fixed-top");
+      // Optional: hide top header to save space
+      topHeader.style.marginTop = "-40px"; 
+    } else {
+      headerMain.classList.remove("fixed-top");
+      topHeader.style.marginTop = "0";
+    }
+  };
+</script>-->
+  
+
+</head>
+
+<body>
+
+  
+  
+  <div id="cover-spin"></div>
+  <header id="top-header" class="">
+    <div class="container-fluid">
+
+      <div class="row justify-content-center">
+     
+<div class="col-12 col-md-12 col-lg-6 col-xl-6 d-flex align-items-center">
+          <nav class="nav-menu d-lg-block">
+            <ul>
+
+              
+
+
+
+<li class="nav-item lang active choosen">
+	<!--<a class="nav-link" href="/en/tnpdcl/billing-services/schedules-tariff/" title="Change to language: English">English</a>-->
+    <a id="en" class="mr-2 lang-but" href="/en/tnpdcl/billing-services/schedules-tariff/">English </a>
+</li>
+
+<li class="nav-item lang">
+	<!--<a class="nav-link" href="/ta/tnpdcl/billing-services/schedules-tariff/" title="Change to language: தமிழ்">தமிழ்</a>-->
+    <a id="ta" class="mr-2 lang-but" href="/ta/tnpdcl/billing-services/schedules-tariff/">தமிழ் </a>
+</li>
+
+
+              <li class="d-none d-lg-block">
+                <a href="#main_con" style="margin-right: 10px;"  title="Skip to Main">Skip to Main Content</a>
+              </li>
+              <li>
+                <a href="/en/tnpdcl/screen-reader/"  title="Screen Reader">Screen Reader Access</a>
+              </li>
+              <li >
+                <a class="twitter header-top-li" href="https://twitter.com/TANGEDCO_Offcl" target="_blank" title="twitter link"><i class="fa fa-twitter">&nbsp;</i></a>
+              </li>
+
+
+
+			  <li >
+                <a class="youtube header-top-li" href="https://www.youtube.com/channel/UCrxNwnwxRy3EYOzy3iXsiUw" target="_blank"  title="youtube link"><i class="fa fa-youtube-play">&nbsp;</i></a>
+              </li>
+			  <li >
+                <a class="instagram header-top-li" href="https://www.instagram.com/tangedco_official" target="_blank"  title="Insta link"><i class="fa fa-instagram">&nbsp;</i></a>
+              </li>
+			  <li >
+                <a class="facebook header-top-li" href="https://www.facebook.com/TANGEDCOOffcl" target="_blank"  title="facebook link"><i class="fa fa-facebook">&nbsp;</i></a>
+              </li>
+              			  
+
+
+            </ul>
+
+          </nav><!-- .nav-menu -->
+        </div>
+       <div class="col-12 col-md-12 col-lg-6 col-xl-6">
+
+          <nav class="nav-menu  d-none d-lg-block header-social-link pull-right">
+
+            <ul>
+              <li><a class="icon-hover increase header-top-li"  title="Increase Font Size" href="#">A+</a></li>
+              <li><a class="icon-hover resetMe header-top-li"  title="Reset Font Size" href="#">A</a></li>
+              <li><a class="icon-hover decrease header-top-li"  title="Decrease Font Size" href="#">A-</a></li>
+              <li><a class="icon-hover header-top-li callblack"  title="High Contrast" href="#" onclick="javascript:callblack();"><i
+                    class="fa fa-adjust">&nbsp;</i></a></li>
+              <li><a class="icon-hover header-top-li calloriginal"  title="Normal Contrast" href="#" onclick="javascript:calloriginal();"><i
+                    class="fa fa-support">&nbsp;</i></a></li>
+              <li><a href="" > <span
+                    style="font-size:18px; "> Minnagam &emsp;</span><img
+                    alt="" src="/static/tnpdcl/assets/img/time-icon.png" class="img-fluid" width="40px" height="40px" /><span
+                    style="font-size:18px; float:right;">94987 94987</span></a></li>
+				
+            </ul>
+          </nav><!-- .nav-menu -->
+          <!--<nav class="nav-menu  d-none d-lg-block header-social-link pull-right">
+            <ul>
+	<li><a href="http://tneb.tnebnet.org/">Employee Login</a></li>
+</ul>
+            </nav>-->
+          </div>
+		  
+        </div>
+      </div>
+
+    </div>
+  </header>
+<section id="header" class="fixed-top">
+  <header id="logo">
+    <div class="container">
+      <div class="row">
+      
+        <div class="col-12 text-center">
+		
+	
+   <img alt="" src="/static/tnpdcl/assets/img/icon/tnpdclelogo.png" style="max-width:90%;height:auto"  />
+ 
+
+     
+      </div>
+
+    </div> 
+    </div> 
+  </header>
+  <header id="menu-header" class="fixed-top d-none d-lg-block">
+    <div class="container-fluid">
+
+      <div class="row justify-content-center">
+        <div class="col-xl-12 d-flex align-items-center">
+
+          <nav class="nav-menu d-none d-lg-block">
+            <ul>
+              
+
+<li class="child ">
+   
+   <a class="" href="/en/tnpdcl/">Home</a>
+   
+</li>
+
+<li class="child  drop-down">
+   
+   <a class="" href="#">About Us</a>
+   <ul>
+      
+      <li class="child ">
+         
+		
+		
+			<a class="" href="/en/tnpdcl/about-us/tn-glance/">TN at a glance</a>
+		
+         
+      </li>
+      
+      <li class="child ">
+         
+		
+		
+			<a class="" href="/en/tnpdcl/about-us/tnpdcl-profile/">TNPDCL Profile</a>
+		
+         
+      </li>
+      
+      <li class="child ">
+         
+		
+		
+			<a class="" href="/en/tnpdcl/about-us/board-director/">Board of Directors</a>
+		
+         
+      </li>
+      
+      <li class="child ">
+         
+		
+		
+			<a class="" href="/en/tnpdcl/about-us/orga/">Organizational structure</a>
+		
+         
+      </li>
+      
+   </ul>
+   
+</li>
+
+<li class="child ">
+   
+   <a class="" href="/en/tnpdcl/recruitment/">Recruitment</a>
+   
+</li>
+
+<li class="child  drop-down">
+   
+   <a class="" href="#">Consumer Info</a>
+   <ul>
+      
+      <li class="child ">
+         
+		
+		
+		<a class="" href="/en/tnpdcl/consumer-info/pmsurya/">PM Solar House Free Electricity Scheme <img src="/static/tangedco/assets/img/newblink/new.gif" width="30" height="30"/></a>
+		
+         		
+		
+         
+      </li>
+      
+      <li class="child ">
+         
+		
+		
+			<a class="" href="https://app1.tangedco.org/Aadhaar/">Aadhaar-Link your service connection number</a>
+		
+         
+      </li>
+      
+      <li class="child ">
+         
+		
+		
+			<a class="" href="https://www.tnebltd.gov.in/agrifreeservice/repbycatnew.xhtml">350 Nos Agri SPL priority Scheme</a>
+		
+         
+      </li>
+      
+      <li class="child ">
+         
+		
+		
+			<a class="" href="https://www.tnebltd.gov.in/CirLop/lopselhalftan.xhtml">TNPDCL&#x27;s Level of Performance</a>
+		
+         
+      </li>
+      
+      <li class="child ">
+         
+		
+		
+			<a class="" href="/en/tnpdcl/archived-news/">Archived News</a>
+		
+         
+      </li>
+      
+      <li class="child ">
+         
+		
+		
+			<a class="" href="/en/tnpdcl/consumer-info/citizen-charter/">Citizen Charter</a>
+		
+         
+      </li>
+      
+      <li class="child  drop-down">
+         
+         <a class="" href="#">Consumer Guidance</a>
+         <ul>
+            
+            <li class="child ">
+               
+               <a class="" href="/en/tnpdcl/consumer-info/consumer-guidance/general-information/">General Information</a>
+               
+            </li>
+            
+            <li class="child ">
+               
+               <a class="" href="/en/tnpdcl/consumer-info/consumer-guidance/forms/">Forms &amp; Procedures</a>
+               
+            </li>
+            
+            <li class="child ">
+               
+               <a class="" href="/en/tnpdcl/consumer-info/consumer-guidance/faq/">FAQ</a>
+               
+            </li>
+            
+         </ul>
+         
+      </li>
+      
+      <li class="child  drop-down">
+         
+         <a class="" href="#">Outages</a>
+         <ul>
+            
+            <li class="child ">
+               
+               <a class="" href="http://www.tnebltd.gov.in:8080/outages/viewshutdown.xhtml">Scheduled Outage Information</a>
+               
+            </li>
+            
+            <li class="child ">
+               
+               <a class="" href="https://www.tnebltd.gov.in/htoutages/showdetails.xhtml">Outage Details in SIPCOT area</a>
+               
+            </li>
+            
+            <li class="child ">
+               
+               <a class="" href="http://mail.tneb.in/gisapp/chororeal.jsp">Circle wise present Fuse off call status</a>
+               
+            </li>
+            
+            <li class="child ">
+               
+               <a class="" href="http://mail.tneb.in/gisapp/foccirclepub.html">Circle wise previous day call status</a>
+               
+            </li>
+            
+         </ul>
+         
+      </li>
+      
+      <li class="child ">
+         
+		
+		
+			<a class="" href="https://www.tnebltd.gov.in/theftonline/petitionentry.xhtml">Complaint against Unauthorized usage</a>
+		
+         
+      </li>
+      
+      <li class="child ">
+         
+		
+		
+			<a class="" href="/en/tnpdcl/consumer-info/ealert/">Kindly ignore unwanted and fraudulent messages-click here</a>
+		
+         
+      </li>
+      
+   </ul>
+   
+</li>
+
+<li class="child ">
+   
+   <a class="" href="/en/tnpdcl/online-services/online-sevices/">Online Services</a>
+   
+</li>
+
+<li class="child  drop-down">
+   
+   <a class="" href="#">Roof Top Solar</a>
+   <ul>
+      
+      <li class="child ">
+         
+		
+		
+			<a class="" href="/static/tnpdcl/assets/files/pmsuryaghar/annuxure1.pdf">Policies Adopted</a>
+		
+         
+      </li>
+      
+      <li class="child ">
+         
+		
+		
+			<a class="" href="/static/tnpdcl/assets/files/pmsuryaghar/annuxure2.pdf">PM Surya Ghar Muft Bijili Yojana</a>
+		
+         
+      </li>
+      
+      <li class="child ">
+         
+		
+		
+			<a class="" href="/static/tnpdcl/assets/files/pmsuryaghar/annuxure3.pdf">Subsidy Structure</a>
+		
+         
+      </li>
+      
+      <li class="child ">
+         
+		
+		
+			<a class="" href="/static/tnpdcl/assets/files/pmsuryaghar/sop.pdf">SOP  for PM Surya Ghar scheme</a>
+		
+         
+      </li>
+      
+      <li class="child ">
+         
+		
+		
+			<a class="" href="/static/tnpdcl/assets/files/pmsuryaghar/pmsuryagharflowchart.pdf">How to apply in PM Surya Ghar and avail subsidy</a>
+		
+         
+      </li>
+      
+      <li class="child ">
+         
+		
+		
+			<a class="" href="/static/tnpdcl/assets/files/pmsuryaghar/annuxure5.pdf">Contact Information</a>
+		
+         
+      </li>
+      
+      <li class="child ">
+         
+		
+		
+			<a class="" href="/static/tnpdcl/assets/files/pmsuryaghar/annuxure6.pdf">Vendor Empanelment</a>
+		
+         
+      </li>
+      
+      <li class="child ">
+         
+		
+		
+			<a class="" href="https://pmsuryaghar.gov.in/#/registered-vendors">Approved Empaneled Vendors</a>
+		
+         
+      </li>
+      
+      <li class="child ">
+         
+		
+		
+			<a class="" href="/static/tnpdcl/assets/files/pmsuryaghar/performancebankguarantee.pdf">Performance Bank Guarantee</a>
+		
+         
+      </li>
+      
+   </ul>
+   
+</li>
+
+<li class="child  drop-down">
+   
+   <a class="" href="#">Gallery</a>
+   <ul>
+      
+      <li class="child ">
+         
+		
+		
+			<a class="" href="/en/tnpdcl/gallery/gallery/">Photo Gallery</a>
+		
+         
+      </li>
+      
+      <li class="child ">
+         
+		
+		
+			<a class="" href="/en/tnpdcl/press-release/">Press Release</a>
+		
+         
+      </li>
+      
+   </ul>
+   
+</li>
+
+<li class="child  drop-down">
+   
+   <a class="" href="#">Departments</a>
+   <ul>
+      
+      <li class="child ">
+         
+		
+		
+			<a class="" href="/en/tnpdcl/departments/enforcement/">Enforcement</a>
+		
+         
+      </li>
+      
+      <li class="child ">
+         
+		
+		
+			<a class="" href="/en/tnpdcl/departments/training-development/">Human Resource</a>
+		
+         
+      </li>
+      
+      <li class="child ">
+         
+		
+		
+			<a class="" href="/en/tnpdcl/departments/research-development/">Research &amp; Development</a>
+		
+         
+      </li>
+      
+      <li class="child  drop-down">
+         
+         <a class="" href="#">Purchase</a>
+         <ul>
+            
+            <li class="child ">
+               
+               <a class="" href="/en/tnpdcl/departments/purchase/power-purchase/">Power Purchase</a>
+               
+            </li>
+            
+            <li class="child ">
+               
+               <a class="" href="/en/tnpdcl/departments/purchase/procurement-policy/">Procurement Policy</a>
+               
+            </li>
+            
+            <li class="child ">
+               
+               <a class="" href="http://tneb.tnebnet.org/gedcotender/">Tender Login</a>
+               
+            </li>
+            
+         </ul>
+         
+      </li>
+      
+      <li class="child  drop-down">
+         
+         <a class="" href="#">Projects</a>
+         <ul>
+            
+            <li class="child ">
+               
+               <a class="" href="/en/tnpdcl/departments/projects/cdrrproject/">CDRR Project</a>
+               
+            </li>
+            
+         </ul>
+         
+      </li>
+      
+      <li class="child ">
+         
+		
+		
+			<a class="" href="https://app1.tangedco.org/dsmenergy/">Tamil Nadu State Designated Agency(Demand Side Management)</a>
+		
+         
+      </li>
+      
+   </ul>
+   
+</li>
+
+<li class="child ">
+   
+   <a class="" href="/en/tnpdcl/right-information/">RTI</a>
+   
+</li>
+
+<li class="child ">
+   
+   <a class="" href="https://ccms.tangedco.org/tangedco-public/">Consumer Complaints</a>
+   
+</li>
+
+<li class="child ">
+   
+   <a class="" href="http://pens.tnebnet.org/openbd/pens/">Pension</a>
+   
+</li>
+
+<li class="child  drop-down">
+   
+   <a class="" href="#">Reach us</a>
+   <ul>
+      
+      <li class="child ">
+         
+		
+		
+			<a class="" href="/en/tnpdcl/reach-us/contact-information/">Contact Information</a>
+		
+         
+      </li>
+      
+   </ul>
+   
+</li>
+
+          
+            </ul>
+          </nav><!-- .nav-menu -->
+        </div>
+      </div>
+
+    </div>
+  </header>
+</section>
+  <script src="/static/tnpdcl/assets/vendor/vendor/jquery/jquery.min.js"></script>
+  <div id="main_con" >
+  
+	
+<div id="bread" class="" style="margin-top: 55px;"><div class="container-fluid"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="#">Billing Services</a></li><li class="breadcrumb-item active">Schedules of Tariff</li></ol></div></div>
+
+<div class=""><section id="home" class="flex mainalt"><div class="container"><div class="maintitle"><h3>Schedules of Tariff</h3></div></div></section><div id="main" class=""><section id="about" class="about"><div class="container"><div class="row"><div class="col col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4"><img src="/media/filer_public_thumbnails/filer_public/87/da/87da508d-8f51-49fb-897a-e6938dd158ec/tariff_1.png__380x380_q85_subsampling-2.png"
+    alt=""
+    
+    
+    
+    class="img-fluid"
+></div><div class="col col-12 col-sm-12 col-md-8 col-lg-8 col-xl-8"><div class="info-box pt-3 map-ul"><h4>Tariff details</h4><ul><li><a href="/static/tnpdcl/assets/files/tariff/2025/TO062025/TO62025.pdf">Tariff order</a></li><li><a href="/static/tnpdcl/assets/files/tariff/2025/TO072025/TO072025.pdf">Non Tariff related Miscellaneous Charges(LT&amp;HT)</a></li></ul></div></div></div></div></section></div></div>
+
+
+</div>
+
+  <div class="marquee">
+    <div class="marquee__content">
+    <h5><img alt="Save-energy1" height="100" src="/static/tnpdcl/assets/img/Save-energy1.png" width="100"> <strong>Energy / Electricity Saved is Energy Produced</strong>  <img alt="Save-energy2" height="100" src="/static/tnpdcl/assets/img/Save-energy2.png" width="100"> <strong>Energy conservation, a key to sustainable development</strong>  <img alt="Save-energy3" height="100" src="/static/tnpdcl/assets/img/Save-energy4.png" width="100"> <strong>Energy is in limited supply, Use it wisely</strong>   <img alt="Save-energy4" height="100" src="/static/tnpdcl/assets/img/Save-energy3.png" width="100"> <strong>Turn off lights and equipments when not in use</strong>  <img alt="Save-energy5" height="100" src="/static/tnpdcl/assets/img/Save-energy5.png" width="100"> <strong>Save energy for benefit of self and nation</strong>   <img alt="Save-energy1" height="100" src="/static/tnpdcl/assets/img/scrollrcd.png" width="100"> <strong>Install RCD to safeguard life from Electrical Accidents</strong>  </h5>
+    
+    </div>
+    </div>
+ 
+
+
+ 
+ 
+  <h2 class="tnpdcl-home-heading">Explore our trusted websites</h2> 
+ <div class="tnpdcl-exp-url">
+ <a href="https://www.tnebltd.org/en/tneb/" target="_blank">
+      <img src="/static/greenenergy/assets/img/logo/tneb.png" alt="TNEB Logo">
+      <span>TNEB LTD</span>
+  </a>
+  <a href="https://www.tngecl.org/en/greenenergy/" target="_blank">
+      <img src="/static/greenenergy/assets/img/logo/greenenergylogo.png" alt="TNGECL Logo">
+      <span>TNGECL</span>
+  </a>
+  <a href="https://www.tantransco.org/en/tantransco/" target="_blank">
+      <img src="/static/greenenergy/assets/img/logo/tantransco.png" alt="TANTRANSCO Logo">
+      <span>TANTRANSCO</span>
+  </a>
+ 
+  <a href="https://www.tnpgcl.org/en/generation/" target="_blank">
+      <img src="/static/greenenergy/assets/img/logo/tnpgcl.png" alt="TNSDA Logo">
+      <span>TNPGCL</span>
+  </a>
+    <a href="https://app1.tangedco.org/dsmenergy/">
+            <img src="/static/greenenergy/assets/img/logo/tnpdcl.png" alt="TNSDA">
+            <span>TNSDA</span>
+        </a>
+</div>
+
+
+<footer >
+      <footer class="Tnpdcl-Footer">
+  <div>
+    <h3>Useful Links</h3>
+    <ul>
+      <li><a href="https://tneb.tnebnet.org/gedcotender/" target="blank">Tender Login</a></li>
+      <li><a href="https://app1.tangedco.org/nsconline/">Apply Online </a></li>
+     
+      <li><a href="https://play.google.com/store/apps/details?id=com.tneb.tangedco&amp;hl=en" target="blank">Android App</a></li>
+      <li><a href="https://www.tnpdcl.org/static/tnpdcl/assets/files/linkpdf/TangedcoMobileAppManual1.pdf" target="blank">Android App – Installation </a></li>
+      <li><a href="https://www.tnpdcl.org/static/tnpdcl/assets/files/linkpdf/TangedcoMobileAppManual2.pdf" target="blank">IOS App – Installation </a></li>
+      <li><a href="https://www.tnpdcl.org/en/tnpdcl/sitemap/">Sitemap
+</a></li>
+    </ul>
+  </div>
+
+  <div>
+    <h3>External Links</h3>
+    <ul>
+      <li><a href="http://www.urjamithra.in/public/index.php" target="blank">Urja Mitra Portal</a></li>
+      <li><a href="https://tnerc.tn.gov.in/" target="blank">TNERC</a></li>
+      <li><a href="https://npp.gov.in/" target="blank">National Power Portal</a></li>
+      <li><a href="https://www.nvsp.in/" target="blank">National Voters  Portal</a></li>
+    </ul>
+  </div>
+
+
+
+  
+
+  <div>
+    <h3>Policies &amp; Tools</h3>
+    <ul>
+      <li><a href="https://www.tnpdcl.org/en/tnpdcl/disclaimer/">Disclaimer</a></li>
+      <li><a href="https://www.tnpdcl.org/en/tnpdcl/privacy-policy/">Privacy Policy</a></li>
+      <li><a href="https://www.tnpdcl.org/en/tnpdcl/terms-use/">Terms of Use</a></li>
+    </ul>
+    
+     
+    <div class="w3">
+       <a href="https://validator.w3.org/check?uri=https://www.tnpdcl.org/" target="blank"> 
+        <img src="/static/tnpdcl/assets/img/w3_XHTML_13.png" alt="icon1">
+       </a>
+    
+       <a href="https://jigsaw.w3.org/css-validator/validator?uri=https://www.tnpdcl.org/" target="blank">
+        <img src="/static/tnpdcl/assets/img/w3-css1.png" alt="icon2">
+       </a>
+       
+       <a href="https://www.w3.org/WAI/WCAG2AA-Conformance" target="blank">
+       <img src="/static/tnpdcl/assets/img/wcag2AA2.png" alt="icon3">
+       
+       </a>
+       
+       
+    </div>
+    
+  </div>
+
+  <div>
+    <h3>App Privacy</h3>
+    <ul>
+      <li><a href="https://www.tnpdcl.org/static/tnpdcl/assets/files/linkpdf/mobapppolicy23082022.pdf" target="blank">Consumers </a></li>
+      <li><a href="https://www.tnpdcl.org/en/tnpdcl/mobile-app-privacy-policy-officers/">Officers</a></li>
+      <li><a href="https://www.tnpdcl.org/en/tnpdcl/pensionermobileappprivacypolicy/">Pensioners </a></li>
+    </ul>
+  </div>
+  
+  
+  <div>
+    <h3>Customer Care</h3>
+    <p>Phone :  94987 94987<br> 24×7, 365 Days Support</p>
+
+    <h3>Connect With Us</h3>
+    <div class="NSC-Online-social-tnpdcl-online-service-icons">
+      <a href="https://x.com/TANGEDCO_Offcl" target="blank"><img src="/static/tnpdcl/assets/img/home/twitterX.png" alt="Twitter" class="social-tnpdcl-online-service-icon"></a>
+      <a href="https://www.facebook.com/TANGEDCOOffcl" target="blank"><img src="/static/tnpdcl/assets/img/home/facebook.png" alt="Facebook" class="social-tnpdcl-online-service-icon"></a>
+      <a href="https://www.instagram.com/tangedco_official/#" target="blank"><img src="/static/tnpdcl/assets/img/home/Insta.png" alt="Instagram" class="social-tnpdcl-online-service-icon"></a>
+      <a href="https://www.youtube.com/channel/UCrxNwnwxRy3EYOzy3iXsiUw" target="blank"><img src="/static/tnpdcl/assets/img/home/youtube-icon.png" alt="YouTube" class="social-tnpdcl-online-service-icon"></a>
+    </div>
+  </div>
+  
+  
+    <div class="tnpdcl-Online-contact-info">
+    <h3>Contact Us</h3>
+    <p>
+      NPKRR Maaligai,<br>
+      144, Annasalai, Chennai 600002,
+      Tamil Nadu, India.
+    </p>
+    <p>Phone : 044 2852 0131 </p>
+    <p> cpro@tnebnet.org</p>
+  </div>
+</footer>
+  
+</footer>
+
+<footer id="bottom-footer">
+  <div class="footer-row">
+    
+    <div class="footer-stats">
+      <span class="item">Last Updated: <strong>Nov. 24, 2026, 5:29 p.m.</strong></span>
+      
+      <span class="divider">|</span>
+      <span class="item">Visitors: <span id="hitcount" class="count-badge"></span></span>
+      
+      <span class="divider">|</span>
+      <span class="item date-text">Nov. 25, 2026, 10:23 p.m.</span>
+    </div>
+
+    <span class="copyright">
+        Content owned by TNPDCL © 2026. All Rights Reserved.
+    </span>
+    
+  </div>
+</footer>
+
+
+
+  <!--<img data-toggle="modal" data-target="#myModal" src="/static/tangedco/assets/img/tangedco-logo.png" class="img-fluid pull-right bottomright click" style="height:auto; width:120px; margin:10px;" alt="">-->
+
+
+  <!--<div class="modal fade  come-from-modal right" id="myModal" tabindex="-1" role="dialog" style="padding-right: 0px;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 9px;">
+          
+           <div class="row">
+            <div class="col">
+            <img src="/static/tangedco/assets/img/tangedco-logo.png" alt="Sakthi Logo" style="height: 50px;width: 50px;">
+            </div>
+             <div class="col" style="white-space: nowrap;padding: 8px; line-height: 2.5; font-weight: 600;">TANGEDCO Sakthi</div>
+            <div class="col">
+              <button type="button" class="close" data-dismiss="modal" style="color:#fff;margin-top:-10px; line-height: 1.5; opacity: 1; outline: none;" title="Close">
+                <i aria-hidden="true" class="fa fa-angle-double-right projects-ico"></i>
+              </button>
+            </div>
+            </div>
+            </div>
+            <div class="modal-body">
+            <iframe class="bot" src="/static/TNEB-bot/index.html" title="tnsacsbot" style="height: 550px;border: none;"></iframe>
+            </div>
+           
+        </div>
+    </div>
+</div>-->
+
+  <a href="#" class="back-to-top"  title="movetop link"><i class="fa fa-chevron-up">&nbsp;</i></a>
+  <!-- Uncomment below i you want to use a preloader -->
+  <!-- <div id="preloader"></div> -->
+
+  <!-- Vendor JS Files -->
+  
+  <script src="/static/tnpdcl/assets/vendor/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/static/tnpdcl/assets/vendor/vendor/jquery.easing/jquery.easing.min.js"></script>
+  <script src="/static/tnpdcl/assets/vendor/vendor/php-email-form/validate.js"></script>
+  <script src="/static/tnpdcl/assets/vendor/vendor/waypoints/jquery.waypoints.min.js"></script>
+  <script src="/static/tnpdcl/assets/vendor/vendor/counterup/counterup.min.js"></script>
+  <script src="/static/tnpdcl/assets/vendor/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="/static/tnpdcl/assets/vendor/vendor/venobox/venobox.min.js"></script>
+  <script src="/static/tnpdcl/assets/vendor/vendor/owl.carousel/owl.carousel.js"></script>
+  <script src="/static/tnpdcl/assets/vendor/vendor/aos/aos.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="/static/tnpdcl/assets/vendor/js/main.js"></script>
+  <script src="/static/tnpdcl/assets/external/jquery/jquery.bsPhotoGallery.js"></script>
+  <script src="/static/tnpdcl/assets/external/jquery/jquery.bootstrap.newsbox.js"></script>
+
+  
+
+  
+<script>
+/*function fixLogoMenuLayout() {
+  const header = document.getElementById('header');
+  const menuHeader = document.getElementById('menu-header');
+
+  if (header && menuHeader) {
+    // Reset layout styles
+    menuHeader.style.position = 'static';
+    menuHeader.style.marginTop = '0px';
+    menuHeader.style.paddingTop = '0px';
+    menuHeader.style.display = 'block';
+    menuHeader.style.visibility = 'visible';
+
+    // Optional: force text color to white if background is dark
+    menuHeader.style.color = '#fff';
+  }
+}
+
+window.addEventListener('load', fixLogoMenuLayout);
+window.addEventListener('resize', fixLogoMenuLayout);
+*/
+
+
+
+
+function fixLogoMenuLayout() {
+  const header = document.getElementById('header');
+  const menuHeader = document.getElementById('menu-header');
+  
+  // Define the allowed paths
+  const allowedPaths = ['/en/tnpdcl', '/ta/tnpdcl'];
+  
+  // Check if the current URL starts with one of the allowed paths
+  const isAllowedPath = allowedPaths.some(path => window.location.pathname.startsWith(path));
+
+  if (header && menuHeader && isAllowedPath) {
+    // Reset layout styles
+    menuHeader.style.position = 'static';
+    menuHeader.style.marginTop = '0px';
+    menuHeader.style.paddingTop = '0px';
+    menuHeader.style.display = 'block';
+    menuHeader.style.visibility = 'visible';
+
+    // Optional: force text color to white if background is dark
+    menuHeader.style.color = '#fff';
+  }
+}
+
+window.addEventListener('load', fixLogoMenuLayout);
+window.addEventListener('resize', fixLogoMenuLayout);
+
+function adjustMainContainer() {
+  const topHeader = document.getElementById('top-header');
+  const header = document.getElementById('header');
+  const mainCon = document.getElementById('main_con');
+
+  if (!mainCon) return;
+
+  const path = window.location.pathname.replace(/\/$/, '');
+
+  // Skip for exact URLs
+  if (path === '/en/tnpdcl' || path === '/ta/tnpdcl') {
+    mainCon.style.marginTop = '0px';
+    return;
+  }
+
+  // Force a layout recalculation by using getBoundingClientRect
+  const topHeaderHeight = topHeader ? topHeader.getBoundingClientRect().height : 0;
+  const headerHeight = header ? header.getBoundingClientRect().height : 0;
+
+  const totalHeight = topHeaderHeight + headerHeight;
+
+  // Apply dynamically to main container
+  mainCon.style.marginTop = totalHeight + 'px';
+}
+
+// Recalculate on load and resize
+window.addEventListener('load', adjustMainContainer);
+window.addEventListener('resize', adjustMainContainer);
+
+// Also observe dynamic height changes (e.g., text wrapping)
+const observer = new ResizeObserver(adjustMainContainer);
+
+const topHeader = document.getElementById('top-header');
+const header = document.getElementById('header');
+
+if (topHeader) observer.observe(topHeader);
+if (header) observer.observe(header);
+
+
+/*function adjustMainContentPadding() {
+    const header = document.getElementById('header');
+    const menuHeader = document.getElementById('menu-header');
+    const mainContent = document.getElementById('main_con');
+
+    // Start with 0 height
+    let combinedHeaderHeight = 0;
+
+    // Add main header height if it exists
+    if (header) {
+        combinedHeaderHeight += header.offsetHeight;
+    }
+
+    // Add menu header height if it exists
+    if (menuHeader) {
+        combinedHeaderHeight += menuHeader.offsetHeight;
+    }
+
+    // Apply the total to main_con
+    if (mainContent) {
+        // Option A: Flush (0px extra)
+        // mainContent.style.paddingTop = combinedHeaderHeight + 'px';
+
+        // Option B: With your 120px buffer for breathing room
+        mainContent.style.paddingTop = (combinedHeaderHeight) + 'px';
+    }
+}
+
+// Initialize on load and window resize
+window.addEventListener('load', adjustMainContentPadding);
+window.addEventListener('resize', adjustMainContentPadding);
+
+*/
+
+  $(document).ready(function() {
+    
+      if (window.location.href.indexOf("/en/") == -1) {
+          var script = "<title>Schedules of Tariff - த.நா.மி.ப.க</title>";
+          $('head').append(script);
+      } else {
+          var script = "<title>Schedules of Tariff - TNPDCL</title>";
+          $('head').append(script);
+      }
+
+      $('a[href$=".pdf"]').prop('target', '_blank');
+      $('a[href^="http://"]').attr('target', '_blank');
+      $('a[href^="https://"]').attr('target', '_blank');
+
+      $(".owl-carousel").owlCarousel({
+          items: 6,
+          autoPlay: 3000,
+      });
+
+   /***       if ($('#bread').length) {
+          $("#home, #about .maintitle").css("margin-top", "22px");
+      } else {
+          $("#home, #about .maintitle").css("margin-top", "70px");
+      }
+
+   if ($("#header").height() > 50) {
+          var height_fix = $("#header").height() + 10 + "px";
+          $("#bread").css("margin-top", height_fix);
+      } else {
+          $("#bread").css("margin-top", "60px");
+      }***/
+
+      if (window.location.href.indexOf("/ta/")) {
+          $("#home").css("margin-top", "22px");
+      }
+
+      if (window.location.href.indexOf("/en/")) {
+        /***  if ($('#bread').length) {
+              $("#home").css("margin-top", "22px");
+          } else {
+              $("#home").css("margin-top", "70px");
+          }***/
+
+          if (window.location.href.indexOf("/en/") == -1) {
+              $.ajax({
+                  async: true,
+                  dataType: "json",
+                  url: '/ta/tnpdcl/news-list-tamil/',
+                  success: function(response, textStatus) {
+                    $('#last_updated').empty();
+                    $('#last_updated').append(response['last_updated']);
+                    $("#hitcount").append("<span>"+response['hit_count']+"</span>");
+                      for (i = 0; i < response['news_list'].length; i++) {
+                          
+                          $('#ticker01').append('<li style="display:none;">' + response['news_list'][i]['content'] +
+                              "<a target='_blank' href=/media/" + response['news_list'][i]['file_path'] + "> Read More</a></li>");
+                      }
+                  }
+              });
+          } else {
+           
+              $.ajax({
+                  async: true,
+                  dataType: "json",
+                  url: '/en/tnpdcl/news-list/',
+                  success: function(response, textStatus) {
+                    $('#last_updated').empty();
+                    $('#last_updated').append(response['last_updated']);
+                    $("#hitcount").append("<span>"+response['hit_count']+"</span>");
+                      for (i = 0; i < response['news_list'].length; i++) {
+                          $('#ticker01').append('<li style="display:none;">' + response['news_list'][i]['content'] +
+                              "<a target='_blank' href=/media/" + response['news_list'][i]['file_path'] + "> Read More</a></li>");
+                      }
+                  }
+              });
+          }
+      }
+
+      if (screen.width < ($('table').width() + 50)) {
+          $('table').addClass('table-responsive')
+      }
+
+      $('#about ul li a, #featured-services .container-fluid .box ul li a').each(function() {
+          var href_val = $(this).attr('href').toLowerCase();;
+          if (href_val.length > 4 && href_val.indexOf('.pdf') == href_val.length - 4) {
+
+              $(this).prepend('<i class="fa fa-file-pdf-o">&emsp;</i>');
+              $(this).css('line-height', '30px');
+          } else {
+
+              $(this).prepend('<i class="fa fa-link">&emsp;</i>');
+              $(this).css('line-height', '30px');
+          }
+      });
+
+      $(".more-detail").css("display", "none");
+
+      if (applied == true) {
+          $('#top-header, body, #header, #footer, #intro .carousel-fade, .terms-bg').css("background", "#000000");
+          $('#footer .footer-top').css("background", "#302d2d");
+          $('.nav-menu .drop-down ul a, #bottom-footer').css("color", "#000000");
+          $('body').css("color", "#fff");
+          $('.maintitle h3, #home h2, #about a, #about h5, #about h4, #about h6, #sitemap ul li a, .panel ul li a').css("color", "#ffff00");
+          $('.remain-det, #featured-services .box-bg').css("border-bottom", "20px solid #000000");
+      } else {
+          localStorage.clear();
+      }
+
+      $('.panel .panel-title a').prepend('<i class="fa fa-plus">&emsp;</i>');
+      $(".collapse.show").each(function() {
+          $(this).prev(".panel-title").find(".fa").addClass("fa-minus").removeClass("fa-plus");
+      });
+
+      // Toggle plus minus icon on show hide of collapse element
+      $(".collapse").on('show.bs.collapse', function() {
+          $(this).prev(".panel-title").find(".fa").removeClass("fa-plus").addClass("fa-minus");
+      }).on('hide.bs.collapse', function() {
+          $(this).prev(".panel-title").find(".fa").removeClass("fa-minus").addClass("fa-plus");
+      });
+
+      $('ul.first').bsPhotoGallery({
+          "classes": "col-xl-3 col-lg-2 col-md-4 col-sm-4",
+          "hasModal": true,
+          "shortText": false
+      });
+
+      var increase_click = 0;
+      var decrese_click = 0;
+      var originalSize = $('div').css('font-size');
+
+      // reset        
+      $(".resetMe").click(function() {
+          decrese_click = 0;
+          increase_click = 0;
+          $('div').css('font-size', originalSize);
+          $('#header .nav-menu a').css('font-size', "13px");
+        $('.maintitle h3, #about h3').css('font-size', "1.75rem");
+      });
+
+      // Increase Font Size          
+      $(".increase").click(function() {
+          if (decrese_click > 0) {
+              decrese_click = decrese_click - 1;
+          }
+          var currentSize = $('div').css('font-size');
+          var nav_font = $('#header .nav-menu a').css('font-size');
+          var title_font = $('.maintitle h3, #about h3').css('font-size');
+          var fontSize = parseInt(currentSize);
+          fontSize = fontSize + 1 + "px";
+
+          if (increase_click >= 0 && increase_click < 2) {
+              increase_click = increase_click + 1;
+              $('div').css('font-size', fontSize);
+              $('#header .nav-menu a').css('font-size', (parseInt(nav_font) + 1 + "px"));
+              $('.maintitle h3, #about h3').css('font-size', (parseInt(title_font) + 1 + "px"));
+          }
+          return false;
+      });
+
+      // Decrease Font Size       
+      $(".decrease").click(function() {
+          if (increase_click > 0) {
+              increase_click = increase_click - 1;
+          }
+
+          var currentSize = $('div').css('font-size');
+          var nav_font = $('#header .nav-menu a').css('font-size');
+          var title_font = $('.maintitle h3, #about h3').css('font-size');
+          var fontSize = parseInt(currentSize);
+          fontSize = fontSize - 1 + "px";
+
+          if (decrese_click >= 0 && decrese_click < 2) {
+              decrese_click = decrese_click + 1;
+              $('div').css('font-size', fontSize);
+              $('#header .nav-menu a').css('font-size', (parseInt(nav_font) - 1 + "px"));
+              $('.maintitle h3, #about h3').css('font-size', (parseInt(title_font) - 1 + "px"));
+          }
+          return false;
+      });
+
+      var block = false;
+
+      // Add minus icon for collapse element which is open by default
+      $(".collapse.show").each(function() {
+          $(this).prev(".card-header").find(".fa").addClass("fa-minus").removeClass("fa-plus");
+      });
+
+      // Toggle plus minus icon on show hide of collapse element
+      $(".collapse").on('show.bs.collapse', function() {
+          $(this).prev(".card-header").find(".fa").removeClass("fa-plus").addClass("fa-minus");
+      }).on('hide.bs.collapse', function() {
+          $(this).prev(".card-header").find(".fa").removeClass("fa-minus").addClass("fa-plus");
+      });
+  });
+
+
+  var applied = localStorage.getItem("applied") == "true";
+  var original_color, replace_color;
+  
+  function callblack() {
+    applied = true;
+    localStorage.setItem("applied", applied);
+    $('#top-header, body, #header, #footer, #intro .carousel-fade, .terms-bg').css("background", "#000000");
+    $('#footer .footer-top').css("background", "#302d2d");
+    $('.nav-menu .drop-down ul a, #bottom-footer').css("color", "#000000");
+    $('body').css("color", "#fff");
+    $('.maintitle h3, #home h2, #about a, #about h5, #about h4, #about h6, #sitemap ul li a, .panel ul li a').css("color", "#ffff00");
+    $('.remain-det, #featured-services .box-bg').css("border-bottom", "20px solid #000000");
+  }
+  
+  function calloriginal() {
+    applied = false;
+    localStorage.setItem("applied", applied);
+    localStorage.clear();
+    location.reload();
+  }
+
+  $("#more-det").click(function () { 
+    if($(this).text().indexOf("More") != -1){
+      $(".more-detail").css("display", "block");
+      $(this).text("Less..")
+    }
+    else{
+      $(".more-detail").css("display", "none");
+      $(this).text("More..")
+    }
+  });
+
+  /*document.onreadystatechange = function() { 
+    if (document.readyState !== "complete") { 
+        document.querySelector( "body").style.visibility = "hidden"; 
+        document.querySelector("#cover-spin").style.visibility = "visible"; 
+    } else { 
+        document.querySelector("#cover-spin").style.display = "none"; 
+        document.querySelector("body").style.visibility = "visible"; 
+    } 
+  };*/
+
+
+  $(function() {
+      $("#ticker01").bootstrapNews({
+          newsPerPage: 2,
+          autoplay: true,
+          pauseOnHover: true,
+          navigation: false,
+          direction: 'up',
+          newsTickerInterval: 10000,
+          onToDo: function() {
+              //console.log(this);
+          }
+      });
+  });
+
+  $('.venobox').venobox({
+      numeratio: true,
+      border: '20px'
+  });
+
+  $('.venoboxframe').venobox({
+      border: '6px',
+      overlayColor: 'rgba(255,255,255,0.85)',
+      titlePosition: 'bottom',
+      titleColor: '#333',
+      titleBackground: 'transparent',
+      closeColor: '#333',
+      closeBackground: 'transparent',
+      spinner: 'wave'
+  });
+
+  $('.venoboxvid').venobox({
+      bgcolor: '#5b1647',
+      spinner: 'cube-grid',
+
+  });
+
+  $('.venoboxinline').venobox({
+      numeratio: true,
+      framewidth: '400px',
+      frameheight: 'auto',
+      border: '10px',
+      bgcolor: '#f46f00',
+      titleattr: 'data-title',
+      infinigall: true,
+
+  })
+
+  function confirmDelete(news_id) {
+      if (confirm("Are you sure you want to Delete the record")) {
+          $.ajax({
+              async: true,
+              dataType: "json",
+              url: '/en/tnpdcl/ajaxdelete/' + news_id + '/all_json_delete/',
+              success: function(response, textStatus) {
+                  if (response['success'] == "Success") {
+                      window.location.reload();
+                  }
+              }
+          });
+
+      } else {
+          return false;
+      }
+  }
+
+  /*******************************
+  * ACCORDION WITH TOGGLE ICONS
+  *******************************/
+  function toggleIcon(e) {
+      $(e.target)
+          .prev('.panel-heading')
+          .find(".more-less")
+          .toggleClass('glyphicon-plus glyphicon-minus');
+  }
+  $('.panel-group').on('hidden.bs.collapse', toggleIcon);
+  $('.panel-group').on('shown.bs.collapse', toggleIcon);
+
+</script>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YZ8D7LJL0Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YZ8D7LJL0Z');
+</script>
+
+
+  
+
+</body>
+
+</html>

@@ -1,23 +1,111 @@
 {
-  "report_type": "SYNTHETIC_SAMPLE_OUTPUT_NOT_HUMAN_DATA",
+  "report_type": "SYNTHETIC_PRE_STUDY_EXAMPLE_NOT_HUMAN_DATA",
   "is_synthetic_fixture": true,
-  "sample_size_n": 8,
-  "small_sample_epistemic_note": "Cohort N=8 is strictly formative usability testing. Small-N metrics cannot establish population-wide statistical efficacy, bill reduction, or energy savings; inspect individual sessions and 95% Clopper-Pearson intervals.",
-  "task_completion_summary": {
-    "total_step_attempts": 80,
+  "sample_size_n_participants": 8,
+  "inferential_epistemic_scope": "Formative exploratory usability audit across N=8 independent participants. Within-participant task completions (10 tasks/participant) are correlated repeated measures and are summarized at the participant level before step-level breakdowns. Small-N intervals are exploratory uncertainty bounds only\u2014never population-wide efficacy, tariff certification, or savings claims.",
+  "participant_level_task_completion": {
+    "n_participants": 8,
+    "mean_unassisted_proportion": 0.9375,
+    "sd_unassisted_proportion": 0.0744,
+    "median_unassisted_proportion": 0.95,
+    "iqr_unassisted_proportion": [
+      0.9,
+      1.0
+    ],
+    "min_unassisted_proportion": 0.8,
+    "max_unassisted_proportion": 1.0,
+    "participants_all_10_unassisted_count": 4,
+    "per_participant": [
+      {
+        "participant_id": "SYN-P01",
+        "locale": "en",
+        "device": "desktop",
+        "unassisted_steps": 10,
+        "assisted_steps": 0,
+        "failed_steps": 0,
+        "unassisted_rate": 1.0
+      },
+      {
+        "participant_id": "SYN-P02",
+        "locale": "ta",
+        "device": "mobile",
+        "unassisted_steps": 9,
+        "assisted_steps": 1,
+        "failed_steps": 0,
+        "unassisted_rate": 0.9
+      },
+      {
+        "participant_id": "SYN-P03",
+        "locale": "en",
+        "device": "desktop",
+        "unassisted_steps": 9,
+        "assisted_steps": 1,
+        "failed_steps": 0,
+        "unassisted_rate": 0.9
+      },
+      {
+        "participant_id": "SYN-P04",
+        "locale": "ta",
+        "device": "desktop",
+        "unassisted_steps": 9,
+        "assisted_steps": 1,
+        "failed_steps": 0,
+        "unassisted_rate": 0.9
+      },
+      {
+        "participant_id": "SYN-P05",
+        "locale": "en",
+        "device": "mobile",
+        "unassisted_steps": 10,
+        "assisted_steps": 0,
+        "failed_steps": 0,
+        "unassisted_rate": 1.0
+      },
+      {
+        "participant_id": "SYN-P06",
+        "locale": "ta",
+        "device": "mobile",
+        "unassisted_steps": 8,
+        "assisted_steps": 1,
+        "failed_steps": 1,
+        "unassisted_rate": 0.8
+      },
+      {
+        "participant_id": "SYN-P07",
+        "locale": "en",
+        "device": "desktop",
+        "unassisted_steps": 10,
+        "assisted_steps": 0,
+        "failed_steps": 0,
+        "unassisted_rate": 1.0
+      },
+      {
+        "participant_id": "SYN-P08",
+        "locale": "ta",
+        "device": "desktop",
+        "unassisted_steps": 10,
+        "assisted_steps": 0,
+        "failed_steps": 0,
+        "unassisted_rate": 1.0
+      }
+    ]
+  },
+  "pooled_repeated_measures_step_tally": {
+    "note": "Descriptive step-attempt sum across correlated within-participant tasks (NOT independent observations; no pooled binomial CI computed).",
+    "total_participant_step_attempts": 80,
     "unassisted_count": 75,
     "assisted_count": 4,
     "failed_count": 1,
-    "overall_unassisted_rate": 0.9375,
     "per_step": [
       {
         "step_number": 1,
         "step_name": "Step 1: Onboarding & Advisory Disclaimer Check",
+        "n_independent_participants": 8,
         "unassisted_count": 8,
         "assisted_count": 0,
         "failed_count": 0,
         "unassisted_rate": 1.0,
-        "unassisted_ci95": [
+        "exploratory_unassisted_ci95_across_n": [
           0.6306,
           1.0
         ],
@@ -32,11 +120,12 @@
       {
         "step_number": 2,
         "step_name": "Step 2: Language Toggle & Capability Inspection",
+        "n_independent_participants": 8,
         "unassisted_count": 8,
         "assisted_count": 0,
         "failed_count": 0,
         "unassisted_rate": 1.0,
-        "unassisted_ci95": [
+        "exploratory_unassisted_ci95_across_n": [
           0.6306,
           1.0
         ],
@@ -51,11 +140,12 @@
       {
         "step_number": 3,
         "step_name": "Step 3: Manual Historical Bill Entry",
+        "n_independent_participants": 8,
         "unassisted_count": 7,
         "assisted_count": 1,
         "failed_count": 0,
         "unassisted_rate": 0.875,
-        "unassisted_ci95": [
+        "exploratory_unassisted_ci95_across_n": [
           0.4735,
           0.9968
         ],
@@ -70,11 +160,12 @@
       {
         "step_number": 4,
         "step_name": "Step 4: Tariff Headroom & 500 kWh Cliff Interpretation",
+        "n_independent_participants": 8,
         "unassisted_count": 8,
         "assisted_count": 0,
         "failed_count": 0,
         "unassisted_rate": 1.0,
-        "unassisted_ci95": [
+        "exploratory_unassisted_ci95_across_n": [
           0.6306,
           1.0
         ],
@@ -89,11 +180,12 @@
       {
         "step_number": 5,
         "step_name": "Step 5: Interval CSV Import & Worker Feedback",
+        "n_independent_participants": 8,
         "unassisted_count": 6,
         "assisted_count": 1,
         "failed_count": 1,
         "unassisted_rate": 0.75,
-        "unassisted_ci95": [
+        "exploratory_unassisted_ci95_across_n": [
           0.3491,
           0.9681
         ],
@@ -108,11 +200,12 @@
       {
         "step_number": 6,
         "step_name": "Step 6: Interval Chart & Standby Baseload Review",
+        "n_independent_participants": 8,
         "unassisted_count": 8,
         "assisted_count": 0,
         "failed_count": 0,
         "unassisted_rate": 1.0,
-        "unassisted_ci95": [
+        "exploratory_unassisted_ci95_across_n": [
           0.6306,
           1.0
         ],
@@ -127,11 +220,12 @@
       {
         "step_number": 7,
         "step_name": "Step 7: Counterfactual Scenario Exploration",
+        "n_independent_participants": 8,
         "unassisted_count": 7,
         "assisted_count": 1,
         "failed_count": 0,
         "unassisted_rate": 0.875,
-        "unassisted_ci95": [
+        "exploratory_unassisted_ci95_across_n": [
           0.4735,
           0.9968
         ],
@@ -146,11 +240,12 @@
       {
         "step_number": 8,
         "step_name": "Step 8: Recommendation & Q0.05 Bound Audit",
+        "n_independent_participants": 8,
         "unassisted_count": 7,
         "assisted_count": 1,
         "failed_count": 0,
         "unassisted_rate": 0.875,
-        "unassisted_ci95": [
+        "exploratory_unassisted_ci95_across_n": [
           0.4735,
           0.9968
         ],
@@ -165,11 +260,12 @@
       {
         "step_number": 9,
         "step_name": "Step 9: Adaptive EVSI Modal & Provenance Ledger",
+        "n_independent_participants": 8,
         "unassisted_count": 8,
         "assisted_count": 0,
         "failed_count": 0,
         "unassisted_rate": 1.0,
-        "unassisted_ci95": [
+        "exploratory_unassisted_ci95_across_n": [
           0.6306,
           1.0
         ],
@@ -184,11 +280,12 @@
       {
         "step_number": 10,
         "step_name": "Step 10: Privacy Export, Feedback Review & Wipe",
+        "n_independent_participants": 8,
         "unassisted_count": 8,
         "assisted_count": 0,
         "failed_count": 0,
         "unassisted_rate": 1.0,
-        "unassisted_ci95": [
+        "exploratory_unassisted_ci95_across_n": [
           0.6306,
           1.0
         ],
@@ -266,67 +363,87 @@
   "seq_and_burden_summary": {
     "seq_manual_bill_median": 6.0,
     "seq_csv_import_median": 5.0,
+    "qb1_answered_n": 8,
+    "qb1_missing_na_n": 0,
     "qb1_intrusiveness_mean": 1.75,
+    "qb2_answered_n": 8,
+    "qb2_missing_na_n": 0,
     "qb2_effort_mean": 1.88,
-    "willingness_to_try_median": 4.0,
-    "low_tolerance_or_high_burden_fraction": 0.25
+    "qb_tolerance_answered_n": 8,
+    "qb_tolerance_missing_na_n": 0,
+    "qb_burden_evaluated_n": 8,
+    "low_tolerance_or_high_burden_count": 2,
+    "low_tolerance_or_high_burden_fraction": 0.25,
+    "willingness_to_try_median": 4.0
   },
   "safety_comprehension": {
     "SAF-1": {
+      "n_independent_participants": 8,
       "first_attempt_pass_count": 7,
       "first_attempt_pass_rate": 0.875,
-      "first_attempt_ci95": [
+      "exploratory_first_attempt_ci95": [
         0.4735,
         0.9968
       ],
+      "first_attempt_misconception_participants": [
+        "SYN-P04"
+      ],
       "post_debrief_pass_count": 8,
       "post_debrief_pass_rate": 1.0,
-      "post_debrief_ci95": [
+      "exploratory_post_debrief_ci95": [
         0.6306,
         1.0
       ],
       "initial_misconception_detected": true
     },
     "SAF-2": {
+      "n_independent_participants": 8,
       "first_attempt_pass_count": 8,
       "first_attempt_pass_rate": 1.0,
-      "first_attempt_ci95": [
+      "exploratory_first_attempt_ci95": [
         0.6306,
         1.0
       ],
+      "first_attempt_misconception_participants": [],
       "post_debrief_pass_count": 8,
       "post_debrief_pass_rate": 1.0,
-      "post_debrief_ci95": [
+      "exploratory_post_debrief_ci95": [
         0.6306,
         1.0
       ],
       "initial_misconception_detected": false
     },
     "SAF-3": {
+      "n_independent_participants": 8,
       "first_attempt_pass_count": 7,
       "first_attempt_pass_rate": 0.875,
-      "first_attempt_ci95": [
+      "exploratory_first_attempt_ci95": [
         0.4735,
         0.9968
       ],
+      "first_attempt_misconception_participants": [
+        "SYN-P02"
+      ],
       "post_debrief_pass_count": 8,
       "post_debrief_pass_rate": 1.0,
-      "post_debrief_ci95": [
+      "exploratory_post_debrief_ci95": [
         0.6306,
         1.0
       ],
       "initial_misconception_detected": true
     },
     "SAF-4": {
+      "n_independent_participants": 8,
       "first_attempt_pass_count": 8,
       "first_attempt_pass_rate": 1.0,
-      "first_attempt_ci95": [
+      "exploratory_first_attempt_ci95": [
         0.6306,
         1.0
       ],
+      "first_attempt_misconception_participants": [],
       "post_debrief_pass_count": 8,
       "post_debrief_pass_rate": 1.0,
-      "post_debrief_ci95": [
+      "exploratory_post_debrief_ci95": [
         0.6306,
         1.0
       ],
@@ -367,7 +484,7 @@
     "saf1_saf2_post_debrief_100pct": true,
     "saf1_saf2_first_attempt_100pct_no_copy_remediation_needed": false,
     "saf3_saf4_post_debrief_ge_90pct": true,
-    "unassisted_completion_ge_80pct": true,
+    "participant_mean_unassisted_rate_ge_80pct": true,
     "no_single_task_gt_30pct_failure": true,
     "mean_sus_ge_70": true,
     "c_ask_escalation_triggered": false

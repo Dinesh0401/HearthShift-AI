@@ -104,7 +104,7 @@ export const TNPDCL_LT1A_2025_2026: TariffPlan = {
   version: '2025.1.0',
   utility_name: 'Tamil Nadu Power Distribution Corporation Limited (TNPDCL)',
   regulatory_authority: 'Tamil Nadu Electricity Regulatory Commission (TNERC)',
-  tariff_order_ref: 'TNERC Suo-Motu Tariff Order No. 6 of 2025 (Consumer-Payable Effective Slabs)',
+  tariff_order_ref: 'TNERC Suo-Motu Tariff Order No. 6 of 2025 (30-06-2025) & TNERC Order No. 4 of 2026 (27-04-2026, Consumer-Payable Effective Slabs)',
   region: 'Tamil Nadu',
   country_code: 'IN',
   currency: 'INR',
@@ -190,7 +190,7 @@ export const TNPDCL_LT1A_MAY_2026_SCHEME: TariffPlan = {
   version: '2026.2.0',
   utility_name: 'Tamil Nadu Power Distribution Corporation Limited (TNPDCL)',
   regulatory_authority: 'Tamil Nadu Electricity Regulatory Commission (TNERC)',
-  tariff_order_ref: 'GoTN G.O. (Ms) No. 50 (10-05-2026) & TNERC Order No. 6 of 2025',
+  tariff_order_ref: 'GoTN G.O. (Ms) No. 50 (10-05-2026), TNERC Order No. 5 of 2026 (26-05-2026) & Order No. 6 of 2025 (Consumer-Payable Slabs)',
   region: 'Tamil Nadu',
   country_code: 'IN',
   currency: 'INR',
@@ -225,7 +225,7 @@ export const TNPDCL_LT1A_MAY_2026_SCHEME: TariffPlan = {
     id: 'gotn-subsidy-may2026-200free',
     name: 'GoTN 200 Free Units Welfare Scheme (Effective May 10, 2026)',
     authority: 'Government of Tamil Nadu Energy (D3) Department',
-    subsidy_order_ref: 'G.O. (Ms) No. 50, Energy (D3) Dept., dated 10-05-2026',
+    subsidy_order_ref: 'GoTN G.O. (Ms) No. 50 (10-05-2026), Lr. No. 2800/D3/2026 & TNERC Order No. 5 of 2026 (26-05-2026)',
     effective_from: '2026-05-10', // Explicitly May 10, 2026 per G.O. (Ms) No. 50
     rules: [
       {
