@@ -2,15 +2,20 @@
 
 import React, { useState, useMemo } from 'react';
 import { TNPDCL_LT1A_2026_MAY10 } from '../../core/tariff/tariffs/tnpdcl-lt1a';
+import type { TariffPlan } from '../../core/tariff/types';
 import { calculateScenarioOutcome, type ScenarioActionSelection } from '../../core/simulation/scenario-engine';
 import { useLanguage } from '../../locales/i18n';
 import { Sliders, Zap, Info, Sparkles } from 'lucide-react';
 
 interface ScenarioSimulatorProps {
   baselineUnitsKwh: number;
+  tariff?: TariffPlan;
 }
 
-export const ScenarioSimulator: React.FC<ScenarioSimulatorProps> = ({ baselineUnitsKwh }) => {
+export const ScenarioSimulator: React.FC<ScenarioSimulatorProps> = ({
+  baselineUnitsKwh,
+  tariff = TNPDCL_LT1A_2026_MAY10,
+}) => {
   const { t, language } = useLanguage();
 
   const [selections, setSelections] = useState<ScenarioActionSelection>({
@@ -22,20 +27,33 @@ export const ScenarioSimulator: React.FC<ScenarioSimulatorProps> = ({ baselineUn
   });
 
   const outcome = useMemo(() => {
-    return calculateScenarioOutcome(baselineUnitsKwh, selections, TNPDCL_LT1A_2026_MAY10);
-  }, [baselineUnitsKwh, selections]);
+    return calculateScenarioOutcome(baselineUnitsKwh, selections, tariff);
+  }, [baselineUnitsKwh, selections, tariff]);
+
+  const laundryHelperText = tariff.is_time_dependent
+    ? language === 'ta'
+      ? 'TOU கட்டணத்தில் மாலை உச்ச நேரத்திலிருந்து (19:00) காலை நேரத்திற்கு (07:00) மாற்றுவது மாதிரி சேமிப்பைத் தரும்'
+      : 'Under active Time-of-Use tariff, shifting 24 kWh from evening peak (19:00) to morning (07:00) yields modeled cost savings'
+    : language === 'ta'
+    ? 'நிலையான/அடுக்கு கட்டணத்தில் நேர மாற்றத்தால் நேரடி சேமிப்பு ₹0'
+    : 'Under flat/tiered tariff, shifting timing yields ₹0 direct savings';
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
       <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-emerald-50/50 via-teal-50/30 to-white">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-emerald-600 rounded-lg text-white">
-            <Sliders className="w-5 h-5" />
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-emerald-600 rounded-lg text-white">
+              <Sliders className="w-5 h-5" />
+            </div>
+            <div>
+              <h2 className="text-lg font-bold text-gray-900">{t('simulatorTitle')}</h2>
+              <p className="text-xs text-gray-600 mt-0.5">{t('simulatorSubtitle')}</p>
+            </div>
           </div>
-          <div>
-            <h2 className="text-lg font-bold text-gray-900">{t('simulatorTitle')}</h2>
-            <p className="text-xs text-gray-600 mt-0.5">{t('simulatorSubtitle')}</p>
-          </div>
+          <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+            {tariff.name}
+          </span>
         </div>
       </div>
 
@@ -45,19 +63,20 @@ export const ScenarioSimulator: React.FC<ScenarioSimulatorProps> = ({ baselineUn
           {/* Action 1: AC Setpoint */}
           <div className="p-4 bg-gray-50 rounded-xl border border-gray-200/80">
             <div className="flex justify-between items-center mb-3">
-              <label className="text-sm font-semibold text-gray-900 flex items-center gap-2">
+              <span className="text-sm font-semibold text-gray-900 flex items-center gap-2">
                 <Zap className="w-4 h-4 text-emerald-600" />
                 {t('acThermostat')}
-              </label>
+              </span>
               <span className="text-xs font-mono font-medium text-emerald-700 bg-emerald-100/80 px-2.5 py-0.5 rounded-full">
                 +{selections.acSetpointDelta}°C
               </span>
             </div>
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-4 gap-2" role="group" aria-label="AC thermostat setpoint delta">
               {([0, 0.5, 1.0, 2.0] as const).map((delta) => (
                 <button
                   key={delta}
                   type="button"
+                  aria-pressed={selections.acSetpointDelta === delta}
                   onClick={() => setSelections((prev) => ({ ...prev, acSetpointDelta: delta }))}
                   className={`py-2 px-3 text-xs font-medium rounded-lg border transition-all ${
                     selections.acSetpointDelta === delta
@@ -72,17 +91,20 @@ export const ScenarioSimulator: React.FC<ScenarioSimulatorProps> = ({ baselineUn
           </div>
 
           {/* Action 2: AC Runtime Curtailment */}
-          <div className="p-4 bg-gray-50 rounded-xl border border-gray-200/80 flex items-center justify-between">
+          <div className="p-4 bg-gray-50 rounded-xl border border-gray-200/80 flex items-center justify-between gap-4">
             <div>
               <p className="text-sm font-semibold text-gray-900">{t('acRuntimeCurtail')}</p>
               <p className="text-xs text-gray-500 mt-0.5">Switch AC off 1h early; room retains cool air (~90 kWh/period)</p>
             </div>
             <button
               type="button"
+              role="switch"
+              aria-checked={selections.curtailAcHours === 1}
+              aria-label="Curtail AC runtime by 1 hour daily"
               onClick={() =>
                 setSelections((prev) => ({ ...prev, curtailAcHours: prev.curtailAcHours === 1 ? 0 : 1 }))
               }
-              className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+              className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
                 selections.curtailAcHours === 1 ? 'bg-emerald-600' : 'bg-gray-300'
               }`}
             >
@@ -95,20 +117,23 @@ export const ScenarioSimulator: React.FC<ScenarioSimulatorProps> = ({ baselineUn
           </div>
 
           {/* Action 3: Water Heater Trim */}
-          <div className="p-4 bg-gray-50 rounded-xl border border-gray-200/80 flex items-center justify-between">
+          <div className="p-4 bg-gray-50 rounded-xl border border-gray-200/80 flex items-center justify-between gap-4">
             <div>
               <p className="text-sm font-semibold text-gray-900">{t('waterHeaterTimer')}</p>
               <p className="text-xs text-gray-500 mt-0.5">Trim immersion/geyser runtime once warm (~20 kWh/period)</p>
             </div>
             <button
               type="button"
+              role="switch"
+              aria-checked={selections.trimWaterHeaterMinutes > 0}
+              aria-label="Trim water heater duration by 15 to 20 minutes"
               onClick={() =>
                 setSelections((prev) => ({
                   ...prev,
                   trimWaterHeaterMinutes: prev.trimWaterHeaterMinutes > 0 ? 0 : 20,
                 }))
               }
-              className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+              className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
                 selections.trimWaterHeaterMinutes > 0 ? 'bg-emerald-600' : 'bg-gray-300'
               }`}
             >
@@ -121,17 +146,20 @@ export const ScenarioSimulator: React.FC<ScenarioSimulatorProps> = ({ baselineUn
           </div>
 
           {/* Action 4: Standby Power */}
-          <div className="p-4 bg-gray-50 rounded-xl border border-gray-200/80 flex items-center justify-between">
+          <div className="p-4 bg-gray-50 rounded-xl border border-gray-200/80 flex items-center justify-between gap-4">
             <div>
               <p className="text-sm font-semibold text-gray-900">{t('standbyPower')}</p>
               <p className="text-xs text-gray-500 mt-0.5">Switch off entertainment power strip overnight (~6 kWh/period)</p>
             </div>
             <button
               type="button"
+              role="switch"
+              aria-checked={selections.powerDownStandby}
+              aria-label="Eliminate entertainment center overnight standby power"
               onClick={() =>
                 setSelections((prev) => ({ ...prev, powerDownStandby: !prev.powerDownStandby }))
               }
-              className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+              className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
                 selections.powerDownStandby ? 'bg-emerald-600' : 'bg-gray-300'
               }`}
             >
@@ -144,18 +172,29 @@ export const ScenarioSimulator: React.FC<ScenarioSimulatorProps> = ({ baselineUn
           </div>
 
           {/* Action 5: Laundry Shift (Time-of-Use honesty demonstration) */}
-          <div className="p-4 bg-gray-50 rounded-xl border border-gray-200/80 flex items-center justify-between">
+          <div className="p-4 bg-gray-50 rounded-xl border border-gray-200/80 flex items-center justify-between gap-4">
             <div>
-              <p className="text-sm font-semibold text-gray-900">{t('laundryShift')}</p>
-              <p className="text-xs text-amber-700 mt-0.5 font-medium">Under flat/tiered tariff, shifting timing yields ₹0 direct savings</p>
+              <p className="text-sm font-semibold text-gray-900">
+                {tariff.is_time_dependent ? t('laundryShiftTou') : t('laundryShift')}
+              </p>
+              <p className={`text-xs mt-0.5 font-medium ${tariff.is_time_dependent ? 'text-emerald-700' : 'text-amber-700'}`}>
+                {laundryHelperText}
+              </p>
             </div>
             <button
               type="button"
+              role="switch"
+              aria-checked={selections.shiftLaundryToMorning}
+              aria-label="Shift laundry cycle to morning hours"
               onClick={() =>
                 setSelections((prev) => ({ ...prev, shiftLaundryToMorning: !prev.shiftLaundryToMorning }))
               }
-              className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                selections.shiftLaundryToMorning ? 'bg-amber-600' : 'bg-gray-300'
+              className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                selections.shiftLaundryToMorning
+                  ? tariff.is_time_dependent
+                    ? 'bg-emerald-600'
+                    : 'bg-amber-600'
+                  : 'bg-gray-300'
               }`}
             >
               <span
@@ -169,17 +208,20 @@ export const ScenarioSimulator: React.FC<ScenarioSimulatorProps> = ({ baselineUn
 
         {/* Right Column: Dynamic Counterfactual Outcome Card */}
         <div className="lg:col-span-5 space-y-4">
-          {/* Cliff Avoidance Banner */}
+          {/* Dynamic Cliff Avoidance Banner */}
           {outcome.didAvoidCliff && (
             <div className="p-4 bg-emerald-600 text-white rounded-xl shadow-sm border border-emerald-700 animate-fadeIn">
               <div className="flex items-start gap-3">
                 <Sparkles className="w-5 h-5 flex-shrink-0 text-amber-300 mt-0.5" />
                 <div>
                   <p className="text-xs font-bold uppercase tracking-wider text-emerald-100">
-                    {t('cliffAvoidedAlert')}
+                    ₹{outcome.cliffBonusInr.toFixed(2)} {t('cliffAvoidedAlert')}
                   </p>
                   <p className="text-xs text-emerald-50 mt-1 leading-relaxed">
                     {outcome.tierChangeDescription?.[language] ?? outcome.tierChangeDescription?.en}
+                  </p>
+                  <p className="text-[11px] text-emerald-100/90 mt-1.5 font-mono">
+                    {`Slab savings ₹${outcome.slabSavingsInr.toFixed(2)} + Avoided cliff ₹${outcome.cliffBonusInr.toFixed(2)} = ₹${outcome.netSavingsInr.toFixed(2)} total`}
                   </p>
                 </div>
               </div>

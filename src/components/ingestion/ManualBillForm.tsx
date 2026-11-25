@@ -1,24 +1,31 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { validateManualBill, saveManualBill, type ManualBillInput } from '../../core/ingestion/manual-bill';
+import { SUPPORTED_TARIFF_CATALOG, TNPDCL_LT1A_2026_MAY10 } from '../../core/tariff/tariffs/tnpdcl-lt1a';
+import { useLanguage } from '../../locales/i18n';
 
 interface ManualBillFormProps {
+  activeTariffId?: string;
   onSuccess?: (id: number) => void;
   className?: string;
 }
 
 export const ManualBillForm: React.FC<ManualBillFormProps> = ({
+  activeTariffId,
   onSuccess,
   className = '',
 }) => {
+  const { language } = useLanguage();
+  const [hasEditedTariff, setHasEditedTariff] = useState(false);
+
   const [formData, setFormData] = useState<ManualBillInput>({
     billing_period_start: '',
     billing_period_end: '',
     total_units_kwh: 0,
     total_amount: undefined,
     currency: 'INR',
-    tariff_id: 'in-tnpdcl-lt1a-2024',
+    tariff_id: activeTariffId ?? TNPDCL_LT1A_2026_MAY10.id,
     bill_reference_no: '',
   });
 
@@ -28,8 +35,19 @@ export const ManualBillForm: React.FC<ManualBillFormProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (activeTariffId && !hasEditedTariff) {
+      setFormData((prev) =>
+        prev.tariff_id === activeTariffId ? prev : { ...prev, tariff_id: activeTariffId }
+      );
+    }
+  }, [activeTariffId, hasEditedTariff]);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
+    if (name === 'tariff_id') {
+      setHasEditedTariff(true);
+    }
     setFormData((prev) => ({
       ...prev,
       [name]: type === 'number' ? (value === '' ? undefined : parseFloat(value)) : value,
@@ -87,13 +105,13 @@ export const ManualBillForm: React.FC<ManualBillFormProps> = ({
       </div>
 
       {successMessage && (
-        <div className="p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 text-sm">
+        <div role="status" className="p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 text-sm">
           ✓ {successMessage}
         </div>
       )}
 
       {errors.form && (
-        <div className="p-3 rounded-lg bg-red-50 dark:bg-red-950/40 text-red-800 dark:text-red-300 text-sm">
+        <div role="alert" className="p-3 rounded-lg bg-red-50 dark:bg-red-950/40 text-red-800 dark:text-red-300 text-sm">
           ⚠️ {errors.form}
         </div>
       )}
@@ -110,11 +128,15 @@ export const ManualBillForm: React.FC<ManualBillFormProps> = ({
             type="date"
             value={formData.billing_period_start}
             onChange={handleInputChange}
+            aria-invalid={Boolean(errors.billing_period_start)}
+            aria-describedby={errors.billing_period_start ? 'billing_period_start_error' : undefined}
             className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 p-2.5 text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-emerald-500"
             required
           />
           {errors.billing_period_start && (
-            <p className="mt-1 text-xs text-red-600 dark:text-red-400">{errors.billing_period_start}</p>
+            <p id="billing_period_start_error" role="alert" className="mt-1 text-xs text-red-600 dark:text-red-400">
+              {errors.billing_period_start}
+            </p>
           )}
         </div>
 
@@ -128,11 +150,15 @@ export const ManualBillForm: React.FC<ManualBillFormProps> = ({
             type="date"
             value={formData.billing_period_end}
             onChange={handleInputChange}
+            aria-invalid={Boolean(errors.billing_period_end)}
+            aria-describedby={errors.billing_period_end ? 'billing_period_end_error' : undefined}
             className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 p-2.5 text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-emerald-500"
             required
           />
           {errors.billing_period_end && (
-            <p className="mt-1 text-xs text-red-600 dark:text-red-400">{errors.billing_period_end}</p>
+            <p id="billing_period_end_error" role="alert" className="mt-1 text-xs text-red-600 dark:text-red-400">
+              {errors.billing_period_end}
+            </p>
           )}
         </div>
       </div>
@@ -152,11 +178,15 @@ export const ManualBillForm: React.FC<ManualBillFormProps> = ({
             value={formData.total_units_kwh || ''}
             onChange={handleInputChange}
             placeholder="e.g. 450"
+            aria-invalid={Boolean(errors.total_units_kwh)}
+            aria-describedby={errors.total_units_kwh ? 'total_units_kwh_error' : undefined}
             className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 p-2.5 text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-emerald-500"
             required
           />
           {errors.total_units_kwh && (
-            <p className="mt-1 text-xs text-red-600 dark:text-red-400">{errors.total_units_kwh}</p>
+            <p id="total_units_kwh_error" role="alert" className="mt-1 text-xs text-red-600 dark:text-red-400">
+              {errors.total_units_kwh}
+            </p>
           )}
         </div>
 
@@ -169,12 +199,15 @@ export const ManualBillForm: React.FC<ManualBillFormProps> = ({
             name="tariff_id"
             value={formData.tariff_id}
             onChange={handleInputChange}
+            aria-invalid={Boolean(errors.tariff_id)}
+            aria-describedby={errors.tariff_id ? 'tariff_id_error' : undefined}
             className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 p-2.5 text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-emerald-500"
           >
-            <option value="in-tnpdcl-lt1a-2024">Tamil Nadu — TNPDCL LT-1A Domestic (2024–2025)</option>
-            <option value="in-tnpdcl-lt1a-2025">Tamil Nadu — TNPDCL LT-1A Domestic (TNERC Order No. 6 of 2025)</option>
-            <option value="in-tnpdcl-lt1a-may2026">Tamil Nadu — TNPDCL LT-1A (May 10, 2026 Welfare Scheme)</option>
-            <option value="generic-flat-inr">Generic Flat Rate Domestic (₹5/kWh)</option>
+            {SUPPORTED_TARIFF_CATALOG.map((entry) => (
+              <option key={entry.plan.id} value={entry.plan.id}>
+                {entry.regionLabel[language] ?? entry.regionLabel.en}
+              </option>
+            ))}
           </select>
         </div>
       </div>
@@ -196,11 +229,15 @@ export const ManualBillForm: React.FC<ManualBillFormProps> = ({
               value={formData.total_amount ?? ''}
               onChange={handleInputChange}
               placeholder="e.g. 1725.00"
+              aria-invalid={Boolean(errors.total_amount)}
+              aria-describedby={errors.total_amount ? 'total_amount_error' : undefined}
               className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 pl-8 p-2.5 text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-emerald-500"
             />
           </div>
           {errors.total_amount && (
-            <p className="mt-1 text-xs text-red-600 dark:text-red-400">{errors.total_amount}</p>
+            <p id="total_amount_error" role="alert" className="mt-1 text-xs text-red-600 dark:text-red-400">
+              {errors.total_amount}
+            </p>
           )}
         </div>
 
@@ -224,7 +261,7 @@ export const ManualBillForm: React.FC<ManualBillFormProps> = ({
       {calculatedAmount !== undefined && (
         <div className="rounded-lg bg-gray-50 dark:bg-gray-800/60 p-3 text-xs space-y-1">
           <div className="flex justify-between font-medium text-gray-900 dark:text-gray-100">
-            <span>Verified Calculated Tariff Charge:</span>
+            <span>Modeled Statutory Tariff Charge:</span>
             <span>₹{calculatedAmount.toFixed(2)}</span>
           </div>
           {warnings.map((w, idx) => (

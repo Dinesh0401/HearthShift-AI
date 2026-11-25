@@ -7,6 +7,7 @@ import {
   TNPDCL_LT1A_2026_MAY10,
   TNPDCL_LT1A_2025_2026,
   TNPDCL_LT1A_2024_2025,
+  getTariffPlanById,
 } from '../../core/tariff/tariffs/tnpdcl-lt1a';
 import { useLanguage } from '../../locales/i18n';
 import { Trash2, Receipt, AlertCircle } from 'lucide-react';
@@ -100,18 +101,19 @@ export const BillHistoryTable: React.FC<BillHistoryTableProps> = ({
             </thead>
             <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
               {bills.map((bill) => {
-                const tariff = getTariffForDate(bill.billing_period_end);
+                const tariff = bill.tariff_id
+                  ? getTariffPlanById(bill.tariff_id)
+                  : getTariffForDate(bill.billing_period_end);
                 const breakdown = calculateBill(bill.total_units_kwh, tariff);
 
                 return (
                   <tr key={bill.id} className="hover:bg-gray-50/50 dark:hover:bg-gray-800/40">
                     <td className="py-3 px-3 font-medium text-gray-900 dark:text-gray-100">
                       {bill.billing_period_start} → {bill.billing_period_end}
-                      {bill.bill_reference_no && (
-                        <span className="block text-[10px] text-gray-400">
-                          Ref: {bill.bill_reference_no}
-                        </span>
-                      )}
+                      <span className="block text-[10px] text-gray-500 dark:text-gray-400">
+                        {tariff.id}
+                        {bill.bill_reference_no ? ` · Ref: ${bill.bill_reference_no}` : ''}
+                      </span>
                     </td>
                     <td className="py-3 px-3 text-right font-semibold text-gray-800 dark:text-gray-200">
                       {bill.total_units_kwh} kWh

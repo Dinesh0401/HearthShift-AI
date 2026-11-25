@@ -139,7 +139,7 @@ export function generateHouseholdRecommendation(
     };
   }
 
-  // 5. Build Formally Certified Recommendation Object
+  // 5. Build Uncertainty-Bounded Recommendation Object
   const act = decision.recommendedAction;
   const isCliffAvoidance = baselineKwh >= 490.0 && baselineKwh <= 520.0 && act.deltaKwh >= 5.0;
 
@@ -164,7 +164,7 @@ export function generateHouseholdRecommendation(
       }
     : {
         en: `Conservative slab optimization: Expected to reduce bi-monthly consumption by ${act.deltaKwh} kWh, saving at least ₹${lowerBoundInr.toFixed(2)} under your active LT-1A tariff.`,
-        ta: `மின் கட்டணச் சேமிப்பு: இரு மாதத்திற்கு சுமார் ${act.deltaKwh} யூனிட் குறைப்பதன் மூலம் குறைந்தது ₹${lowerBoundInr.toFixed(2)} உறுதியான பணச்சேமிப்பு கிடைக்கும்.`,
+        ta: `மின் கட்டணச் சேமிப்பு: இரு மாதத்திற்கு சுமார் ${act.deltaKwh} யூனிட் குறைப்பதன் மூலம் குறைந்தது ₹${lowerBoundInr.toFixed(2)} — மாதிரி அடிப்படையில் குறைந்தபட்ச சேமிப்பு மதிப்பீடு கிடைக்கலாம் (உறுதிப்படுத்தப்பட்டதல்ல).`,
       };
 
   const advisoryAssumption: LocalizedString = {

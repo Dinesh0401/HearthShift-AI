@@ -1,7 +1,12 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { parseEnergyCsv, type CsvValidationPreview, type CsvColumnMapping } from '../../core/ingestion/csv-parser';
+import {
+  parseEnergyCsv,
+  MAX_CSV_BYTES,
+  type CsvValidationPreview,
+  type CsvColumnMapping,
+} from '../../core/ingestion/csv-parser';
 import { commitValidatedReadings } from '../../core/storage/ingestion-storage';
 
 interface CsvDropzoneProps {
@@ -55,6 +60,16 @@ export const CsvDropzone: React.FC<CsvDropzoneProps> = ({
     setErrorMsg(null);
     setCommitSuccess(null);
     setPreview(null);
+
+    if (file.size > MAX_CSV_BYTES) {
+      const fileSizeMb = (file.size / (1024 * 1024)).toFixed(1);
+      const maxSizeMb = Math.round(MAX_CSV_BYTES / (1024 * 1024));
+      setErrorMsg(
+        `File "${file.name}" (${fileSizeMb} MB) exceeds the maximum allowed size of ${maxSizeMb} MB.`
+      );
+      return;
+    }
+
     setIsParsing(true);
     setProgress(0);
     setParsedRows(0);
@@ -142,11 +157,20 @@ export const CsvDropzone: React.FC<CsvDropzoneProps> = ({
       {/* Drag & Drop Zone */}
       {!preview && !isParsing && (
         <div
+          role="button"
+          tabIndex={0}
+          aria-label="Upload smart-meter CSV file. Click or press Enter or Space to browse local files."
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
-          className={`flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-xl cursor-pointer transition-colors ${
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              fileInputRef.current?.click();
+            }
+          }}
+          className={`flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-xl cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 ${
             isDragging
               ? 'border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/20'
               : 'border-gray-300 dark:border-gray-700 hover:border-emerald-400 bg-gray-50/50 dark:bg-gray-800/40'

@@ -77,6 +77,9 @@ export interface CsvValidationPreview {
   readings: EnergyReading[]; // Full normalized readings ready for staged commit
 }
 
+export const MAX_CSV_BYTES = 25 * 1024 * 1024; // 25 MB hard resource bound
+export const MAX_CSV_ROWS = 500000; // 500k rows hard DoS bound
+
 export interface ParseCsvOptions {
   mapping?: CsvColumnMapping;
   abort_signal?: AbortSignal;
@@ -92,7 +95,45 @@ export async function parseEnergyCsv(
   csvContent: string,
   options: ParseCsvOptions = {}
 ): Promise<CsvValidationPreview> {
-  const lines = csvContent.split(/\r?\n/).filter((line) => line.trim().length > 0);
+  if (typeof csvContent !== 'string') {
+    throw new Error('Invalid CSV input: expected string content.');
+  }
+
+  // Enforce hard byte bound before allocating line arrays
+  if (csvContent.length > MAX_CSV_BYTES) {
+    throw new Error(
+      `CSV file exceeds maximum allowed size of ${MAX_CSV_BYTES / (1024 * 1024)} MB.`
+    );
+  }
+  const byteLength = new TextEncoder().encode(csvContent).byteLength;
+  if (byteLength > MAX_CSV_BYTES) {
+    throw new Error(
+      `CSV file (${(byteLength / (1024 * 1024)).toFixed(1)} MB) exceeds maximum allowed size of ${MAX_CSV_BYTES / (1024 * 1024)} MB.`
+    );
+  }
+
+  // Scan non-empty lines linearly while enforcing hard row bound
+  const lines: string[] = [];
+  let pos = 0;
+  while (pos <= csvContent.length) {
+    const nextNewline = csvContent.indexOf('\n', pos);
+    const end = nextNewline === -1 ? csvContent.length : nextNewline;
+    let rawLine = csvContent.slice(pos, end);
+    if (rawLine.endsWith('\r')) {
+      rawLine = rawLine.slice(0, -1);
+    }
+    if (rawLine.trim().length > 0) {
+      lines.push(rawLine);
+      if (lines.length - 1 > MAX_CSV_ROWS) {
+        throw new Error(
+          `CSV file exceeds maximum allowed row count of ${MAX_CSV_ROWS.toLocaleString()} rows.`
+        );
+      }
+    }
+    if (nextNewline === -1) break;
+    pos = nextNewline + 1;
+  }
+
   if (lines.length === 0) {
     throw new Error('CSV file is empty.');
   }
@@ -470,9 +511,25 @@ export async function parseEnergyCsv(
 // ══════════════════════════════════════════════════════════
 
 function detectDelimiter(line: string): string {
-  const commas = (line.match(/,/g) || []).length;
-  const semicolons = (line.match(/;/g) || []).length;
-  const tabs = (line.match(/\t/g) || []).length;
+  let commas = 0;
+  let semicolons = 0;
+  let tabs = 0;
+  let inQuotes = false;
+
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') {
+      if (inQuotes && i + 1 < line.length && line[i + 1] === '"') {
+        i++;
+      } else {
+        inQuotes = !inQuotes;
+      }
+    } else if (!inQuotes) {
+      if (ch === ',') commas++;
+      else if (ch === ';') semicolons++;
+      else if (ch === '\t') tabs++;
+    }
+  }
 
   if (tabs > commas && tabs > semicolons) return '\t';
   if (semicolons > commas) return ';';
@@ -480,22 +537,39 @@ function detectDelimiter(line: string): string {
 }
 
 function splitCsvLine(line: string, delimiter: string): string[] {
-  const pattern = new RegExp(
-    `(${delimiter}|\\r?\\n|^)(?:"([^"]*(?:""[^"]*)*)"|([^"${delimiter}\\r\\n]*))`,
-    'gi'
-  );
+  // Deterministic O(N) state-machine parser (zero regex backtracking / ReDoS risk)
   const result: string[] = [];
-  let match: RegExpExecArray | null;
+  let current = '';
+  let inQuotes = false;
 
-  while ((match = pattern.exec(line)) !== null) {
-    if (match[2] !== undefined) {
-      result.push(match[2].replace(/""/g, '"'));
-    } else if (match[3] !== undefined) {
-      result.push(match[3]);
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+
+    if (inQuotes) {
+      if (ch === '"') {
+        if (i + 1 < line.length && line[i + 1] === '"') {
+          current += '"';
+          i++;
+        } else {
+          inQuotes = false;
+        }
+      } else {
+        current += ch;
+      }
+    } else {
+      if (ch === '"' && current.length === 0) {
+        inQuotes = true;
+      } else if (ch === delimiter) {
+        result.push(current);
+        current = '';
+      } else if (ch !== '\r' && ch !== '\n') {
+        current += ch;
+      }
     }
   }
 
-  return result.length > 0 ? result : line.split(delimiter);
+  result.push(current);
+  return result;
 }
 
 function findTimestampColumnIndex(headers: string[], userSpecified?: string): number {
@@ -605,7 +679,7 @@ export function parseDateTimeString(
   _format?: 'iso' | 'uk' | 'us' | 'auto'
 ): Date | null {
   const cleanStr = rawStr.trim();
-  if (!cleanStr) return null;
+  if (!cleanStr || cleanStr.length > 64) return null;
 
   // Unix epoch timestamp (seconds or milliseconds)
   if (/^\d{10}(\.\d+)?$/.test(cleanStr)) {
