@@ -427,3 +427,42 @@ export function getTariffPlanById(tariffId?: string): TariffPlan {
   const found = SUPPORTED_TARIFF_CATALOG.find((entry) => entry.plan.id === tariffId);
   return found ? found.plan : TNPDCL_LT1A_MAY_2026_SCHEME;
 }
+
+export interface HistoricalTariffResolution {
+  plan: TariffPlan;
+  /** True when the billing period begins strictly before 2026-05-10 and ends on/after 2026-05-10 */
+  isTransitionBoundaryStraddled: boolean;
+}
+
+const TNPDCL_MAY_2026_EFFECTIVE_MS = Date.parse('2026-05-10T00:00:00Z');
+const TNPDCL_JUL_2025_EFFECTIVE_MS = Date.parse('2025-07-01T00:00:00Z');
+
+/**
+ * Resolves the historically applicable TNPDCL LT-1A schedule for a dated billing period
+ * under the `meter_reading_date_after` transition convention, and detects cycles crossing
+ * the May 10, 2026 GoTN G.O. (Ms) No. 50 / TNERC Order No. 5 of 2026 effective boundary.
+ */
+export function resolveTnpdclTariffForPeriod(
+  periodEnd: string,
+  periodStart?: string
+): HistoricalTariffResolution {
+  const endMs = Date.parse(`${periodEnd.trim()}T00:00:00Z`);
+  const startMs = periodStart ? Date.parse(`${periodStart.trim()}T00:00:00Z`) : NaN;
+
+  let plan = TNPDCL_LT1A_2024_2025;
+  if (!Number.isNaN(endMs)) {
+    if (endMs >= TNPDCL_MAY_2026_EFFECTIVE_MS) {
+      plan = TNPDCL_LT1A_MAY_2026_SCHEME;
+    } else if (endMs >= TNPDCL_JUL_2025_EFFECTIVE_MS) {
+      plan = TNPDCL_LT1A_2025_2026;
+    }
+  }
+
+  const isTransitionBoundaryStraddled =
+    !Number.isNaN(startMs) &&
+    !Number.isNaN(endMs) &&
+    startMs < TNPDCL_MAY_2026_EFFECTIVE_MS &&
+    endMs >= TNPDCL_MAY_2026_EFFECTIVE_MS;
+
+  return { plan, isTransitionBoundaryStraddled };
+}

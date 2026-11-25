@@ -4,13 +4,11 @@ import React, { useState, useEffect } from 'react';
 import { db, type StoredBillEntry } from '../../lib/db';
 import { calculateBill } from '../../core/tariff/calculator';
 import {
-  TNPDCL_LT1A_2026_MAY10,
-  TNPDCL_LT1A_2025_2026,
-  TNPDCL_LT1A_2024_2025,
   getTariffPlanById,
+  resolveTnpdclTariffForPeriod,
 } from '../../core/tariff/tariffs/tnpdcl-lt1a';
 import { useLanguage } from '../../locales/i18n';
-import { Trash2, Receipt, AlertCircle } from 'lucide-react';
+import { Trash2, Receipt, AlertCircle, AlertTriangle } from 'lucide-react';
 
 interface BillHistoryTableProps {
   refreshTrigger?: number;
@@ -56,16 +54,29 @@ export const BillHistoryTable: React.FC<BillHistoryTableProps> = ({
     }
   };
 
-  const getTariffForDate = (dateStr: string) => {
-    const d = new Date(dateStr);
-    if (d >= new Date('2026-05-10T00:00:00Z')) {
-      return TNPDCL_LT1A_2026_MAY10;
-    }
-    if (d >= new Date('2025-07-01T00:00:00Z')) {
-      return TNPDCL_LT1A_2025_2026;
-    }
-    return TNPDCL_LT1A_2024_2025;
-  };
+  const renderedBills = bills.map((bill) => {
+    const resolvedPeriod = resolveTnpdclTariffForPeriod(
+      bill.billing_period_end,
+      bill.billing_period_start
+    );
+    const tariff = bill.tariff_id
+      ? getTariffPlanById(bill.tariff_id)
+      : resolvedPeriod.plan;
+    const breakdown = calculateBill(bill.total_units_kwh, tariff);
+    const isTnpdclTransitionEligiblePlan =
+      tariff.id === 'in-tnpdcl-lt1a-may2026' || tariff.id === 'in-tnpdcl-lt1a-2025';
+    const crossesMay10Boundary =
+      isTnpdclTransitionEligiblePlan && resolvedPeriod.isTransitionBoundaryStraddled;
+
+    return {
+      bill,
+      tariff,
+      breakdown,
+      crossesMay10Boundary,
+    };
+  });
+
+  const hasBoundaryCrossingBill = renderedBills.some((item) => item.crossesMay10Boundary);
 
   return (
     <div className={`rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm ${className}`}>
@@ -100,13 +111,7 @@ export const BillHistoryTable: React.FC<BillHistoryTableProps> = ({
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
-              {bills.map((bill) => {
-                const tariff = bill.tariff_id
-                  ? getTariffPlanById(bill.tariff_id)
-                  : getTariffForDate(bill.billing_period_end);
-                const breakdown = calculateBill(bill.total_units_kwh, tariff);
-
-                return (
+              {renderedBills.map(({ bill, tariff, breakdown, crossesMay10Boundary }) => (
                   <tr key={bill.id} className="hover:bg-gray-50/50 dark:hover:bg-gray-800/40">
                     <td className="py-3 px-3 font-medium text-gray-900 dark:text-gray-100">
                       {bill.billing_period_start} → {bill.billing_period_end}
@@ -114,6 +119,12 @@ export const BillHistoryTable: React.FC<BillHistoryTableProps> = ({
                         {tariff.id}
                         {bill.bill_reference_no ? ` · Ref: ${bill.bill_reference_no}` : ''}
                       </span>
+                      {crossesMay10Boundary && (
+                        <span className="mt-1 inline-flex items-center gap-1 rounded bg-amber-50 border border-amber-200 px-1.5 py-0.5 text-[10px] font-medium text-amber-800 dark:bg-amber-950/40 dark:border-amber-800 dark:text-amber-300">
+                          <AlertTriangle className="w-3 h-3 shrink-0" />
+                          {t('boundaryCrossedBadge')}
+                        </span>
+                      )}
                     </td>
                     <td className="py-3 px-3 text-right font-semibold text-gray-800 dark:text-gray-200">
                       {bill.total_units_kwh} kWh
@@ -142,10 +153,14 @@ export const BillHistoryTable: React.FC<BillHistoryTableProps> = ({
                       </button>
                     </td>
                   </tr>
-                );
-              })}
+              ))}
             </tbody>
           </table>
+          {hasBoundaryCrossingBill && (
+            <p className="mt-3 rounded-lg bg-amber-50/80 border border-amber-200 px-3 py-2 text-[11px] text-amber-900 dark:bg-amber-950/30 dark:border-amber-800 dark:text-amber-200">
+              {t('boundaryCrossedNote')}
+            </p>
+          )}
         </div>
       )}
     </div>

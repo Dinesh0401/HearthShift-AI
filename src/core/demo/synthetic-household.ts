@@ -14,12 +14,66 @@
 
 import { db, type StoredBillEntry, type StoredEnergyReading } from '../../lib/db';
 import { calculateBill } from '../tariff/calculator';
-import { getTariffPlanById } from '../tariff/tariffs/tnpdcl-lt1a';
+import { resolveTnpdclTariffForPeriod } from '../tariff/tariffs/tnpdcl-lt1a';
 
 export const DEMO_MODE_STORAGE_KEY = 'hearthshift_demo_mode';
 export const ACTIVE_TARIFF_STORAGE_KEY = 'hearthshift_active_tariff_id';
+/** Active tariff used for modern forward-looking counterfactual simulations in Demo Mode */
 export const DEMO_TARIFF_ID = 'in-tnpdcl-lt1a-may2026';
 export const DEMO_IMPORT_BATCH_ID = 'demo_synthetic_8d';
+
+export interface SyntheticDemoBillSpec {
+  billing_period_start: string;
+  billing_period_end: string;
+  total_units_kwh: number;
+  bill_reference_no: string;
+}
+
+export const SYNTHETIC_DEMO_BILL_SPECS: readonly SyntheticDemoBillSpec[] = [
+  {
+    billing_period_start: '2026-01-01',
+    billing_period_end: '2026-02-28',
+    total_units_kwh: 445,
+    bill_reference_no: 'DEMO-SYNTH-2026-01',
+  },
+  {
+    billing_period_start: '2026-03-01',
+    billing_period_end: '2026-04-30',
+    total_units_kwh: 492,
+    bill_reference_no: 'DEMO-SYNTH-2026-02',
+  },
+  {
+    billing_period_start: '2026-05-01',
+    billing_period_end: '2026-06-30',
+    total_units_kwh: 508,
+    bill_reference_no: 'DEMO-SYNTH-2026-03',
+  },
+];
+
+/**
+ * Builds deterministic synthetic bill entries using the historically applicable
+ * TNPDCL LT-1A schedule for each dated billing cycle (distinct from the active
+ * May 2026 schedule used by counterfactual simulations).
+ */
+export function buildSyntheticDemoBills(nowIso: string = new Date().toISOString()): StoredBillEntry[] {
+  return SYNTHETIC_DEMO_BILL_SPECS.map((spec) => {
+    const { plan } = resolveTnpdclTariffForPeriod(
+      spec.billing_period_end,
+      spec.billing_period_start
+    );
+    return {
+      billing_period_start: spec.billing_period_start,
+      billing_period_end: spec.billing_period_end,
+      total_units_kwh: spec.total_units_kwh,
+      total_amount: calculateBill(spec.total_units_kwh, plan).net_payable,
+      currency: plan.currency,
+      tariff_id: plan.id,
+      bill_reference_no: spec.bill_reference_no,
+      created_at: nowIso,
+      updated_at: nowIso,
+    };
+  });
+}
 
 /**
  * Deterministic hourly diurnal profile (kWh per hour) for a typical Tamil Nadu household:
@@ -84,40 +138,7 @@ export async function loadSyntheticDemoHousehold(): Promise<void> {
   await db.deleteAllUserData();
 
   const now = new Date().toISOString();
-  const demoTariff = getTariffPlanById(DEMO_TARIFF_ID);
-
-  const syntheticBillSpecs = [
-    {
-      billing_period_start: '2026-01-01',
-      billing_period_end: '2026-02-28',
-      total_units_kwh: 445,
-      bill_reference_no: 'DEMO-SYNTH-2026-01',
-    },
-    {
-      billing_period_start: '2026-03-01',
-      billing_period_end: '2026-04-30',
-      total_units_kwh: 492,
-      bill_reference_no: 'DEMO-SYNTH-2026-02',
-    },
-    {
-      billing_period_start: '2026-05-01',
-      billing_period_end: '2026-06-30',
-      total_units_kwh: 508,
-      bill_reference_no: 'DEMO-SYNTH-2026-03',
-    },
-  ];
-
-  const billsToInsert: StoredBillEntry[] = syntheticBillSpecs.map((spec) => ({
-    billing_period_start: spec.billing_period_start,
-    billing_period_end: spec.billing_period_end,
-    total_units_kwh: spec.total_units_kwh,
-    total_amount: calculateBill(spec.total_units_kwh, demoTariff).net_payable,
-    currency: demoTariff.currency,
-    tariff_id: DEMO_TARIFF_ID,
-    bill_reference_no: spec.bill_reference_no,
-    created_at: now,
-    updated_at: now,
-  }));
+  const billsToInsert: StoredBillEntry[] = buildSyntheticDemoBills(now);
 
   const startMs = Date.parse('2026-05-01T00:00:00Z');
   const readingsToInsert: StoredEnergyReading[] = [];

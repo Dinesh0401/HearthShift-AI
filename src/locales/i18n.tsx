@@ -21,7 +21,7 @@ export const translations = {
     loadDemoBtn: 'Load Safe Demo Dataset (Synthetic)',
     clearDemoBtn: 'Exit & Clear Demo Data',
     demoModeBannerTitle: 'SYNTHETIC DEMO MODE — Simulated Sample Household (Not Real Utility Data)',
-    demoModeBannerDesc: 'Displaying 3 synthetic bi-monthly bills (445 / 492 / 508 kWh) and 192 hourly intervals (8 days) for exploration. Savings ledger remains empty so zero fake actual savings are invented.',
+    demoModeBannerDesc: 'Displaying 3 synthetic bi-monthly bills (Jan–Apr 2026 under historical 2025 order: ₹1,458.50 / ₹1,754.60; May–Jun 508 kWh: ₹2,107.20) and 192 hourly intervals. Counterfactual simulations use the active May 2026 schedule; savings ledger remains empty.',
 
     // Alpha Disclaimer & Public Alpha Presentation
     alphaDisclaimerTitle: 'Experimental Research Alpha — Advisory Models Only',
@@ -94,6 +94,8 @@ export const translations = {
     colNet: 'Net Payable',
     colActions: 'Actions',
     deleteBtn: 'Delete',
+    boundaryCrossedBadge: 'Crosses May 10, 2026 policy date (mid-cycle rule unverified)',
+    boundaryCrossedNote: 'Billing cycles crossing May 10, 2026 (start < 2026-05-10 <= end) apply the meter-reading-date cutoff here without pro-ration; utility mid-cycle treatment is unverified—always check your printed TNPDCL bill.',
 
     // Interval Chart
     intervalChartTitle: 'Empirical Interval Load Profile',
@@ -205,7 +207,7 @@ export const translations = {
     loadDemoBtn: 'மாதிரி சோதனைத் தரவை ஏற்றுக (செயற்கை)',
     clearDemoBtn: 'வெளியேறி மாதிரித் தரவை அழி',
     demoModeBannerTitle: 'செயற்கை மாதிரி முறைமை — உருவகப்படுத்தப்பட்ட மாதிரி வீடு (உண்மையான மின் தரவு அல்ல)',
-    demoModeBannerDesc: 'ஆய்விற்காக 3 செயற்கை இரு-மாத பில்கள் (445 / 492 / 508 kWh) மற்றும் 192 மணிநேர அளவீடுகள் (8 நாட்கள்) காட்டப்படுகின்றன. போலியான சேமிப்பைத் தவிர்க்க சேமிப்புப் பதிவேடு காலியாக உள்ளது.',
+    demoModeBannerDesc: 'ஆய்விற்காக 3 செயற்கை இரு-மாத பில்கள் (ஜன–ஏப் 2026 பழைய 2025 கட்டணப்படி: ₹1,458.50 / ₹1,754.60; மே–ஜூன் 508 kWh: ₹2,107.20) மற்றும் 192 மணிநேர அளவீடுகள் காட்டப்படுகின்றன. எதிர்கால மாதிரி ஒப்பீடுகள் மே 2026 திட்டத்தைப் பயன்படுத்துகின்றன; சேமிப்புப் பதிவேடு காலியாக உள்ளது.',
 
     // Alpha Disclaimer & Public Alpha Presentation
     alphaDisclaimerTitle: 'சோதனை ஆய்வு ஆல்ஃபா பதிப்பு — ஆலோசனை மாதிரிகள் மட்டுமே',
@@ -278,6 +280,8 @@ export const translations = {
     colNet: 'செலுத்த வேண்டிய நிகரத் தொகை',
     colActions: 'செயல்கள்',
     deleteBtn: 'நீக்கு',
+    boundaryCrossedBadge: 'மே 10, 2026 கொள்கை எல்லையைக் கடக்கிறது (இடைக்கால விதி உறுதிப்படுத்தப்படவில்லை)',
+    boundaryCrossedNote: 'மே 10, 2026-ஐக் கடக்கும் கட்டணக் காலங்களுக்கு அளவீடு முடிந்த தேதி விதி பயன்படுத்தப்படுகிறது; மின்வாரிய இடைக்காலப் பகிர்வு முறை அதிகாரப்பூர்வமாக உறுதிப்படுத்தப்படவில்லை—அச்சிடப்பட்ட TNPDCL ரசீதைச் சரிபார்க்கவும்.',
 
     // Interval Chart
     intervalChartTitle: 'உண்மையான கால இடைவெளி பயன்பாட்டு வரைபடம்',
