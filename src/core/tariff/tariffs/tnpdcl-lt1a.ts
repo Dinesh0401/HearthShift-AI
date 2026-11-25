@@ -14,8 +14,8 @@
 import type { TariffPlan } from '../types';
 
 /**
- * TNPDCL LT-1A Domestic Schedule (2024–2025)
- * Effective: July 1, 2024 to June 30, 2025
+ * TNPDCL LT-1A Domestic Schedule (2024–2025 Historical Baseline)
+ * Effective: July 1, 2024 to June 30, 2025 (Reflects earlier baseline ₹4.50/₹2.25 schedule retained for historical bill verification).
  * Bi-monthly billing cadence.
  */
 export const TNPDCL_LT1A_2024_2025: TariffPlan = {
@@ -94,8 +94,9 @@ export const TNPDCL_LT1A_2024_2025: TariffPlan = {
 
 /**
  * TNPDCL LT-1A Domestic Schedule (2025–2026)
- * Effective: July 1, 2025 to April 30, 2026
- * Issued under TNERC Tariff Order No. 6 of 2025
+ * Effective: July 1, 2025 to May 9, 2026
+ * Issued under TNERC Suo-Motu Tariff Order No. 6 of 2025.
+ * Note: Slab rates below encode effective consumer-payable charges after GoTN Sec 65 base-rate subsidy (₹2.35 for 101-200, ₹4.70 for 201-400, ₹6.30 for 401-500, etc.).
  */
 export const TNPDCL_LT1A_2025_2026: TariffPlan = {
   id: 'in-tnpdcl-lt1a-2025',
@@ -103,13 +104,13 @@ export const TNPDCL_LT1A_2025_2026: TariffPlan = {
   version: '2025.1.0',
   utility_name: 'Tamil Nadu Power Distribution Corporation Limited (TNPDCL)',
   regulatory_authority: 'Tamil Nadu Electricity Regulatory Commission (TNERC)',
-  tariff_order_ref: 'TNERC Tariff Order No. 6 of 2025 (Domestic LT-1A)',
+  tariff_order_ref: 'TNERC Suo-Motu Tariff Order No. 6 of 2025 (Consumer-Payable Effective Slabs)',
   region: 'Tamil Nadu',
   country_code: 'IN',
   currency: 'INR',
   billing_cadence: 'bimonthly',
   effective_from: '2025-07-01',
-  effective_to: '2026-04-30',
+  effective_to: '2026-05-09',
   source_url: 'https://www.tnpdcl.org/en/tnpdcl/billing-services/schedules-tariff/',
   is_time_dependent: false,
 
@@ -173,14 +174,15 @@ export const TNPDCL_LT1A_2025_2026: TariffPlan = {
 
 /**
  * TNPDCL LT-1A Domestic Schedule (May 2026 Welfare Scheme)
- * Effective: May 10, 2026 onwards (Published GoTN G.O. and TNERC Provisional Subsidy Order)
+ * Effective: May 10, 2026 onwards
  * Sources:
- * - SimpliCity News & TN Government Gazette (G.O. Ms No. on 200 Free Units, effective May 10, 2026)
- * - TNERC Provisional Subsidy Approval for TNPDCL (period starting May 10, 2026)
- * - ebbillcalc.com verified consumer-payable slab matrix
+ * - G.O. (Ms) No. 50, Energy (D3) Department, Government of Tamil Nadu, dated May 10, 2026
+ *   (200 Free Units bi-monthly for domestic households consuming <= 500 units).
+ * - TNERC Suo-Motu Tariff Order No. 6 of 2025 consumer-payable slab rates (₹4.70 to ₹11.55).
  * 
  * Special feature: 200 Free Units bi-monthly for households consuming <= 500 units bi-monthly.
- * Introduces a high-stakes economic cliff at 500 vs 501 units!
+ * Exceeding 500 units reverts to 100 free units under the high-consumption slab table,
+ * creating an abrupt +₹478.40 jump between 500 kWh (₹1,570.00) and 501 kWh (₹2,048.40).
  */
 export const TNPDCL_LT1A_MAY_2026_SCHEME: TariffPlan = {
   id: 'in-tnpdcl-lt1a-may2026',
@@ -188,7 +190,7 @@ export const TNPDCL_LT1A_MAY_2026_SCHEME: TariffPlan = {
   version: '2026.2.0',
   utility_name: 'Tamil Nadu Power Distribution Corporation Limited (TNPDCL)',
   regulatory_authority: 'Tamil Nadu Electricity Regulatory Commission (TNERC)',
-  tariff_order_ref: 'GoTN May 10, 2026 Domestic Welfare Notification & TNERC Order',
+  tariff_order_ref: 'GoTN G.O. (Ms) No. 50 (10-05-2026) & TNERC Order No. 6 of 2025',
   region: 'Tamil Nadu',
   country_code: 'IN',
   currency: 'INR',
@@ -222,9 +224,9 @@ export const TNPDCL_LT1A_MAY_2026_SCHEME: TariffPlan = {
   subsidy_scheme: {
     id: 'gotn-subsidy-may2026-200free',
     name: 'GoTN 200 Free Units Welfare Scheme (Effective May 10, 2026)',
-    authority: 'Government of Tamil Nadu Energy Department',
-    subsidy_order_ref: 'GoTN Energy Dept G.O. (Ms) on 200 Free Units Domestic Scheme (Effective 10-05-2026)',
-    effective_from: '2026-05-10', // Explicitly May 10, 2026 per official Gazette reporting
+    authority: 'Government of Tamil Nadu Energy (D3) Department',
+    subsidy_order_ref: 'G.O. (Ms) No. 50, Energy (D3) Dept., dated 10-05-2026',
+    effective_from: '2026-05-10', // Explicitly May 10, 2026 per G.O. (Ms) No. 50
     rules: [
       {
         type: 'free_units',
