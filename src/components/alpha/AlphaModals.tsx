@@ -65,9 +65,9 @@ export const ChangelogModal: React.FC<ChangelogModalProps> = ({ isOpen, onClose 
             <ul className="list-disc pl-4 space-y-1 text-emerald-900">
               <li>Integer-paise TNPDCL LT-1A (May 2026, 2025–2026, 2024–2025) &amp; generic Flat / TOU tariff selector.</li>
               <li>TR-VOI chance-constrained advisor with multi-tariff exact piecewise moments &amp; Python parity verification.</li>
-              <li>Progressive capability gating (`BASIC` / `INTERVAL` / `OPTIMIZATION_ELIGIBLE`) &amp; bounded `25 MB` CSV ingestion.</li>
-              <li>Safe Synthetic Demo Mode (`3` bills, `192h` hourly data, `0` fake verified savings) &amp; 4-tier provenance ledger.</li>
-              <li>Static Next.js export compatibility (`out/`), strict CSP headers, and bilingual English / Tamil UI.</li>
+              <li>Progressive capability gating (<code>BASIC</code> / <code>INTERVAL</code> / <code>OPTIMIZATION_ELIGIBLE</code>) &amp; bounded 25 MB CSV ingestion.</li>
+              <li>Safe Synthetic Demo Mode (3 bills, 192h hourly data, 0 fake verified savings) &amp; 4-tier provenance ledger.</li>
+              <li>Static Next.js export compatibility (<code>out/</code>), strict CSP headers, and bilingual English / Tamil UI.</li>
             </ul>
           </div>
 
@@ -75,13 +75,13 @@ export const ChangelogModal: React.FC<ChangelogModalProps> = ({ isOpen, onClose 
             <p className="font-bold text-amber-950">Explicitly Not Implemented Yet</p>
             <ul className="list-disc pl-4 space-y-1 text-amber-900">
               <li>
-                <strong>No Offline Service Worker Caching:</strong> `manifest.json` provides app metadata only; opening or reloading requires network access to the host (open sessions compute locally in IndexedDB).
+                <strong>No Offline Service Worker Caching:</strong> <code>manifest.json</code> provides app metadata only; opening or reloading requires network access to the host (open sessions compute locally in IndexedDB).
               </li>
               <li>
                 <strong>No IPMVP Option C / ASHRAE 14 Certification:</strong> Modeled and user-reported figures are not calibrated M&amp;V baselines.
               </li>
               <li>
-                <strong>No Human Field Study Results Yet:</strong> Stage 1 ($N = 5\text{--}10$) and Stage 2 RCT ($N = 152\text{--}160$) are pre-pilot protocols only.
+                <strong>No Human Field Study Results Yet:</strong> Stage 1 (N = 5–10) and Stage 2 RCT (N = 152–160) are pre-pilot protocols only.
               </li>
             </ul>
           </div>
