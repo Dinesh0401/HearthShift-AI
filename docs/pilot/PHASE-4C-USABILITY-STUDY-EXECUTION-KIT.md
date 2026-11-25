@@ -92,7 +92,7 @@
 | **9** | *"Try clicking `Tried It!`, then check Savings Ledger. Why does it show User Reported instead of Measurement Verified, and what is the M&V notice saying?"* | Recognizes `User Reported` ≠ verified M&V/IPMVP Option C savings. |
 | **10** | *"Open Privacy & Storage (and optionally inspect Alpha Feedback). Check what Export JSON and Delete All My Data do, explain what happens if you had kept data after closing this tab, then wipe the test data and reload the page."* | Exports or describes unencrypted JSON risk, confirms browser-profile persistence across tab closes, wipes cleanly, confirms reset after reload. |
 
-> **Safe Demo & Mid-Cycle Straddle Disclaimer (Read Aloud When Exploring Demo Mode or `<= 500 kWh` Cycles):** Safe Demo Bills 1 & 2 (`Jan–Apr 2026`, `445` / `492 kWh`) apply the May 10, 2026 scheme (`₹1,223.50` / `₹1,519.60`) uniformly for synthetic illustration (`₹235.00` lower than historical pre-May-10 receipts). Any real household bill spanning `2026-05-10` with `101–500 kWh` is excluded from unadjusted INR savings comparisons; verify against printed TNPDCL bills.
+> **Safe Demo & Mid-Cycle Straddle Disclaimer (Read Aloud When Exploring Demo Mode or `<= 500 kWh` Cycles):** Safe Demo Bills 1 & 2 (`Jan–Apr 2026`, `445` / `492 kWh`) now display historical pre-May-10 amounts (`₹1,458.50` / `₹1,754.60` under `in-tnpdcl-lt1a-2025`), while Safe Demo Bill 3 (`May–Jun 2026`, `508 kWh` -> `₹2,107.20`) and forward counterfactual simulations use the active May 2026 scheme (`in-tnpdcl-lt1a-may2026`). Cycles crossing `2026-05-10` display an unverified mid-cycle boundary notice in the bill history table; always verify against printed TNPDCL bills, and exclude `101–500 kWh` straddled bills from unadjusted INR comparisons.
 
 ---
 
