@@ -1,20 +1,19 @@
 import { defineConfig, devices } from '@playwright/test';
 
+const port = process.env.E2E_PORT || '3008';
+const baseURL = process.env.E2E_BASE_URL || `http://127.0.0.1:${port}`;
+
 export default defineConfig({
   testDir: './tests/e2e',
   fullyParallel: false,
   retries: 0,
   workers: 1,
   reporter: 'list',
+  globalSetup: './tests/e2e/global-setup.ts',
+  globalTeardown: './tests/e2e/global-teardown.ts',
   use: {
-    baseURL: 'http://127.0.0.1:3008',
+    baseURL,
     trace: 'off',
-  },
-  webServer: {
-    command: 'node ./node_modules/next/dist/bin/next start -p 3008',
-    url: 'http://127.0.0.1:3008',
-    reuseExistingServer: false,
-    timeout: 60 * 1000,
   },
   projects: [
     {
