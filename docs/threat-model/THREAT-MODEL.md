@@ -51,7 +51,7 @@ HearthShift AI is strictly architected as a **Local-First Client-Side Applicatio
 | **Household Preference Vector ($\boldsymbol{\theta}$)** | **HIGH** | Client IndexedDB only | **NEVER TRANSMITTED** | User-controlled / Purge on request |
 | **User Feedback on Actions ($y \in \{-1,0,+1\}$)** | **MEDIUM** | Client IndexedDB only | **NEVER TRANSMITTED** | User-controlled / Purge on request |
 | **Public Tariff Definitions** | **PUBLIC** | CDN Cached / IndexedDB | Inbound HTTPS only | Publicly immutable, versioned |
-| **Application Assets (HTML/JS/WASM)** | **PUBLIC** | CDN Cached / ServiceWorker | Inbound HTTPS only | Standard PWA cache updates |
+| **Application Assets (HTML/JS/CSS)** | **PUBLIC** | CDN Cached / ServiceWorker | Inbound HTTPS only | Standard PWA cache updates |
 
 ---
 
@@ -116,14 +116,17 @@ HearthShift AI is strictly architected as a **Local-First Client-Side Applicatio
    IndexedDB is stored unencrypted on the client's physical filesystem (unless the underlying OS drive has BitLocker / FileVault enabled). Anyone with raw physical filesystem access to the user profile folder could parse the SQLite/LevelDB database.
 2. **Malicious Browser Extensions:**  
    Extensions with `<all_urls>` permission can read the DOM and window storage. Users are cautioned against running untrusted extensions in profiles handling sensitive financial or utility data.
-3. **Absence of Differential Privacy Guarantees in v1:**  
-   Because v1 operates purely locally without federated sharing, formal $(\epsilon, \delta)$-differential privacy is not required. However, if aggregate cohort benchmarking is introduced in future versions, formal DP mechanisms must be implemented before any parameter sharing.
+3. **Absence of Differential Privacy in v1:**  
+   Because v1 operates purely locally without federated sharing, formal $(\epsilon, \delta)$-differential privacy is not required. However, if aggregate cohort benchmarking or Phase 4A Stage 2 de-identified research exports are introduced in future versions, formal sanitization/DP mechanisms and asymmetric export encryption must be implemented before any parameter sharing.
+4. **Unencrypted Local JSON Backup (`exportAllUserData()`):**  
+   Clicking **Export JSON** in `PrivacyDataManager.tsx` downloads an unencrypted JSON file (`hearthshift_backup_<date>.json`) to the user's device for transparent local portability; users must safeguard exported files on their local filesystem.
 
 ---
 
-## 7. Security & Privacy Testing Verification Checklist
+## 7. Security, Privacy & Human-Factors Testing Verification Checklist
 
-* [ ] Automated Playwright test monitoring all outgoing network requests during bill entry, CSV import, and scenario simulation; must assert `requests.filter(r => r.url.includes('/api/')).length === 0`.
-* [ ] Zero external script tags in `index.html` (strict Content Security Policy: `default-src 'self'`).
+* [ ] Automated Playwright test monitoring all outgoing network requests during bill entry, CSV import, and scenario simulation; must assert zero outbound telemetry payloads.
+* [ ] Zero external script tags in built HTML assets (strict Content Security Policy: `default-src 'self'`).
 * [ ] Verification of `deleteAllUserData()` to ensure zero residual storage in IndexedDB.
 * [ ] Verification of `exportAllUserData()` to ensure human-auditable output.
+* [ ] Stage 1 usability & privacy mental-model verification per [`docs/pilot/USABILITY-STUDY-PROTOCOL.md`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/docs/pilot/USABILITY-STUDY-PROTOCOL.md) before any Stage 2 RCT deployment ([`docs/pilot/FIELD-PILOT-PROTOCOL.md`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/docs/pilot/FIELD-PILOT-PROTOCOL.md)).

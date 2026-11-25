@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "tariff_id": "in-tnpdcl-lt1a-may2026",
   "tariff_bills": [
     {
@@ -691,6 +691,1008 @@
         0.4,
         0.3
       ]
+    }
+  ],
+  "multi_tariff_piecewise_moments": [
+    {
+      "tariff_id": "in-tnpdcl-lt1a-may2026",
+      "mu": 250.0,
+      "sigma": 0.0,
+      "mean_bill_paise": 23500.0,
+      "std_bill_paise": 0.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-may2026",
+      "mu": 250.0,
+      "sigma": 8.0,
+      "mean_bill_paise": 23500.0,
+      "std_bill_paise": 3760.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-may2026",
+      "mu": 250.0,
+      "sigma": 12.0,
+      "mean_bill_paise": 23500.02,
+      "std_bill_paise": 5639.92,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-may2026",
+      "mu": 495.0,
+      "sigma": 0.0,
+      "mean_bill_paise": 153850.0,
+      "std_bill_paise": 0.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-may2026",
+      "mu": 495.0,
+      "sigma": 8.0,
+      "mean_bill_paise": 166623.35,
+      "std_bill_paise": 25215.36,
+      "cliff_crossing_prob": 0.266
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-may2026",
+      "mu": 495.0,
+      "sigma": 12.0,
+      "mean_bill_paise": 170324.03,
+      "std_bill_paise": 29343.51,
+      "cliff_crossing_prob": 0.3385
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-may2026",
+      "mu": 500.0,
+      "sigma": 0.0,
+      "mean_bill_paise": 157000.0,
+      "std_bill_paise": 0.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-may2026",
+      "mu": 500.0,
+      "sigma": 8.0,
+      "mean_bill_paise": 181170.22,
+      "std_bill_paise": 28418.03,
+      "cliff_crossing_prob": 0.5
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-may2026",
+      "mu": 500.0,
+      "sigma": 12.0,
+      "mean_bill_paise": 181505.33,
+      "std_bill_paise": 31006.04,
+      "cliff_crossing_prob": 0.5
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-may2026",
+      "mu": 505.0,
+      "sigma": 0.0,
+      "mean_bill_paise": 208200.0,
+      "std_bill_paise": 0.0,
+      "cliff_crossing_prob": 1.0
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-may2026",
+      "mu": 505.0,
+      "sigma": 8.0,
+      "mean_bill_paise": 195970.71,
+      "std_bill_paise": 25677.74,
+      "cliff_crossing_prob": 0.734
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-may2026",
+      "mu": 505.0,
+      "sigma": 12.0,
+      "mean_bill_paise": 192858.69,
+      "std_bill_paise": 29859.83,
+      "cliff_crossing_prob": 0.6615
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-may2026",
+      "mu": 650.0,
+      "sigma": 0.0,
+      "mean_bill_paise": 335250.0,
+      "std_bill_paise": 0.0,
+      "cliff_crossing_prob": 1.0
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-may2026",
+      "mu": 650.0,
+      "sigma": 8.0,
+      "mean_bill_paise": 335250.0,
+      "std_bill_paise": 7560.0,
+      "cliff_crossing_prob": 1.0
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-may2026",
+      "mu": 650.0,
+      "sigma": 12.0,
+      "mean_bill_paise": 335250.0,
+      "std_bill_paise": 11339.98,
+      "cliff_crossing_prob": 1.0
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-2025",
+      "mu": 250.0,
+      "sigma": 0.0,
+      "mean_bill_paise": 47000.0,
+      "std_bill_paise": 0.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-2025",
+      "mu": 250.0,
+      "sigma": 8.0,
+      "mean_bill_paise": 47000.0,
+      "std_bill_paise": 3760.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-2025",
+      "mu": 250.0,
+      "sigma": 12.0,
+      "mean_bill_paise": 47000.01,
+      "std_bill_paise": 5639.96,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-2025",
+      "mu": 495.0,
+      "sigma": 0.0,
+      "mean_bill_paise": 177350.0,
+      "std_bill_paise": 0.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-2025",
+      "mu": 495.0,
+      "sigma": 8.0,
+      "mean_bill_paise": 183872.69,
+      "std_bill_paise": 15007.87,
+      "cliff_crossing_prob": 0.266
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-2025",
+      "mu": 495.0,
+      "sigma": 12.0,
+      "mean_bill_paise": 185870.2,
+      "std_bill_paise": 18507.06,
+      "cliff_crossing_prob": 0.3385
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-2025",
+      "mu": 500.0,
+      "sigma": 0.0,
+      "mean_bill_paise": 180500.0,
+      "std_bill_paise": 0.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-2025",
+      "mu": 500.0,
+      "sigma": 8.0,
+      "mean_bill_paise": 192920.22,
+      "std_bill_paise": 16826.91,
+      "cliff_crossing_prob": 0.5
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-2025",
+      "mu": 500.0,
+      "sigma": 12.0,
+      "mean_bill_paise": 193255.33,
+      "std_bill_paise": 19539.94,
+      "cliff_crossing_prob": 0.5
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-2025",
+      "mu": 505.0,
+      "sigma": 0.0,
+      "mean_bill_paise": 208200.0,
+      "std_bill_paise": 0.0,
+      "cliff_crossing_prob": 1.0
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-2025",
+      "mu": 505.0,
+      "sigma": 8.0,
+      "mean_bill_paise": 202221.37,
+      "std_bill_paise": 15544.3,
+      "cliff_crossing_prob": 0.734
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-2025",
+      "mu": 505.0,
+      "sigma": 12.0,
+      "mean_bill_paise": 200812.53,
+      "std_bill_paise": 19104.34,
+      "cliff_crossing_prob": 0.6615
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-2025",
+      "mu": 650.0,
+      "sigma": 0.0,
+      "mean_bill_paise": 335250.0,
+      "std_bill_paise": 0.0,
+      "cliff_crossing_prob": 1.0
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-2025",
+      "mu": 650.0,
+      "sigma": 8.0,
+      "mean_bill_paise": 335250.0,
+      "std_bill_paise": 7560.0,
+      "cliff_crossing_prob": 1.0
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-2025",
+      "mu": 650.0,
+      "sigma": 12.0,
+      "mean_bill_paise": 335250.0,
+      "std_bill_paise": 11339.98,
+      "cliff_crossing_prob": 1.0
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-2024",
+      "mu": 250.0,
+      "sigma": 0.0,
+      "mean_bill_paise": 45000.0,
+      "std_bill_paise": 0.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-2024",
+      "mu": 250.0,
+      "sigma": 8.0,
+      "mean_bill_paise": 45000.0,
+      "std_bill_paise": 3600.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-2024",
+      "mu": 250.0,
+      "sigma": 12.0,
+      "mean_bill_paise": 45000.01,
+      "std_bill_paise": 5399.96,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-2024",
+      "mu": 495.0,
+      "sigma": 0.0,
+      "mean_bill_paise": 169500.0,
+      "std_bill_paise": 0.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-2024",
+      "mu": 495.0,
+      "sigma": 8.0,
+      "mean_bill_paise": 175743.75,
+      "std_bill_paise": 14344.31,
+      "cliff_crossing_prob": 0.266
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-2024",
+      "mu": 495.0,
+      "sigma": 12.0,
+      "mean_bill_paise": 177654.77,
+      "std_bill_paise": 17679.82,
+      "cliff_crossing_prob": 0.3385
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-2024",
+      "mu": 500.0,
+      "sigma": 0.0,
+      "mean_bill_paise": 172500.0,
+      "std_bill_paise": 0.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-2024",
+      "mu": 500.0,
+      "sigma": 8.0,
+      "mean_bill_paise": 184388.31,
+      "std_bill_paise": 16083.8,
+      "cliff_crossing_prob": 0.5
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-2024",
+      "mu": 500.0,
+      "sigma": 12.0,
+      "mean_bill_paise": 184707.46,
+      "std_bill_paise": 18666.71,
+      "cliff_crossing_prob": 0.5
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-2024",
+      "mu": 505.0,
+      "sigma": 0.0,
+      "mean_bill_paise": 199000.0,
+      "std_bill_paise": 0.0,
+      "cliff_crossing_prob": 1.0
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-2024",
+      "mu": 505.0,
+      "sigma": 8.0,
+      "mean_bill_paise": 193274.4,
+      "std_bill_paise": 14854.6,
+      "cliff_crossing_prob": 0.734
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-2024",
+      "mu": 505.0,
+      "sigma": 12.0,
+      "mean_bill_paise": 191924.02,
+      "std_bill_paise": 18248.05,
+      "cliff_crossing_prob": 0.6615
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-2024",
+      "mu": 650.0,
+      "sigma": 0.0,
+      "mean_bill_paise": 320000.0,
+      "std_bill_paise": 0.0,
+      "cliff_crossing_prob": 1.0
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-2024",
+      "mu": 650.0,
+      "sigma": 8.0,
+      "mean_bill_paise": 320000.0,
+      "std_bill_paise": 7200.0,
+      "cliff_crossing_prob": 1.0
+    },
+    {
+      "tariff_id": "in-tnpdcl-lt1a-2024",
+      "mu": 650.0,
+      "sigma": 12.0,
+      "mean_bill_paise": 320000.0,
+      "std_bill_paise": 10799.98,
+      "cliff_crossing_prob": 1.0
+    },
+    {
+      "tariff_id": "generic-flat-inr",
+      "mu": 250.0,
+      "sigma": 0.0,
+      "mean_bill_paise": 136250.0,
+      "std_bill_paise": 0.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "tariff_id": "generic-flat-inr",
+      "mu": 250.0,
+      "sigma": 8.0,
+      "mean_bill_paise": 136250.0,
+      "std_bill_paise": 4200.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "tariff_id": "generic-flat-inr",
+      "mu": 250.0,
+      "sigma": 12.0,
+      "mean_bill_paise": 136250.0,
+      "std_bill_paise": 6300.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "tariff_id": "generic-flat-inr",
+      "mu": 495.0,
+      "sigma": 0.0,
+      "mean_bill_paise": 264875.0,
+      "std_bill_paise": 0.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "tariff_id": "generic-flat-inr",
+      "mu": 495.0,
+      "sigma": 8.0,
+      "mean_bill_paise": 264875.0,
+      "std_bill_paise": 4200.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "tariff_id": "generic-flat-inr",
+      "mu": 495.0,
+      "sigma": 12.0,
+      "mean_bill_paise": 264875.0,
+      "std_bill_paise": 6300.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "tariff_id": "generic-flat-inr",
+      "mu": 500.0,
+      "sigma": 0.0,
+      "mean_bill_paise": 267500.0,
+      "std_bill_paise": 0.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "tariff_id": "generic-flat-inr",
+      "mu": 500.0,
+      "sigma": 8.0,
+      "mean_bill_paise": 267500.0,
+      "std_bill_paise": 4200.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "tariff_id": "generic-flat-inr",
+      "mu": 500.0,
+      "sigma": 12.0,
+      "mean_bill_paise": 267500.0,
+      "std_bill_paise": 6300.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "tariff_id": "generic-flat-inr",
+      "mu": 505.0,
+      "sigma": 0.0,
+      "mean_bill_paise": 270125.0,
+      "std_bill_paise": 0.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "tariff_id": "generic-flat-inr",
+      "mu": 505.0,
+      "sigma": 8.0,
+      "mean_bill_paise": 270125.0,
+      "std_bill_paise": 4200.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "tariff_id": "generic-flat-inr",
+      "mu": 505.0,
+      "sigma": 12.0,
+      "mean_bill_paise": 270125.0,
+      "std_bill_paise": 6300.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "tariff_id": "generic-flat-inr",
+      "mu": 650.0,
+      "sigma": 0.0,
+      "mean_bill_paise": 346250.0,
+      "std_bill_paise": 0.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "tariff_id": "generic-flat-inr",
+      "mu": 650.0,
+      "sigma": 8.0,
+      "mean_bill_paise": 346250.0,
+      "std_bill_paise": 4200.0,
+      "cliff_crossing_prob": 0.0
+    },
+    {
+      "tariff_id": "generic-flat-inr",
+      "mu": 650.0,
+      "sigma": 12.0,
+      "mean_bill_paise": 346250.0,
+      "std_bill_paise": 6300.0,
+      "cliff_crossing_prob": 0.0
+    }
+  ],
+  "tr_voi_decisions": [
+    {
+      "case_id": "ask_may2026_cliff_505",
+      "tariff_id": "in-tnpdcl-lt1a-may2026",
+      "baseline_kwh": 505.0,
+      "initial_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ],
+      "asked_question_ids": [],
+      "prior_feedback": null,
+      "expected_outcome": "ask_question",
+      "expected_action_id": null,
+      "expected_question_id": "q_ac_flexibility",
+      "expected_decision_metric_paise": 0.0
+    },
+    {
+      "case_id": "ask_may2026_cliff_520",
+      "tariff_id": "in-tnpdcl-lt1a-may2026",
+      "baseline_kwh": 520.0,
+      "initial_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ],
+      "asked_question_ids": [],
+      "prior_feedback": null,
+      "expected_outcome": "ask_question",
+      "expected_action_id": null,
+      "expected_question_id": "q_ac_flexibility",
+      "expected_decision_metric_paise": 0.0
+    },
+    {
+      "case_id": "ask_may2026_mid_450",
+      "tariff_id": "in-tnpdcl-lt1a-may2026",
+      "baseline_kwh": 450.0,
+      "initial_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ],
+      "asked_question_ids": [],
+      "prior_feedback": null,
+      "expected_outcome": "ask_question",
+      "expected_action_id": null,
+      "expected_question_id": "q_water_heater_duration",
+      "expected_decision_metric_paise": 0.0
+    },
+    {
+      "case_id": "ask_may2026_high_650",
+      "tariff_id": "in-tnpdcl-lt1a-may2026",
+      "baseline_kwh": 650.0,
+      "initial_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ],
+      "asked_question_ids": [],
+      "prior_feedback": null,
+      "expected_outcome": "ask_question",
+      "expected_action_id": null,
+      "expected_question_id": "q_ac_flexibility",
+      "expected_decision_metric_paise": 0.0
+    },
+    {
+      "case_id": "ask_2025_cliff_505",
+      "tariff_id": "in-tnpdcl-lt1a-2025",
+      "baseline_kwh": 505.0,
+      "initial_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ],
+      "asked_question_ids": [],
+      "prior_feedback": null,
+      "expected_outcome": "ask_question",
+      "expected_action_id": null,
+      "expected_question_id": "q_ac_flexibility",
+      "expected_decision_metric_paise": 0.0
+    },
+    {
+      "case_id": "ask_2024_cliff_505",
+      "tariff_id": "in-tnpdcl-lt1a-2024",
+      "baseline_kwh": 505.0,
+      "initial_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ],
+      "asked_question_ids": [],
+      "prior_feedback": null,
+      "expected_outcome": "ask_question",
+      "expected_action_id": null,
+      "expected_question_id": "q_ac_flexibility",
+      "expected_decision_metric_paise": 0.0
+    },
+    {
+      "case_id": "ask_flat_505",
+      "tariff_id": "generic-flat-inr",
+      "baseline_kwh": 505.0,
+      "initial_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ],
+      "asked_question_ids": [],
+      "prior_feedback": null,
+      "expected_outcome": "ask_question",
+      "expected_action_id": null,
+      "expected_question_id": "q_water_heater_duration",
+      "expected_decision_metric_paise": 0.0
+    },
+    {
+      "case_id": "rec_may2026_cliff_505",
+      "tariff_id": "in-tnpdcl-lt1a-may2026",
+      "baseline_kwh": 505.0,
+      "initial_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ],
+      "asked_question_ids": [
+        "q_ac_flexibility",
+        "q_laundry_timing",
+        "q_water_heater_duration",
+        "q_standby_management"
+      ],
+      "prior_feedback": null,
+      "expected_outcome": "recommend",
+      "expected_action_id": "water_heater_timer_trim",
+      "expected_question_id": null,
+      "expected_decision_metric_paise": 11575.95
+    },
+    {
+      "case_id": "rec_may2026_cliff_520",
+      "tariff_id": "in-tnpdcl-lt1a-may2026",
+      "baseline_kwh": 520.0,
+      "initial_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ],
+      "asked_question_ids": [
+        "q_ac_flexibility",
+        "q_laundry_timing",
+        "q_water_heater_duration",
+        "q_standby_management"
+      ],
+      "prior_feedback": null,
+      "expected_outcome": "recommend",
+      "expected_action_id": "ac_setpoint_plus1",
+      "expected_question_id": null,
+      "expected_decision_metric_paise": 35830.2
+    },
+    {
+      "case_id": "rec_may2026_high_650",
+      "tariff_id": "in-tnpdcl-lt1a-may2026",
+      "baseline_kwh": 650.0,
+      "initial_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ],
+      "asked_question_ids": [
+        "q_ac_flexibility",
+        "q_laundry_timing",
+        "q_water_heater_duration",
+        "q_standby_management"
+      ],
+      "prior_feedback": null,
+      "expected_outcome": "recommend",
+      "expected_action_id": "water_heater_timer_trim",
+      "expected_question_id": null,
+      "expected_decision_metric_paise": 3242.23
+    },
+    {
+      "case_id": "rec_2025_cliff_505",
+      "tariff_id": "in-tnpdcl-lt1a-2025",
+      "baseline_kwh": 505.0,
+      "initial_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ],
+      "asked_question_ids": [
+        "q_ac_flexibility",
+        "q_laundry_timing",
+        "q_water_heater_duration",
+        "q_standby_management"
+      ],
+      "prior_feedback": null,
+      "expected_outcome": "recommend",
+      "expected_action_id": "water_heater_timer_trim",
+      "expected_question_id": null,
+      "expected_decision_metric_paise": 6352.25
+    },
+    {
+      "case_id": "rec_2024_cliff_520",
+      "tariff_id": "in-tnpdcl-lt1a-2024",
+      "baseline_kwh": 520.0,
+      "initial_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ],
+      "asked_question_ids": [
+        "q_ac_flexibility",
+        "q_laundry_timing",
+        "q_water_heater_duration",
+        "q_standby_management"
+      ],
+      "prior_feedback": null,
+      "expected_outcome": "recommend",
+      "expected_action_id": "ac_setpoint_plus1",
+      "expected_question_id": null,
+      "expected_decision_metric_paise": 12469.72
+    },
+    {
+      "case_id": "rec_may2026_520_after_ac_yes",
+      "tariff_id": "in-tnpdcl-lt1a-may2026",
+      "baseline_kwh": 520.0,
+      "initial_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ],
+      "asked_question_ids": [
+        "q_ac_flexibility"
+      ],
+      "prior_feedback": {
+        "question_id": "q_ac_flexibility",
+        "feature_index": 0,
+        "response": 1
+      },
+      "expected_outcome": "recommend",
+      "expected_action_id": "ac_setpoint_plus2",
+      "expected_question_id": null,
+      "expected_decision_metric_paise": 56004.01
+    },
+    {
+      "case_id": "rec_may2026_520_after_ac_no",
+      "tariff_id": "in-tnpdcl-lt1a-may2026",
+      "baseline_kwh": 520.0,
+      "initial_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ],
+      "asked_question_ids": [
+        "q_ac_flexibility"
+      ],
+      "prior_feedback": {
+        "question_id": "q_ac_flexibility",
+        "feature_index": 0,
+        "response": -1
+      },
+      "expected_outcome": "recommend",
+      "expected_action_id": "ac_setpoint_plus1",
+      "expected_question_id": null,
+      "expected_decision_metric_paise": 28739.8
+    },
+    {
+      "case_id": "rec_may2026_450_after_wh_yes",
+      "tariff_id": "in-tnpdcl-lt1a-may2026",
+      "baseline_kwh": 450.0,
+      "initial_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ],
+      "asked_question_ids": [
+        "q_water_heater_duration"
+      ],
+      "prior_feedback": {
+        "question_id": "q_water_heater_duration",
+        "feature_index": 2,
+        "response": 1
+      },
+      "expected_outcome": "recommend",
+      "expected_action_id": "water_heater_timer_trim",
+      "expected_question_id": null,
+      "expected_decision_metric_paise": 3253.04
+    },
+    {
+      "case_id": "abstain_may2026_low_250",
+      "tariff_id": "in-tnpdcl-lt1a-may2026",
+      "baseline_kwh": 250.0,
+      "initial_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ],
+      "asked_question_ids": [],
+      "prior_feedback": null,
+      "expected_outcome": "abstain",
+      "expected_action_id": "null_action",
+      "expected_question_id": null,
+      "expected_decision_metric_paise": 0.0
+    },
+    {
+      "case_id": "abstain_may2026_mid_380",
+      "tariff_id": "in-tnpdcl-lt1a-may2026",
+      "baseline_kwh": 380.0,
+      "initial_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ],
+      "asked_question_ids": [],
+      "prior_feedback": null,
+      "expected_outcome": "abstain",
+      "expected_action_id": "null_action",
+      "expected_question_id": null,
+      "expected_decision_metric_paise": 0.0
+    },
+    {
+      "case_id": "abstain_may2026_below_cliff_495",
+      "tariff_id": "in-tnpdcl-lt1a-may2026",
+      "baseline_kwh": 495.0,
+      "initial_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ],
+      "asked_question_ids": [
+        "q_ac_flexibility",
+        "q_laundry_timing",
+        "q_water_heater_duration",
+        "q_standby_management"
+      ],
+      "prior_feedback": null,
+      "expected_outcome": "abstain",
+      "expected_action_id": "null_action",
+      "expected_question_id": null,
+      "expected_decision_metric_paise": 0.0
+    },
+    {
+      "case_id": "abstain_2024_high_650",
+      "tariff_id": "in-tnpdcl-lt1a-2024",
+      "baseline_kwh": 650.0,
+      "initial_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ],
+      "asked_question_ids": [
+        "q_ac_flexibility",
+        "q_laundry_timing",
+        "q_water_heater_duration",
+        "q_standby_management"
+      ],
+      "prior_feedback": null,
+      "expected_outcome": "abstain",
+      "expected_action_id": "null_action",
+      "expected_question_id": null,
+      "expected_decision_metric_paise": 0.0
+    },
+    {
+      "case_id": "abstain_flat_520",
+      "tariff_id": "generic-flat-inr",
+      "baseline_kwh": 520.0,
+      "initial_mu": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_sigma": [
+        0.4,
+        0.4,
+        0.4,
+        0.3
+      ],
+      "asked_question_ids": [
+        "q_ac_flexibility",
+        "q_laundry_timing",
+        "q_water_heater_duration",
+        "q_standby_management"
+      ],
+      "prior_feedback": null,
+      "expected_outcome": "abstain",
+      "expected_action_id": "null_action",
+      "expected_question_id": null,
+      "expected_decision_metric_paise": 0.0
     }
   ]
 }

@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../../lib/db';
 import { rollbackBatch } from '../../core/storage/ingestion-storage';
+import { clearDemoModeFlag } from '../../core/demo/synthetic-household';
 import { useLanguage } from '../../locales/i18n';
-import { ShieldCheck, Download, Trash2, Undo2, CheckCircle2 } from 'lucide-react';
+import { ShieldCheck, Download, Trash2, Undo2, CheckCircle2, AlertTriangle } from 'lucide-react';
 
 interface PrivacyDataManagerProps {
   onDataPurged?: () => void;
@@ -78,6 +79,7 @@ export const PrivacyDataManager: React.FC<PrivacyDataManagerProps> = ({
   const handleDeleteAll = async () => {
     try {
       setIsDeleting(true);
+      clearDemoModeFlag();
       await db.deleteAllUserData();
       setMessage(t('deleteSuccessMsg'));
       setConfirmDelete(false);
@@ -116,12 +118,33 @@ export const PrivacyDataManager: React.FC<PrivacyDataManagerProps> = ({
         </div>
       </div>
 
+      {/* Browser Storage Limitations & Device Risks Notice */}
+      <div className="rounded-2xl border border-amber-200 dark:border-amber-900/60 bg-amber-50/70 dark:bg-amber-950/20 p-5">
+        <div className="flex items-start gap-3">
+          <div className="p-2 bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 rounded-xl shrink-0 mt-0.5">
+            <AlertTriangle className="w-5 h-5" />
+          </div>
+          <div>
+            <h4 className="text-sm font-bold text-amber-950 dark:text-amber-100">
+              {t('storageLimitationsTitle')}
+            </h4>
+            <p className="mt-1 text-xs text-amber-900/90 dark:text-amber-200/90 leading-relaxed">
+              {t('storageLimitationsDesc')}
+            </p>
+          </div>
+        </div>
+      </div>
+
       {message && (
-        <div className="p-4 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300 text-xs flex items-center justify-between">
+        <div
+          role="status"
+          className="p-4 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300 text-xs flex items-center justify-between"
+        >
           <span>{message}</span>
           <button
             type="button"
             onClick={() => setMessage(null)}
+            aria-label="Dismiss status message"
             className="text-blue-600 hover:text-blue-800 font-bold ml-4"
           >
             ✕

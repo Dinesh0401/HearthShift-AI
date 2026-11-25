@@ -1,6 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { calculateScenarioOutcome } from '../../src/core/simulation/scenario-engine';
-import { TNPDCL_LT1A_2026_MAY10 } from '../../src/core/tariff/tariffs/tnpdcl-lt1a';
+import {
+  TNPDCL_LT1A_2026_MAY10,
+  TNPDCL_LT1A_2024_2025,
+  GENERIC_TOU_TARIFF_INR,
+} from '../../src/core/tariff/tariffs/tnpdcl-lt1a';
+import type { TariffPlan } from '../../src/core/tariff/types';
 
 describe('Scenario Engine', () => {
   it('detects cliff avoidance when reducing consumption below 500 kWh', () => {
@@ -148,5 +153,77 @@ describe('Scenario Engine', () => {
     expect(result.totalReductionKwh).toBe(151);
     expect(result.proposedKwh).toBe(520 - 151); // 369 kWh
     expect(result.didAvoidCliff).toBe(true);
+  });
+
+  it('evaluates TOU load shift dynamically vs zero non-TOU shift savings', () => {
+    const laundryOnly = {
+      acSetpointDelta: 0 as const,
+      curtailAcHours: 0 as const,
+      trimWaterHeaterMinutes: 0 as const,
+      powerDownStandby: false,
+      shiftLaundryToMorning: true,
+    };
+
+    // 1. Non-TOU tariff (TNPDCL_LT1A_2026_MAY10) strictly returns zero savings
+    const nonTou = calculateScenarioOutcome(350, laundryOnly, TNPDCL_LT1A_2026_MAY10);
+    expect(nonTou.totalReductionKwh).toBe(0);
+    expect(nonTou.netSavingsInr).toBe(0);
+    expect(nonTou.assumptions.some((a) => a.en.includes('non-TOU'))).toBe(true);
+
+    // 2. GENERIC_TOU_TARIFF_INR enters active TOU evaluation (07:00 is Morning Peak @ ₹10 == 19:00 Evening Peak @ ₹10 -> ₹0 delta)
+    const genericTou = calculateScenarioOutcome(350, laundryOnly, GENERIC_TOU_TARIFF_INR);
+    expect(genericTou.totalReductionKwh).toBe(0);
+    expect(genericTou.proposedKwh).toBe(350);
+    expect(genericTou.netSavingsInr).toBe(0);
+    expect(genericTou.assumptions.some((a) => a.en.includes('under active TOU tariff'))).toBe(true);
+
+    // 3. Time-of-Use schedule with Morning Off-Peak (06:00-10:00 @ ₹5/kWh vs Evening Peak 18:00-22:00 @ ₹10/kWh)
+    // Shifting 24 kWh from 19:00 to 07:00 saves 24 * (10 - 5) = ₹120.00 with 0 kWh reduction
+    const morningOffPeakTou: TariffPlan = {
+      ...GENERIC_TOU_TARIFF_INR,
+      id: 'generic-tou-morning-offpeak-inr',
+      gross_tariff: {
+        type: 'time_of_use',
+        default_rate_paise: 700,
+        time_bands: [
+          { label: 'Morning Off-Peak', start_hour: 6, end_hour: 10, rate_paise: 500 },
+          { label: 'Normal Day', start_hour: 10, end_hour: 18, rate_paise: 700 },
+          { label: 'Evening Peak', start_hour: 18, end_hour: 22, rate_paise: 1000 },
+          { label: 'Night Off-Peak', start_hour: 22, end_hour: 6, rate_paise: 500 },
+        ],
+      },
+    };
+
+    const dynamicTou = calculateScenarioOutcome(350, laundryOnly, morningOffPeakTou);
+    expect(dynamicTou.totalReductionKwh).toBe(0);
+    expect(dynamicTou.proposedKwh).toBe(350);
+    expect(dynamicTou.netSavingsInr).toBe(120.0);
+    expect(dynamicTou.proposedBillInr).toBe(Number((dynamicTou.baselineBillInr - 120.0).toFixed(2)));
+    expect(dynamicTou.assumptions.some((a) => a.en.includes('active TOU tariff') && a.en.includes('120.00'))).toBe(true);
+  });
+
+  it('dynamically detects historical 2024 tariff cliff (₹233.00, not ₹478.40)', () => {
+    const result = calculateScenarioOutcome(
+      505,
+      {
+        acSetpointDelta: 0.5, // -15 kWh -> 490 kWh
+        curtailAcHours: 0,
+        trimWaterHeaterMinutes: 0,
+        powerDownStandby: false,
+        shiftLaundryToMorning: false,
+      },
+      TNPDCL_LT1A_2024_2025
+    );
+
+    expect(result.didAvoidCliff).toBe(true);
+    expect(result.cliffThresholdKwh).toBe(500);
+    expect(result.cliffBonusInr).toBe(233.0);
+    expect(result.cliffBonusInr).not.toBe(478.4);
+    expect(result.baselineBillInr).toBe(1990.0);
+    expect(result.proposedBillInr).toBe(1665.0);
+    expect(result.netSavingsInr).toBe(325.0);
+    expect(result.slabSavingsInr).toBe(92.0);
+    expect(result.tierChangeDescription?.en).toContain('233.00');
+    expect(result.tierChangeDescription?.en).not.toContain('478.40');
   });
 });

@@ -1,0 +1,1551 @@
+{
+  "metadata": {
+    "generated_at_utc": "2026-11-25T03:55:06.075633+00:00",
+    "alpha_two_sided": 0.05,
+    "target_powers": [
+      0.8,
+      0.9
+    ],
+    "attrition_rates": [
+      0.0,
+      0.15,
+      0.2
+    ],
+    "scipy_version": "1.18.1",
+    "numpy_version": "2.5.5",
+    "statistical_methods": {
+      "endpoint_a_continuous": "Exact two-sided two-sample Student's t-test via non-central t (scipy.stats.nct), cross-checked with normal z-approx and ANCOVA variance reduction.",
+      "endpoint_b_binary": "Exact finite-sample two-sided Pearson chi-square power via product-binomial enumeration, paired with Fleiss uncorrected and continuity-corrected normal approximations."
+    }
+  },
+  "endpoint_a_continuous": {
+    "sample_size_requirements": [
+      {
+        "label": "Small (d=0.30)",
+        "cohens_d": 0.3,
+        "target_power": 0.8,
+        "completers_per_arm_exact_t": 176,
+        "completers_total_exact_t": 352,
+        "completers_per_arm_normal_approx": 175,
+        "exact_power_at_completers": 0.801379,
+        "enrollment_by_attrition": {
+          "attrition_0pct": {
+            "per_arm_enrolled": 176,
+            "total_enrolled_balanced": 352,
+            "total_enrolled_unrounded_ceil": 352
+          },
+          "attrition_15pct": {
+            "per_arm_enrolled": 208,
+            "total_enrolled_balanced": 416,
+            "total_enrolled_unrounded_ceil": 415
+          },
+          "attrition_20pct": {
+            "per_arm_enrolled": 220,
+            "total_enrolled_balanced": 440,
+            "total_enrolled_unrounded_ceil": 440
+          }
+        }
+      },
+      {
+        "label": "Small (d=0.30)",
+        "cohens_d": 0.3,
+        "target_power": 0.9,
+        "completers_per_arm_exact_t": 235,
+        "completers_total_exact_t": 470,
+        "completers_per_arm_normal_approx": 234,
+        "exact_power_at_completers": 0.900653,
+        "enrollment_by_attrition": {
+          "attrition_0pct": {
+            "per_arm_enrolled": 235,
+            "total_enrolled_balanced": 470,
+            "total_enrolled_unrounded_ceil": 470
+          },
+          "attrition_15pct": {
+            "per_arm_enrolled": 277,
+            "total_enrolled_balanced": 554,
+            "total_enrolled_unrounded_ceil": 553
+          },
+          "attrition_20pct": {
+            "per_arm_enrolled": 294,
+            "total_enrolled_balanced": 588,
+            "total_enrolled_unrounded_ceil": 588
+          }
+        }
+      },
+      {
+        "label": "Conservative realistic (d=0.50)",
+        "cohens_d": 0.5,
+        "target_power": 0.8,
+        "completers_per_arm_exact_t": 64,
+        "completers_total_exact_t": 128,
+        "completers_per_arm_normal_approx": 63,
+        "exact_power_at_completers": 0.80146,
+        "enrollment_by_attrition": {
+          "attrition_0pct": {
+            "per_arm_enrolled": 64,
+            "total_enrolled_balanced": 128,
+            "total_enrolled_unrounded_ceil": 128
+          },
+          "attrition_15pct": {
+            "per_arm_enrolled": 76,
+            "total_enrolled_balanced": 152,
+            "total_enrolled_unrounded_ceil": 151
+          },
+          "attrition_20pct": {
+            "per_arm_enrolled": 80,
+            "total_enrolled_balanced": 160,
+            "total_enrolled_unrounded_ceil": 160
+          }
+        }
+      },
+      {
+        "label": "Conservative realistic (d=0.50)",
+        "cohens_d": 0.5,
+        "target_power": 0.9,
+        "completers_per_arm_exact_t": 86,
+        "completers_total_exact_t": 172,
+        "completers_per_arm_normal_approx": 85,
+        "exact_power_at_completers": 0.90323,
+        "enrollment_by_attrition": {
+          "attrition_0pct": {
+            "per_arm_enrolled": 86,
+            "total_enrolled_balanced": 172,
+            "total_enrolled_unrounded_ceil": 172
+          },
+          "attrition_15pct": {
+            "per_arm_enrolled": 102,
+            "total_enrolled_balanced": 204,
+            "total_enrolled_unrounded_ceil": 203
+          },
+          "attrition_20pct": {
+            "per_arm_enrolled": 108,
+            "total_enrolled_balanced": 216,
+            "total_enrolled_unrounded_ceil": 215
+          }
+        }
+      },
+      {
+        "label": "Large (d=0.80)",
+        "cohens_d": 0.8,
+        "target_power": 0.8,
+        "completers_per_arm_exact_t": 26,
+        "completers_total_exact_t": 52,
+        "completers_per_arm_normal_approx": 25,
+        "exact_power_at_completers": 0.807487,
+        "enrollment_by_attrition": {
+          "attrition_0pct": {
+            "per_arm_enrolled": 26,
+            "total_enrolled_balanced": 52,
+            "total_enrolled_unrounded_ceil": 52
+          },
+          "attrition_15pct": {
+            "per_arm_enrolled": 31,
+            "total_enrolled_balanced": 62,
+            "total_enrolled_unrounded_ceil": 62
+          },
+          "attrition_20pct": {
+            "per_arm_enrolled": 33,
+            "total_enrolled_balanced": 66,
+            "total_enrolled_unrounded_ceil": 65
+          }
+        }
+      },
+      {
+        "label": "Large (d=0.80)",
+        "cohens_d": 0.8,
+        "target_power": 0.9,
+        "completers_per_arm_exact_t": 34,
+        "completers_total_exact_t": 68,
+        "completers_per_arm_normal_approx": 33,
+        "exact_power_at_completers": 0.901502,
+        "enrollment_by_attrition": {
+          "attrition_0pct": {
+            "per_arm_enrolled": 34,
+            "total_enrolled_balanced": 68,
+            "total_enrolled_unrounded_ceil": 68
+          },
+          "attrition_15pct": {
+            "per_arm_enrolled": 40,
+            "total_enrolled_balanced": 80,
+            "total_enrolled_unrounded_ceil": 80
+          },
+          "attrition_20pct": {
+            "per_arm_enrolled": 43,
+            "total_enrolled_balanced": 86,
+            "total_enrolled_unrounded_ceil": 85
+          }
+        }
+      }
+    ],
+    "fixed_n_evaluation": [
+      {
+        "scenario": "Legacy unpowered N=30 (0% attrition)",
+        "enrolled_total": 30,
+        "assumed_attrition_rate": 0.0,
+        "completers_control": 15,
+        "completers_treatment": 15,
+        "completers_total": 30,
+        "achieved_power": {
+          "d_0.30": 0.124698,
+          "d_0.50": 0.262443,
+          "d_0.80": 0.561785
+        },
+        "mde_d_at_80pct_power": 1.0598,
+        "mde_d_at_90pct_power": 1.2264
+      },
+      {
+        "scenario": "Legacy unpowered N=30 (20% attrition)",
+        "enrolled_total": 30,
+        "assumed_attrition_rate": 0.2,
+        "completers_control": 12,
+        "completers_treatment": 12,
+        "completers_total": 24,
+        "achieved_power": {
+          "d_0.30": 0.108293,
+          "d_0.50": 0.216143,
+          "d_0.80": 0.465759
+        },
+        "mde_d_at_80pct_power": 1.1968,
+        "mde_d_at_90pct_power": 1.3852
+      },
+      {
+        "scenario": "Candidate Pilot N=100 (0% attrition)",
+        "enrolled_total": 100,
+        "assumed_attrition_rate": 0.0,
+        "completers_control": 50,
+        "completers_treatment": 50,
+        "completers_total": 100,
+        "achieved_power": {
+          "d_0.30": 0.317802,
+          "d_0.50": 0.696893,
+          "d_0.80": 0.977279
+        },
+        "mde_d_at_80pct_power": 0.5659,
+        "mde_d_at_90pct_power": 0.6548
+      },
+      {
+        "scenario": "Candidate Pilot N=100 (15% attrition, balanced n=42/arm)",
+        "enrolled_total": 100,
+        "assumed_attrition_rate": 0.15,
+        "completers_control": 42,
+        "completers_treatment": 42,
+        "completers_total": 84,
+        "achieved_power": {
+          "d_0.30": 0.274282,
+          "d_0.50": 0.619611,
+          "d_0.80": 0.951827
+        },
+        "mde_d_at_80pct_power": 0.6186,
+        "mde_d_at_90pct_power": 0.7158
+      },
+      {
+        "scenario": "Candidate Pilot N=100 (15% attrition, N=85 asymmetric 42/43)",
+        "enrolled_total": 100,
+        "assumed_attrition_rate": 0.15,
+        "completers_control": 42,
+        "completers_treatment": 43,
+        "completers_total": 85,
+        "achieved_power": {
+          "d_0.30": 0.276994,
+          "d_0.50": 0.624782,
+          "d_0.80": 0.953968
+        },
+        "mde_d_at_80pct_power": 0.6149,
+        "mde_d_at_90pct_power": 0.7115
+      },
+      {
+        "scenario": "Candidate Pilot N=100 (20% attrition, n=40/arm)",
+        "enrolled_total": 100,
+        "assumed_attrition_rate": 0.2,
+        "completers_control": 40,
+        "completers_treatment": 40,
+        "completers_total": 80,
+        "achieved_power": {
+          "d_0.30": 0.263284,
+          "d_0.50": 0.598147,
+          "d_0.80": 0.942182
+        },
+        "mde_d_at_80pct_power": 0.6343,
+        "mde_d_at_90pct_power": 0.7339
+      },
+      {
+        "scenario": "Powered Stage 2 Target N=160 (20% attrition -> N=128)",
+        "enrolled_total": 160,
+        "assumed_attrition_rate": 0.2,
+        "completers_control": 64,
+        "completers_treatment": 64,
+        "completers_total": 128,
+        "achieved_power": {
+          "d_0.30": 0.391469,
+          "d_0.50": 0.80146,
+          "d_0.80": 0.994309
+        },
+        "mde_d_at_80pct_power": 0.4991,
+        "mde_d_at_90pct_power": 0.5774
+      },
+      {
+        "scenario": "Powered Stage 2 Target N=152 (15% attrition -> N=128)",
+        "enrolled_total": 152,
+        "assumed_attrition_rate": 0.15,
+        "completers_control": 64,
+        "completers_treatment": 64,
+        "completers_total": 128,
+        "achieved_power": {
+          "d_0.30": 0.391469,
+          "d_0.50": 0.80146,
+          "d_0.80": 0.994309
+        },
+        "mde_d_at_80pct_power": 0.4991,
+        "mde_d_at_90pct_power": 0.5774
+      },
+      {
+        "scenario": "High-Power Target N=200 (20% attrition -> N=160)",
+        "enrolled_total": 200,
+        "assumed_attrition_rate": 0.2,
+        "completers_control": 80,
+        "completers_treatment": 80,
+        "completers_total": 160,
+        "achieved_power": {
+          "d_0.30": 0.470512,
+          "d_0.50": 0.881602,
+          "d_0.80": 0.998925
+        },
+        "mde_d_at_80pct_power": 0.4457,
+        "mde_d_at_90pct_power": 0.5157
+      }
+    ],
+    "ancova_sensitivity_d050": [
+      {
+        "rho": 0.0,
+        "variance_reduction_factor": 1.0,
+        "completers_per_arm": 64,
+        "completers_total": 128,
+        "enrolled_total_15pct_attrition": 152,
+        "enrolled_total_20pct_attrition": 160,
+        "exact_power_achieved": 0.801411,
+        "target_power": 0.8,
+        "cohens_d_unadjusted": 0.5
+      },
+      {
+        "rho": 0.5,
+        "variance_reduction_factor": 0.75,
+        "completers_per_arm": 49,
+        "completers_total": 98,
+        "enrolled_total_15pct_attrition": 116,
+        "enrolled_total_20pct_attrition": 124,
+        "exact_power_achieved": 0.807515,
+        "target_power": 0.8,
+        "cohens_d_unadjusted": 0.5
+      },
+      {
+        "rho": 0.7,
+        "variance_reduction_factor": 0.51,
+        "completers_per_arm": 34,
+        "completers_total": 68,
+        "enrolled_total_15pct_attrition": 80,
+        "enrolled_total_20pct_attrition": 86,
+        "exact_power_achieved": 0.811623,
+        "target_power": 0.8,
+        "cohens_d_unadjusted": 0.5
+      },
+      {
+        "rho": 0.0,
+        "variance_reduction_factor": 1.0,
+        "completers_per_arm": 86,
+        "completers_total": 172,
+        "enrolled_total_15pct_attrition": 204,
+        "enrolled_total_20pct_attrition": 216,
+        "exact_power_achieved": 0.903211,
+        "target_power": 0.9,
+        "cohens_d_unadjusted": 0.5
+      },
+      {
+        "rho": 0.5,
+        "variance_reduction_factor": 0.75,
+        "completers_per_arm": 65,
+        "completers_total": 130,
+        "enrolled_total_15pct_attrition": 154,
+        "enrolled_total_20pct_attrition": 164,
+        "exact_power_achieved": 0.9043,
+        "target_power": 0.9,
+        "cohens_d_unadjusted": 0.5
+      },
+      {
+        "rho": 0.7,
+        "variance_reduction_factor": 0.51,
+        "completers_per_arm": 44,
+        "completers_total": 88,
+        "enrolled_total_15pct_attrition": 104,
+        "enrolled_total_20pct_attrition": 110,
+        "exact_power_achieved": 0.900894,
+        "target_power": 0.9,
+        "cohens_d_unadjusted": 0.5
+      }
+    ],
+    "parametric_unit_translations": [
+      {
+        "assumed_residual_sd_kwh": 30.0,
+        "assumed_residual_sd_inr": 250.0,
+        "translations": {
+          "d_0.30": {
+            "delta_kwh_per_bimonthly_cycle": 9.0,
+            "delta_inr_per_bimonthly_cycle": 75.0
+          },
+          "d_0.50": {
+            "delta_kwh_per_bimonthly_cycle": 15.0,
+            "delta_inr_per_bimonthly_cycle": 125.0
+          },
+          "d_0.80": {
+            "delta_kwh_per_bimonthly_cycle": 24.0,
+            "delta_inr_per_bimonthly_cycle": 200.0
+          },
+          "mde_n100_20pct_attrition_80pct_power": {
+            "mde_d": 0.6343,
+            "delta_kwh_per_bimonthly_cycle": 19.03,
+            "delta_inr_per_bimonthly_cycle": 158.57
+          }
+        }
+      },
+      {
+        "assumed_residual_sd_kwh": 45.0,
+        "assumed_residual_sd_inr": 375.0,
+        "translations": {
+          "d_0.30": {
+            "delta_kwh_per_bimonthly_cycle": 13.5,
+            "delta_inr_per_bimonthly_cycle": 112.5
+          },
+          "d_0.50": {
+            "delta_kwh_per_bimonthly_cycle": 22.5,
+            "delta_inr_per_bimonthly_cycle": 187.5
+          },
+          "d_0.80": {
+            "delta_kwh_per_bimonthly_cycle": 36.0,
+            "delta_inr_per_bimonthly_cycle": 300.0
+          },
+          "mde_n100_20pct_attrition_80pct_power": {
+            "mde_d": 0.6343,
+            "delta_kwh_per_bimonthly_cycle": 28.54,
+            "delta_inr_per_bimonthly_cycle": 237.86
+          }
+        }
+      },
+      {
+        "assumed_residual_sd_kwh": 60.0,
+        "assumed_residual_sd_inr": 500.0,
+        "translations": {
+          "d_0.30": {
+            "delta_kwh_per_bimonthly_cycle": 18.0,
+            "delta_inr_per_bimonthly_cycle": 150.0
+          },
+          "d_0.50": {
+            "delta_kwh_per_bimonthly_cycle": 30.0,
+            "delta_inr_per_bimonthly_cycle": 250.0
+          },
+          "d_0.80": {
+            "delta_kwh_per_bimonthly_cycle": 48.0,
+            "delta_inr_per_bimonthly_cycle": 400.0
+          },
+          "mde_n100_20pct_attrition_80pct_power": {
+            "mde_d": 0.6343,
+            "delta_kwh_per_bimonthly_cycle": 38.06,
+            "delta_inr_per_bimonthly_cycle": 317.15
+          }
+        }
+      }
+    ]
+  },
+  "endpoint_b_binary_cliff_avoidance": {
+    "sample_size_requirements": [
+      {
+        "scenario": "Conservative (+20 pp: 25% -> 45%)",
+        "p_control": 0.25,
+        "p_treatment": 0.45,
+        "absolute_lift_pp": 20.0,
+        "cohens_h": 0.4234,
+        "target_power": 0.8,
+        "completers_per_arm_fleiss_uncorr": 89,
+        "completers_total_fleiss_uncorr": 178,
+        "completers_per_arm_fleiss_cc": 98,
+        "completers_total_fleiss_cc": 196,
+        "completers_per_arm_exact_binom_chi2": 88,
+        "completers_total_exact_binom_chi2": 176,
+        "exact_power_at_exact_n": 0.803053,
+        "enrollment_by_attrition_exact_chi2": {
+          "attrition_0pct": {
+            "per_arm_enrolled": 88,
+            "total_enrolled_balanced": 176,
+            "total_enrolled_unrounded_ceil": 176
+          },
+          "attrition_15pct": {
+            "per_arm_enrolled": 104,
+            "total_enrolled_balanced": 208,
+            "total_enrolled_unrounded_ceil": 208
+          },
+          "attrition_20pct": {
+            "per_arm_enrolled": 110,
+            "total_enrolled_balanced": 220,
+            "total_enrolled_unrounded_ceil": 220
+          }
+        },
+        "enrollment_by_attrition_fleiss_cc": {
+          "attrition_0pct": {
+            "per_arm_enrolled": 98,
+            "total_enrolled_balanced": 196,
+            "total_enrolled_unrounded_ceil": 196
+          },
+          "attrition_15pct": {
+            "per_arm_enrolled": 116,
+            "total_enrolled_balanced": 232,
+            "total_enrolled_unrounded_ceil": 231
+          },
+          "attrition_20pct": {
+            "per_arm_enrolled": 123,
+            "total_enrolled_balanced": 246,
+            "total_enrolled_unrounded_ceil": 245
+          }
+        }
+      },
+      {
+        "scenario": "Conservative (+20 pp: 25% -> 45%)",
+        "p_control": 0.25,
+        "p_treatment": 0.45,
+        "absolute_lift_pp": 20.0,
+        "cohens_h": 0.4234,
+        "target_power": 0.9,
+        "completers_per_arm_fleiss_uncorr": 118,
+        "completers_total_fleiss_uncorr": 236,
+        "completers_per_arm_fleiss_cc": 128,
+        "completers_total_fleiss_cc": 256,
+        "completers_per_arm_exact_binom_chi2": 118,
+        "completers_total_exact_binom_chi2": 236,
+        "exact_power_at_exact_n": 0.901944,
+        "enrollment_by_attrition_exact_chi2": {
+          "attrition_0pct": {
+            "per_arm_enrolled": 118,
+            "total_enrolled_balanced": 236,
+            "total_enrolled_unrounded_ceil": 236
+          },
+          "attrition_15pct": {
+            "per_arm_enrolled": 139,
+            "total_enrolled_balanced": 278,
+            "total_enrolled_unrounded_ceil": 278
+          },
+          "attrition_20pct": {
+            "per_arm_enrolled": 148,
+            "total_enrolled_balanced": 296,
+            "total_enrolled_unrounded_ceil": 295
+          }
+        },
+        "enrollment_by_attrition_fleiss_cc": {
+          "attrition_0pct": {
+            "per_arm_enrolled": 128,
+            "total_enrolled_balanced": 256,
+            "total_enrolled_unrounded_ceil": 256
+          },
+          "attrition_15pct": {
+            "per_arm_enrolled": 151,
+            "total_enrolled_balanced": 302,
+            "total_enrolled_unrounded_ceil": 302
+          },
+          "attrition_20pct": {
+            "per_arm_enrolled": 160,
+            "total_enrolled_balanced": 320,
+            "total_enrolled_unrounded_ceil": 320
+          }
+        }
+      },
+      {
+        "scenario": "Conservative (+20 pp: 30% -> 50%)",
+        "p_control": 0.3,
+        "p_treatment": 0.5,
+        "absolute_lift_pp": 20.0,
+        "cohens_h": 0.4115,
+        "target_power": 0.8,
+        "completers_per_arm_fleiss_uncorr": 93,
+        "completers_total_fleiss_uncorr": 186,
+        "completers_per_arm_fleiss_cc": 103,
+        "completers_total_fleiss_cc": 206,
+        "completers_per_arm_exact_binom_chi2": 94,
+        "completers_total_exact_binom_chi2": 188,
+        "exact_power_at_exact_n": 0.800195,
+        "enrollment_by_attrition_exact_chi2": {
+          "attrition_0pct": {
+            "per_arm_enrolled": 94,
+            "total_enrolled_balanced": 188,
+            "total_enrolled_unrounded_ceil": 188
+          },
+          "attrition_15pct": {
+            "per_arm_enrolled": 111,
+            "total_enrolled_balanced": 222,
+            "total_enrolled_unrounded_ceil": 222
+          },
+          "attrition_20pct": {
+            "per_arm_enrolled": 118,
+            "total_enrolled_balanced": 236,
+            "total_enrolled_unrounded_ceil": 235
+          }
+        },
+        "enrollment_by_attrition_fleiss_cc": {
+          "attrition_0pct": {
+            "per_arm_enrolled": 103,
+            "total_enrolled_balanced": 206,
+            "total_enrolled_unrounded_ceil": 206
+          },
+          "attrition_15pct": {
+            "per_arm_enrolled": 122,
+            "total_enrolled_balanced": 244,
+            "total_enrolled_unrounded_ceil": 243
+          },
+          "attrition_20pct": {
+            "per_arm_enrolled": 129,
+            "total_enrolled_balanced": 258,
+            "total_enrolled_unrounded_ceil": 258
+          }
+        }
+      },
+      {
+        "scenario": "Conservative (+20 pp: 30% -> 50%)",
+        "p_control": 0.3,
+        "p_treatment": 0.5,
+        "absolute_lift_pp": 20.0,
+        "cohens_h": 0.4115,
+        "target_power": 0.9,
+        "completers_per_arm_fleiss_uncorr": 124,
+        "completers_total_fleiss_uncorr": 248,
+        "completers_per_arm_fleiss_cc": 134,
+        "completers_total_fleiss_cc": 268,
+        "completers_per_arm_exact_binom_chi2": 126,
+        "completers_total_exact_binom_chi2": 252,
+        "exact_power_at_exact_n": 0.901498,
+        "enrollment_by_attrition_exact_chi2": {
+          "attrition_0pct": {
+            "per_arm_enrolled": 126,
+            "total_enrolled_balanced": 252,
+            "total_enrolled_unrounded_ceil": 252
+          },
+          "attrition_15pct": {
+            "per_arm_enrolled": 149,
+            "total_enrolled_balanced": 298,
+            "total_enrolled_unrounded_ceil": 297
+          },
+          "attrition_20pct": {
+            "per_arm_enrolled": 158,
+            "total_enrolled_balanced": 316,
+            "total_enrolled_unrounded_ceil": 315
+          }
+        },
+        "enrollment_by_attrition_fleiss_cc": {
+          "attrition_0pct": {
+            "per_arm_enrolled": 134,
+            "total_enrolled_balanced": 268,
+            "total_enrolled_unrounded_ceil": 268
+          },
+          "attrition_15pct": {
+            "per_arm_enrolled": 158,
+            "total_enrolled_balanced": 316,
+            "total_enrolled_unrounded_ceil": 316
+          },
+          "attrition_20pct": {
+            "per_arm_enrolled": 168,
+            "total_enrolled_balanced": 336,
+            "total_enrolled_unrounded_ceil": 335
+          }
+        }
+      },
+      {
+        "scenario": "Primary Realistic (+25 pp: 25% -> 50%)",
+        "p_control": 0.25,
+        "p_treatment": 0.5,
+        "absolute_lift_pp": 25.0,
+        "cohens_h": 0.5236,
+        "target_power": 0.8,
+        "completers_per_arm_fleiss_uncorr": 58,
+        "completers_total_fleiss_uncorr": 116,
+        "completers_per_arm_fleiss_cc": 66,
+        "completers_total_fleiss_cc": 132,
+        "completers_per_arm_exact_binom_chi2": 59,
+        "completers_total_exact_binom_chi2": 118,
+        "exact_power_at_exact_n": 0.808679,
+        "enrollment_by_attrition_exact_chi2": {
+          "attrition_0pct": {
+            "per_arm_enrolled": 59,
+            "total_enrolled_balanced": 118,
+            "total_enrolled_unrounded_ceil": 118
+          },
+          "attrition_15pct": {
+            "per_arm_enrolled": 70,
+            "total_enrolled_balanced": 140,
+            "total_enrolled_unrounded_ceil": 139
+          },
+          "attrition_20pct": {
+            "per_arm_enrolled": 74,
+            "total_enrolled_balanced": 148,
+            "total_enrolled_unrounded_ceil": 148
+          }
+        },
+        "enrollment_by_attrition_fleiss_cc": {
+          "attrition_0pct": {
+            "per_arm_enrolled": 66,
+            "total_enrolled_balanced": 132,
+            "total_enrolled_unrounded_ceil": 132
+          },
+          "attrition_15pct": {
+            "per_arm_enrolled": 78,
+            "total_enrolled_balanced": 156,
+            "total_enrolled_unrounded_ceil": 156
+          },
+          "attrition_20pct": {
+            "per_arm_enrolled": 83,
+            "total_enrolled_balanced": 166,
+            "total_enrolled_unrounded_ceil": 165
+          }
+        }
+      },
+      {
+        "scenario": "Primary Realistic (+25 pp: 25% -> 50%)",
+        "p_control": 0.25,
+        "p_treatment": 0.5,
+        "absolute_lift_pp": 25.0,
+        "cohens_h": 0.5236,
+        "target_power": 0.9,
+        "completers_per_arm_fleiss_uncorr": 77,
+        "completers_total_fleiss_uncorr": 154,
+        "completers_per_arm_fleiss_cc": 85,
+        "completers_total_fleiss_cc": 170,
+        "completers_per_arm_exact_binom_chi2": 76,
+        "completers_total_exact_binom_chi2": 152,
+        "exact_power_at_exact_n": 0.902187,
+        "enrollment_by_attrition_exact_chi2": {
+          "attrition_0pct": {
+            "per_arm_enrolled": 76,
+            "total_enrolled_balanced": 152,
+            "total_enrolled_unrounded_ceil": 152
+          },
+          "attrition_15pct": {
+            "per_arm_enrolled": 90,
+            "total_enrolled_balanced": 180,
+            "total_enrolled_unrounded_ceil": 179
+          },
+          "attrition_20pct": {
+            "per_arm_enrolled": 95,
+            "total_enrolled_balanced": 190,
+            "total_enrolled_unrounded_ceil": 190
+          }
+        },
+        "enrollment_by_attrition_fleiss_cc": {
+          "attrition_0pct": {
+            "per_arm_enrolled": 85,
+            "total_enrolled_balanced": 170,
+            "total_enrolled_unrounded_ceil": 170
+          },
+          "attrition_15pct": {
+            "per_arm_enrolled": 100,
+            "total_enrolled_balanced": 200,
+            "total_enrolled_unrounded_ceil": 200
+          },
+          "attrition_20pct": {
+            "per_arm_enrolled": 107,
+            "total_enrolled_balanced": 214,
+            "total_enrolled_unrounded_ceil": 213
+          }
+        }
+      },
+      {
+        "scenario": "Primary Realistic (+25 pp: 30% -> 55%)",
+        "p_control": 0.3,
+        "p_treatment": 0.55,
+        "absolute_lift_pp": 25.0,
+        "cohens_h": 0.5117,
+        "target_power": 0.8,
+        "completers_per_arm_fleiss_uncorr": 61,
+        "completers_total_fleiss_uncorr": 122,
+        "completers_per_arm_fleiss_cc": 68,
+        "completers_total_fleiss_cc": 136,
+        "completers_per_arm_exact_binom_chi2": 60,
+        "completers_total_exact_binom_chi2": 120,
+        "exact_power_at_exact_n": 0.806005,
+        "enrollment_by_attrition_exact_chi2": {
+          "attrition_0pct": {
+            "per_arm_enrolled": 60,
+            "total_enrolled_balanced": 120,
+            "total_enrolled_unrounded_ceil": 120
+          },
+          "attrition_15pct": {
+            "per_arm_enrolled": 71,
+            "total_enrolled_balanced": 142,
+            "total_enrolled_unrounded_ceil": 142
+          },
+          "attrition_20pct": {
+            "per_arm_enrolled": 75,
+            "total_enrolled_balanced": 150,
+            "total_enrolled_unrounded_ceil": 150
+          }
+        },
+        "enrollment_by_attrition_fleiss_cc": {
+          "attrition_0pct": {
+            "per_arm_enrolled": 68,
+            "total_enrolled_balanced": 136,
+            "total_enrolled_unrounded_ceil": 136
+          },
+          "attrition_15pct": {
+            "per_arm_enrolled": 80,
+            "total_enrolled_balanced": 160,
+            "total_enrolled_unrounded_ceil": 160
+          },
+          "attrition_20pct": {
+            "per_arm_enrolled": 85,
+            "total_enrolled_balanced": 170,
+            "total_enrolled_unrounded_ceil": 170
+          }
+        }
+      },
+      {
+        "scenario": "Primary Realistic (+25 pp: 30% -> 55%)",
+        "p_control": 0.3,
+        "p_treatment": 0.55,
+        "absolute_lift_pp": 25.0,
+        "cohens_h": 0.5117,
+        "target_power": 0.9,
+        "completers_per_arm_fleiss_uncorr": 81,
+        "completers_total_fleiss_uncorr": 162,
+        "completers_per_arm_fleiss_cc": 88,
+        "completers_total_fleiss_cc": 176,
+        "completers_per_arm_exact_binom_chi2": 82,
+        "completers_total_exact_binom_chi2": 164,
+        "exact_power_at_exact_n": 0.904221,
+        "enrollment_by_attrition_exact_chi2": {
+          "attrition_0pct": {
+            "per_arm_enrolled": 82,
+            "total_enrolled_balanced": 164,
+            "total_enrolled_unrounded_ceil": 164
+          },
+          "attrition_15pct": {
+            "per_arm_enrolled": 97,
+            "total_enrolled_balanced": 194,
+            "total_enrolled_unrounded_ceil": 193
+          },
+          "attrition_20pct": {
+            "per_arm_enrolled": 103,
+            "total_enrolled_balanced": 206,
+            "total_enrolled_unrounded_ceil": 205
+          }
+        },
+        "enrollment_by_attrition_fleiss_cc": {
+          "attrition_0pct": {
+            "per_arm_enrolled": 88,
+            "total_enrolled_balanced": 176,
+            "total_enrolled_unrounded_ceil": 176
+          },
+          "attrition_15pct": {
+            "per_arm_enrolled": 104,
+            "total_enrolled_balanced": 208,
+            "total_enrolled_unrounded_ceil": 208
+          },
+          "attrition_20pct": {
+            "per_arm_enrolled": 110,
+            "total_enrolled_balanced": 220,
+            "total_enrolled_unrounded_ceil": 220
+          }
+        }
+      },
+      {
+        "scenario": "Optimistic (+30 pp: 20% -> 50%)",
+        "p_control": 0.2,
+        "p_treatment": 0.5,
+        "absolute_lift_pp": 30.0,
+        "cohens_h": 0.6435,
+        "target_power": 0.8,
+        "completers_per_arm_fleiss_uncorr": 39,
+        "completers_total_fleiss_uncorr": 78,
+        "completers_per_arm_fleiss_cc": 45,
+        "completers_total_fleiss_cc": 90,
+        "completers_per_arm_exact_binom_chi2": 39,
+        "completers_total_exact_binom_chi2": 78,
+        "exact_power_at_exact_n": 0.812838,
+        "enrollment_by_attrition_exact_chi2": {
+          "attrition_0pct": {
+            "per_arm_enrolled": 39,
+            "total_enrolled_balanced": 78,
+            "total_enrolled_unrounded_ceil": 78
+          },
+          "attrition_15pct": {
+            "per_arm_enrolled": 46,
+            "total_enrolled_balanced": 92,
+            "total_enrolled_unrounded_ceil": 92
+          },
+          "attrition_20pct": {
+            "per_arm_enrolled": 49,
+            "total_enrolled_balanced": 98,
+            "total_enrolled_unrounded_ceil": 98
+          }
+        },
+        "enrollment_by_attrition_fleiss_cc": {
+          "attrition_0pct": {
+            "per_arm_enrolled": 45,
+            "total_enrolled_balanced": 90,
+            "total_enrolled_unrounded_ceil": 90
+          },
+          "attrition_15pct": {
+            "per_arm_enrolled": 53,
+            "total_enrolled_balanced": 106,
+            "total_enrolled_unrounded_ceil": 106
+          },
+          "attrition_20pct": {
+            "per_arm_enrolled": 57,
+            "total_enrolled_balanced": 114,
+            "total_enrolled_unrounded_ceil": 113
+          }
+        }
+      },
+      {
+        "scenario": "Optimistic (+30 pp: 20% -> 50%)",
+        "p_control": 0.2,
+        "p_treatment": 0.5,
+        "absolute_lift_pp": 30.0,
+        "cohens_h": 0.6435,
+        "target_power": 0.9,
+        "completers_per_arm_fleiss_uncorr": 52,
+        "completers_total_fleiss_uncorr": 104,
+        "completers_per_arm_fleiss_cc": 58,
+        "completers_total_fleiss_cc": 116,
+        "completers_per_arm_exact_binom_chi2": 51,
+        "completers_total_exact_binom_chi2": 102,
+        "exact_power_at_exact_n": 0.90274,
+        "enrollment_by_attrition_exact_chi2": {
+          "attrition_0pct": {
+            "per_arm_enrolled": 51,
+            "total_enrolled_balanced": 102,
+            "total_enrolled_unrounded_ceil": 102
+          },
+          "attrition_15pct": {
+            "per_arm_enrolled": 60,
+            "total_enrolled_balanced": 120,
+            "total_enrolled_unrounded_ceil": 120
+          },
+          "attrition_20pct": {
+            "per_arm_enrolled": 64,
+            "total_enrolled_balanced": 128,
+            "total_enrolled_unrounded_ceil": 128
+          }
+        },
+        "enrollment_by_attrition_fleiss_cc": {
+          "attrition_0pct": {
+            "per_arm_enrolled": 58,
+            "total_enrolled_balanced": 116,
+            "total_enrolled_unrounded_ceil": 116
+          },
+          "attrition_15pct": {
+            "per_arm_enrolled": 69,
+            "total_enrolled_balanced": 138,
+            "total_enrolled_unrounded_ceil": 137
+          },
+          "attrition_20pct": {
+            "per_arm_enrolled": 73,
+            "total_enrolled_balanced": 146,
+            "total_enrolled_unrounded_ceil": 145
+          }
+        }
+      },
+      {
+        "scenario": "Large (+35 pp: 25% -> 60%)",
+        "p_control": 0.25,
+        "p_treatment": 0.6,
+        "absolute_lift_pp": 35.0,
+        "cohens_h": 0.725,
+        "target_power": 0.8,
+        "completers_per_arm_fleiss_uncorr": 31,
+        "completers_total_fleiss_uncorr": 62,
+        "completers_per_arm_fleiss_cc": 36,
+        "completers_total_fleiss_cc": 72,
+        "completers_per_arm_exact_binom_chi2": 30,
+        "completers_total_exact_binom_chi2": 60,
+        "exact_power_at_exact_n": 0.801957,
+        "enrollment_by_attrition_exact_chi2": {
+          "attrition_0pct": {
+            "per_arm_enrolled": 30,
+            "total_enrolled_balanced": 60,
+            "total_enrolled_unrounded_ceil": 60
+          },
+          "attrition_15pct": {
+            "per_arm_enrolled": 36,
+            "total_enrolled_balanced": 72,
+            "total_enrolled_unrounded_ceil": 71
+          },
+          "attrition_20pct": {
+            "per_arm_enrolled": 38,
+            "total_enrolled_balanced": 76,
+            "total_enrolled_unrounded_ceil": 75
+          }
+        },
+        "enrollment_by_attrition_fleiss_cc": {
+          "attrition_0pct": {
+            "per_arm_enrolled": 36,
+            "total_enrolled_balanced": 72,
+            "total_enrolled_unrounded_ceil": 72
+          },
+          "attrition_15pct": {
+            "per_arm_enrolled": 43,
+            "total_enrolled_balanced": 86,
+            "total_enrolled_unrounded_ceil": 85
+          },
+          "attrition_20pct": {
+            "per_arm_enrolled": 45,
+            "total_enrolled_balanced": 90,
+            "total_enrolled_unrounded_ceil": 90
+          }
+        }
+      },
+      {
+        "scenario": "Large (+35 pp: 25% -> 60%)",
+        "p_control": 0.25,
+        "p_treatment": 0.6,
+        "absolute_lift_pp": 35.0,
+        "cohens_h": 0.725,
+        "target_power": 0.9,
+        "completers_per_arm_fleiss_uncorr": 40,
+        "completers_total_fleiss_uncorr": 80,
+        "completers_per_arm_fleiss_cc": 46,
+        "completers_total_fleiss_cc": 92,
+        "completers_per_arm_exact_binom_chi2": 40,
+        "completers_total_exact_binom_chi2": 80,
+        "exact_power_at_exact_n": 0.907095,
+        "enrollment_by_attrition_exact_chi2": {
+          "attrition_0pct": {
+            "per_arm_enrolled": 40,
+            "total_enrolled_balanced": 80,
+            "total_enrolled_unrounded_ceil": 80
+          },
+          "attrition_15pct": {
+            "per_arm_enrolled": 48,
+            "total_enrolled_balanced": 96,
+            "total_enrolled_unrounded_ceil": 95
+          },
+          "attrition_20pct": {
+            "per_arm_enrolled": 50,
+            "total_enrolled_balanced": 100,
+            "total_enrolled_unrounded_ceil": 100
+          }
+        },
+        "enrollment_by_attrition_fleiss_cc": {
+          "attrition_0pct": {
+            "per_arm_enrolled": 46,
+            "total_enrolled_balanced": 92,
+            "total_enrolled_unrounded_ceil": 92
+          },
+          "attrition_15pct": {
+            "per_arm_enrolled": 55,
+            "total_enrolled_balanced": 110,
+            "total_enrolled_unrounded_ceil": 109
+          },
+          "attrition_20pct": {
+            "per_arm_enrolled": 58,
+            "total_enrolled_balanced": 116,
+            "total_enrolled_unrounded_ceil": 115
+          }
+        }
+      }
+    ],
+    "fixed_n100_cliff_enriched": [
+      {
+        "cohort": "Enriched N=100 (0% attrition, n=50/arm)",
+        "completers_control": 50,
+        "completers_treatment": 50,
+        "completers_total": 100,
+        "power_by_pair": [
+          {
+            "scenario": "Conservative (+20 pp: 25% -> 45%)",
+            "p_control": 0.25,
+            "p_treatment": 0.45,
+            "exact_binom_chi2_power": 0.557863,
+            "normal_approx_power": 0.555572
+          },
+          {
+            "scenario": "Conservative (+20 pp: 30% -> 50%)",
+            "p_control": 0.3,
+            "p_treatment": 0.5,
+            "exact_binom_chi2_power": 0.545541,
+            "normal_approx_power": 0.533106
+          },
+          {
+            "scenario": "Primary Realistic (+25 pp: 25% -> 50%)",
+            "p_control": 0.25,
+            "p_treatment": 0.5,
+            "exact_binom_chi2_power": 0.745205,
+            "normal_approx_power": 0.740167
+          },
+          {
+            "scenario": "Primary Realistic (+25 pp: 30% -> 55%)",
+            "p_control": 0.3,
+            "p_treatment": 0.55,
+            "exact_binom_chi2_power": 0.736664,
+            "normal_approx_power": 0.72165
+          },
+          {
+            "scenario": "Optimistic (+30 pp: 20% -> 50%)",
+            "p_control": 0.2,
+            "p_treatment": 0.5,
+            "exact_binom_chi2_power": 0.89479,
+            "normal_approx_power": 0.894025
+          },
+          {
+            "scenario": "Large (+35 pp: 25% -> 60%)",
+            "p_control": 0.25,
+            "p_treatment": 0.6,
+            "exact_binom_chi2_power": 0.956545,
+            "normal_approx_power": 0.954438
+          }
+        ]
+      },
+      {
+        "cohort": "Enriched N=100 (15% attrition, balanced n=42/arm)",
+        "completers_control": 42,
+        "completers_treatment": 42,
+        "completers_total": 84,
+        "power_by_pair": [
+          {
+            "scenario": "Conservative (+20 pp: 25% -> 45%)",
+            "p_control": 0.25,
+            "p_treatment": 0.45,
+            "exact_binom_chi2_power": 0.499661,
+            "normal_approx_power": 0.484362
+          },
+          {
+            "scenario": "Conservative (+20 pp: 30% -> 50%)",
+            "p_control": 0.3,
+            "p_treatment": 0.5,
+            "exact_binom_chi2_power": 0.494428,
+            "normal_approx_power": 0.463771
+          },
+          {
+            "scenario": "Primary Realistic (+25 pp: 25% -> 50%)",
+            "p_control": 0.25,
+            "p_treatment": 0.5,
+            "exact_binom_chi2_power": 0.684095,
+            "normal_approx_power": 0.663029
+          },
+          {
+            "scenario": "Primary Realistic (+25 pp: 30% -> 55%)",
+            "p_control": 0.3,
+            "p_treatment": 0.55,
+            "exact_binom_chi2_power": 0.678537,
+            "normal_approx_power": 0.644147
+          },
+          {
+            "scenario": "Optimistic (+30 pp: 20% -> 50%)",
+            "p_control": 0.2,
+            "p_treatment": 0.5,
+            "exact_binom_chi2_power": 0.84368,
+            "normal_approx_power": 0.834386
+          },
+          {
+            "scenario": "Large (+35 pp: 25% -> 60%)",
+            "p_control": 0.25,
+            "p_treatment": 0.6,
+            "exact_binom_chi2_power": 0.926677,
+            "normal_approx_power": 0.9152
+          }
+        ]
+      },
+      {
+        "cohort": "Enriched N=100 (15% attrition, N=85 asymmetric 42/43)",
+        "completers_control": 42,
+        "completers_treatment": 43,
+        "completers_total": 85,
+        "power_by_pair": [
+          {
+            "scenario": "Conservative (+20 pp: 25% -> 45%)",
+            "p_control": 0.25,
+            "p_treatment": 0.45,
+            "exact_binom_chi2_power": 0.493287,
+            "normal_approx_power": 0.488328
+          },
+          {
+            "scenario": "Conservative (+20 pp: 30% -> 50%)",
+            "p_control": 0.3,
+            "p_treatment": 0.5,
+            "exact_binom_chi2_power": 0.465224,
+            "normal_approx_power": 0.467819
+          },
+          {
+            "scenario": "Primary Realistic (+25 pp: 25% -> 50%)",
+            "p_control": 0.25,
+            "p_treatment": 0.5,
+            "exact_binom_chi2_power": 0.66862,
+            "normal_approx_power": 0.667817
+          },
+          {
+            "scenario": "Primary Realistic (+25 pp: 30% -> 55%)",
+            "p_control": 0.3,
+            "p_treatment": 0.55,
+            "exact_binom_chi2_power": 0.64722,
+            "normal_approx_power": 0.649101
+          },
+          {
+            "scenario": "Optimistic (+30 pp: 20% -> 50%)",
+            "p_control": 0.2,
+            "p_treatment": 0.5,
+            "exact_binom_chi2_power": 0.842703,
+            "normal_approx_power": 0.838507
+          },
+          {
+            "scenario": "Large (+35 pp: 25% -> 60%)",
+            "p_control": 0.25,
+            "p_treatment": 0.6,
+            "exact_binom_chi2_power": 0.914892,
+            "normal_approx_power": 0.918272
+          }
+        ]
+      },
+      {
+        "cohort": "Enriched N=100 (20% attrition, n=40/arm)",
+        "completers_control": 40,
+        "completers_treatment": 40,
+        "completers_total": 80,
+        "power_by_pair": [
+          {
+            "scenario": "Conservative (+20 pp: 25% -> 45%)",
+            "p_control": 0.25,
+            "p_treatment": 0.45,
+            "exact_binom_chi2_power": 0.466297,
+            "normal_approx_power": 0.465514
+          },
+          {
+            "scenario": "Conservative (+20 pp: 30% -> 50%)",
+            "p_control": 0.3,
+            "p_treatment": 0.5,
+            "exact_binom_chi2_power": 0.458054,
+            "normal_approx_power": 0.445527
+          },
+          {
+            "scenario": "Primary Realistic (+25 pp: 25% -> 50%)",
+            "p_control": 0.25,
+            "p_treatment": 0.5,
+            "exact_binom_chi2_power": 0.647432,
+            "normal_approx_power": 0.641217
+          },
+          {
+            "scenario": "Primary Realistic (+25 pp: 30% -> 55%)",
+            "p_control": 0.3,
+            "p_treatment": 0.55,
+            "exact_binom_chi2_power": 0.640481,
+            "normal_approx_power": 0.62242
+          },
+          {
+            "scenario": "Optimistic (+30 pp: 20% -> 50%)",
+            "p_control": 0.2,
+            "p_treatment": 0.5,
+            "exact_binom_chi2_power": 0.816583,
+            "normal_approx_power": 0.815532
+          },
+          {
+            "scenario": "Large (+35 pp: 25% -> 60%)",
+            "p_control": 0.25,
+            "p_treatment": 0.6,
+            "exact_binom_chi2_power": 0.907095,
+            "normal_approx_power": 0.901454
+          }
+        ]
+      }
+    ],
+    "fixed_n100_unselected_cohort": [
+      {
+        "cohort": "Unselected N=100, 25% cliff-adjacent, 20% attrition (n=10/arm)",
+        "cliff_adjacent_share": 0.25,
+        "attrition_rate": 0.2,
+        "effective_cliff_completers_per_arm": 10,
+        "effective_cliff_completers_total": 20,
+        "power_by_pair": [
+          {
+            "scenario": "Primary Realistic (+25 pp: 25% -> 50%)",
+            "p_control": 0.25,
+            "p_treatment": 0.5,
+            "exact_binom_chi2_power": 0.181737,
+            "normal_approx_power": 0.202906
+          },
+          {
+            "scenario": "Primary Realistic (+25 pp: 30% -> 55%)",
+            "p_control": 0.3,
+            "p_treatment": 0.55,
+            "exact_binom_chi2_power": 0.18082,
+            "normal_approx_power": 0.196427
+          },
+          {
+            "scenario": "Large (+35 pp: 25% -> 60%)",
+            "p_control": 0.25,
+            "p_treatment": 0.6,
+            "exact_binom_chi2_power": 0.32891,
+            "normal_approx_power": 0.343589
+          }
+        ]
+      },
+      {
+        "cohort": "Unselected N=100, 25% cliff-adjacent, 15% attrition (n=11/arm)",
+        "cliff_adjacent_share": 0.25,
+        "attrition_rate": 0.15,
+        "effective_cliff_completers_per_arm": 11,
+        "effective_cliff_completers_total": 22,
+        "power_by_pair": [
+          {
+            "scenario": "Primary Realistic (+25 pp: 25% -> 50%)",
+            "p_control": 0.25,
+            "p_treatment": 0.5,
+            "exact_binom_chi2_power": 0.221709,
+            "normal_approx_power": 0.219629
+          },
+          {
+            "scenario": "Primary Realistic (+25 pp: 30% -> 55%)",
+            "p_control": 0.3,
+            "p_treatment": 0.55,
+            "exact_binom_chi2_power": 0.223072,
+            "normal_approx_power": 0.212447
+          },
+          {
+            "scenario": "Large (+35 pp: 25% -> 60%)",
+            "p_control": 0.25,
+            "p_treatment": 0.6,
+            "exact_binom_chi2_power": 0.394793,
+            "normal_approx_power": 0.374435
+          }
+        ]
+      },
+      {
+        "cohort": "Unselected N=100, 40% cliff-adjacent, 20% attrition (n=16/arm)",
+        "cliff_adjacent_share": 0.4,
+        "attrition_rate": 0.2,
+        "effective_cliff_completers_per_arm": 16,
+        "effective_cliff_completers_total": 32,
+        "power_by_pair": [
+          {
+            "scenario": "Primary Realistic (+25 pp: 25% -> 50%)",
+            "p_control": 0.25,
+            "p_treatment": 0.5,
+            "exact_binom_chi2_power": 0.319825,
+            "normal_approx_power": 0.302813
+          },
+          {
+            "scenario": "Primary Realistic (+25 pp: 30% -> 55%)",
+            "p_control": 0.3,
+            "p_treatment": 0.55,
+            "exact_binom_chi2_power": 0.305474,
+            "normal_approx_power": 0.292297
+          },
+          {
+            "scenario": "Large (+35 pp: 25% -> 60%)",
+            "p_control": 0.25,
+            "p_treatment": 0.6,
+            "exact_binom_chi2_power": 0.537356,
+            "normal_approx_power": 0.518173
+          }
+        ]
+      },
+      {
+        "cohort": "Unselected N=100, 40% cliff-adjacent, 15% attrition (n=17/arm)",
+        "cliff_adjacent_share": 0.4,
+        "attrition_rate": 0.15,
+        "effective_cliff_completers_per_arm": 17,
+        "effective_cliff_completers_total": 34,
+        "power_by_pair": [
+          {
+            "scenario": "Primary Realistic (+25 pp: 25% -> 50%)",
+            "p_control": 0.25,
+            "p_treatment": 0.5,
+            "exact_binom_chi2_power": 0.332024,
+            "normal_approx_power": 0.319213
+          },
+          {
+            "scenario": "Primary Realistic (+25 pp: 30% -> 55%)",
+            "p_control": 0.3,
+            "p_treatment": 0.55,
+            "exact_binom_chi2_power": 0.332721,
+            "normal_approx_power": 0.308078
+          },
+          {
+            "scenario": "Large (+35 pp: 25% -> 60%)",
+            "p_control": 0.25,
+            "p_treatment": 0.6,
+            "exact_binom_chi2_power": 0.575196,
+            "normal_approx_power": 0.544375
+          }
+        ]
+      }
+    ],
+    "mde_cliff_enriched_n100": [
+      {
+        "cohort": "Enriched N=100 (0% attrition, n=50/arm)",
+        "completers_control": 50,
+        "completers_treatment": 50,
+        "target_power": 0.8,
+        "p0_control": 0.25,
+        "mde_p1_exact_chi2": 0.5176,
+        "mde_delta_pp_exact_chi2": 26.76,
+        "mde_p1_normal": 0.5194,
+        "mde_delta_pp_normal": 26.94
+      },
+      {
+        "cohort": "Enriched N=100 (0% attrition, n=50/arm)",
+        "completers_control": 50,
+        "completers_treatment": 50,
+        "target_power": 0.9,
+        "p0_control": 0.25,
+        "mde_p1_exact_chi2": 0.5595,
+        "mde_delta_pp_exact_chi2": 30.95,
+        "mde_p1_normal": 0.5618,
+        "mde_delta_pp_normal": 31.18
+      },
+      {
+        "cohort": "Enriched N=100 (0% attrition, n=50/arm)",
+        "completers_control": 50,
+        "completers_treatment": 50,
+        "target_power": 0.8,
+        "p0_control": 0.3,
+        "mde_p1_exact_chi2": 0.57,
+        "mde_delta_pp_exact_chi2": 27.0,
+        "mde_p1_normal": 0.5747,
+        "mde_delta_pp_normal": 27.47
+      },
+      {
+        "cohort": "Enriched N=100 (0% attrition, n=50/arm)",
+        "completers_control": 50,
+        "completers_treatment": 50,
+        "target_power": 0.9,
+        "p0_control": 0.3,
+        "mde_p1_exact_chi2": 0.6118,
+        "mde_delta_pp_exact_chi2": 31.18,
+        "mde_p1_normal": 0.6164,
+        "mde_delta_pp_normal": 31.64
+      },
+      {
+        "cohort": "Enriched N=100 (15% attrition, balanced n=42/arm)",
+        "completers_control": 42,
+        "completers_treatment": 42,
+        "target_power": 0.8,
+        "p0_control": 0.25,
+        "mde_p1_exact_chi2": 0.5375,
+        "mde_delta_pp_exact_chi2": 28.75,
+        "mde_p1_normal": 0.545,
+        "mde_delta_pp_normal": 29.5
+      },
+      {
+        "cohort": "Enriched N=100 (15% attrition, balanced n=42/arm)",
+        "completers_control": 42,
+        "completers_treatment": 42,
+        "target_power": 0.9,
+        "p0_control": 0.25,
+        "mde_p1_exact_chi2": 0.5827,
+        "mde_delta_pp_exact_chi2": 33.27,
+        "mde_p1_normal": 0.5907,
+        "mde_delta_pp_normal": 34.07
+      },
+      {
+        "cohort": "Enriched N=100 (15% attrition, balanced n=42/arm)",
+        "completers_control": 42,
+        "completers_treatment": 42,
+        "target_power": 0.8,
+        "p0_control": 0.3,
+        "mde_p1_exact_chi2": 0.5894,
+        "mde_delta_pp_exact_chi2": 28.94,
+        "mde_p1_normal": 0.5999,
+        "mde_delta_pp_normal": 29.99
+      },
+      {
+        "cohort": "Enriched N=100 (15% attrition, balanced n=42/arm)",
+        "completers_control": 42,
+        "completers_treatment": 42,
+        "target_power": 0.9,
+        "p0_control": 0.3,
+        "mde_p1_exact_chi2": 0.6346,
+        "mde_delta_pp_exact_chi2": 33.46,
+        "mde_p1_normal": 0.6446,
+        "mde_delta_pp_normal": 34.46
+      },
+      {
+        "cohort": "Enriched N=100 (15% attrition, N=85 asymmetric 42/43)",
+        "completers_control": 42,
+        "completers_treatment": 43,
+        "target_power": 0.8,
+        "p0_control": 0.25,
+        "mde_p1_exact_chi2": 0.5441,
+        "mde_delta_pp_exact_chi2": 29.41,
+        "mde_p1_normal": 0.5433,
+        "mde_delta_pp_normal": 29.33
+      },
+      {
+        "cohort": "Enriched N=100 (15% attrition, N=85 asymmetric 42/43)",
+        "completers_control": 42,
+        "completers_treatment": 43,
+        "target_power": 0.9,
+        "p0_control": 0.25,
+        "mde_p1_exact_chi2": 0.5907,
+        "mde_delta_pp_exact_chi2": 34.07,
+        "mde_p1_normal": 0.5887,
+        "mde_delta_pp_normal": 33.87
+      },
+      {
+        "cohort": "Enriched N=100 (15% attrition, N=85 asymmetric 42/43)",
+        "completers_control": 42,
+        "completers_treatment": 43,
+        "target_power": 0.8,
+        "p0_control": 0.3,
+        "mde_p1_exact_chi2": 0.5985,
+        "mde_delta_pp_exact_chi2": 29.85,
+        "mde_p1_normal": 0.5982,
+        "mde_delta_pp_normal": 29.82
+      },
+      {
+        "cohort": "Enriched N=100 (15% attrition, N=85 asymmetric 42/43)",
+        "completers_control": 42,
+        "completers_treatment": 43,
+        "target_power": 0.9,
+        "p0_control": 0.3,
+        "mde_p1_exact_chi2": 0.6433,
+        "mde_delta_pp_exact_chi2": 34.33,
+        "mde_p1_normal": 0.6426,
+        "mde_delta_pp_normal": 34.26
+      },
+      {
+        "cohort": "Enriched N=100 (20% attrition, n=40/arm)",
+        "completers_control": 40,
+        "completers_treatment": 40,
+        "target_power": 0.8,
+        "p0_control": 0.25,
+        "mde_p1_exact_chi2": 0.5494,
+        "mde_delta_pp_exact_chi2": 29.94,
+        "mde_p1_normal": 0.5526,
+        "mde_delta_pp_normal": 30.26
+      },
+      {
+        "cohort": "Enriched N=100 (20% attrition, n=40/arm)",
+        "completers_control": 40,
+        "completers_treatment": 40,
+        "target_power": 0.9,
+        "p0_control": 0.25,
+        "mde_p1_exact_chi2": 0.5957,
+        "mde_delta_pp_exact_chi2": 34.57,
+        "mde_p1_normal": 0.5991,
+        "mde_delta_pp_normal": 34.91
+      },
+      {
+        "cohort": "Enriched N=100 (20% attrition, n=40/arm)",
+        "completers_control": 40,
+        "completers_treatment": 40,
+        "target_power": 0.8,
+        "p0_control": 0.3,
+        "mde_p1_exact_chi2": 0.6014,
+        "mde_delta_pp_exact_chi2": 30.14,
+        "mde_p1_normal": 0.6073,
+        "mde_delta_pp_normal": 30.73
+      },
+      {
+        "cohort": "Enriched N=100 (20% attrition, n=40/arm)",
+        "completers_control": 40,
+        "completers_treatment": 40,
+        "target_power": 0.9,
+        "p0_control": 0.3,
+        "mde_p1_exact_chi2": 0.6474,
+        "mde_delta_pp_exact_chi2": 34.74,
+        "mde_p1_normal": 0.6528,
+        "mde_delta_pp_normal": 35.28
+      }
+    ]
+  }
+}

@@ -60,6 +60,16 @@ def two_sample_t_power(n_ctrl: int, n_trt: int, d: float, alpha: float = ALPHA) 
     t_crit = float(stats.t.ppf(1.0 - alpha / 2.0, df=df))
     upper_tail = float(stats.nct.sf(t_crit, df=df, nc=ncp))
     lower_tail = float(stats.nct.cdf(-t_crit, df=df, nc=ncp))
+
+    # Guard against numerical NaN/underflow in SciPy nct at extreme ncp >> t_crit
+    if math.isnan(upper_tail):
+        cdf_val = float(stats.nct.cdf(t_crit, df=df, nc=ncp))
+        upper_tail = 1.0 if (math.isnan(cdf_val) and ncp > t_crit + 6.0) else (1.0 - cdf_val)
+    if math.isnan(lower_tail):
+        lower_tail = 0.0
+    if upper_tail == 0.0 and ncp - t_crit > 10.0:
+        upper_tail = 1.0
+
     return float(min(1.0, max(0.0, upper_tail + lower_tail)))
 
 
@@ -84,10 +94,23 @@ def mde_continuous_t(n_ctrl: int, n_trt: int, target_power: float, alpha: float 
     if two_sample_t_power(n_ctrl, n_trt, 0.0, alpha) >= target_power:
         return 0.0
 
+    # Tight analytical bracket around asymptotic MDE to stay well inside exact nct domain
+    z_alpha = float(stats.norm.ppf(1.0 - alpha / 2.0))
+    z_beta = float(stats.norm.ppf(target_power))
+    n_eff = (n_ctrl * n_trt) / (n_ctrl + n_trt)
+    d_asymp = (z_alpha + z_beta) / math.sqrt(n_eff)
+    d_lo = max(1e-4, 0.5 * d_asymp)
+    d_hi = min(4.0, 2.0 * d_asymp + 0.5)
+
     def obj(d_val: float) -> float:
         return two_sample_t_power(n_ctrl, n_trt, d_val, alpha) - target_power
 
-    return float(optimize.brentq(obj, 1e-4, 5.0, xtol=1e-7))
+    while obj(d_lo) > 0.0:
+        d_lo *= 0.5
+    while obj(d_hi) < 0.0:
+        d_hi *= 1.5
+
+    return float(optimize.brentq(obj, d_lo, d_hi, xtol=1e-7))
 
 
 def inflate_for_attrition(n_per_arm_completers: int, attrition_rate: float) -> Dict[str, int]:

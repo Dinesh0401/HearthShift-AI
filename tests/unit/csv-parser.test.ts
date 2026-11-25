@@ -3,7 +3,11 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { parseEnergyCsv } from '../../src/core/ingestion/csv-parser';
+import {
+  parseEnergyCsv,
+  MAX_CSV_BYTES,
+  MAX_CSV_ROWS,
+} from '../../src/core/ingestion/csv-parser';
 
 describe('Streaming CSV Parser', () => {
   it('parses standard 2-column interval CSV data (timestamp, kwh)', async () => {
@@ -209,5 +213,39 @@ MAC000002,Std,2012-10-12 01:30:00.0000000,0.110`;
     await expect(
       parseEnergyCsv(csvContent, { abort_signal: controller.signal })
     ).rejects.toThrow('cancelled');
+  });
+
+  it('rejects empty and header-only CSV files cleanly', async () => {
+    await expect(parseEnergyCsv('')).rejects.toThrow('CSV file is empty.');
+    await expect(parseEnergyCsv('   \r\n  \n  ')).rejects.toThrow('CSV file is empty.');
+    await expect(parseEnergyCsv('timestamp,consumption_kwh\n')).rejects.toThrow(
+      'No valid data rows could be extracted'
+    );
+  });
+
+  it('rejects CSV files exceeding MAX_CSV_ROWS cleanly', async () => {
+    // 500,001 rows x 24 bytes (~12 MB) stays below MAX_CSV_BYTES to isolate the row limit guard
+    const row = '2026-05-01 00:00:00,0.5\n';
+    const oversizedRowsCsv = 'timestamp,kwh\n' + row.repeat(MAX_CSV_ROWS + 1);
+
+    await expect(parseEnergyCsv(oversizedRowsCsv)).rejects.toThrow(/maximum allowed row count/i);
+  });
+
+  it('rejects CSV payloads exceeding MAX_CSV_BYTES cleanly', async () => {
+    const oversizedByteCsv = 'timestamp,kwh\n2026-05-01 00:00:00,' + '1'.repeat(MAX_CSV_BYTES);
+
+    await expect(parseEnergyCsv(oversizedByteCsv)).rejects.toThrow(/maximum allowed size/i);
+  });
+
+  it('handles malformed unclosed quotes in linear time without regex backtracking', async () => {
+    const start = Date.now();
+    const unclosedQuoteCsv = `timestamp,kwh\n"2026-05-01 00:00:00,${'a'.repeat(50000)},0.5\n2026-05-01 01:00:00,0.45`;
+
+    const result = await parseEnergyCsv(unclosedQuoteCsv);
+    const elapsedMs = Date.now() - start;
+
+    expect(result.valid_readings_count).toBe(1);
+    expect(result.error_count).toBe(1);
+    expect(elapsedMs).toBeLessThan(1000);
   });
 });

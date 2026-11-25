@@ -2,10 +2,10 @@
 ## Mathematical Equivalence, Numerical Quadrature Proofs, and Physical Model Catalog
 ### Verification of Client-Side TR-VOI and Python Research Benchmark Invariants
 
-**Document Status:** Complete & Verified Research Integrity Report  
-**Version:** 1.0.0  
-**Date:** November 24, 2026  
-**Target Release:** Phase 3 Gate G/H Verification  
+**Document Status:** Complete Software Parity Audit (Revised Phase 4A Boundaries)  
+**Version:** 1.1.0  
+**Date:** November 25, 2026  
+**Target Release:** Phase 3 Computational Verification (Pre-Pilot)  
 **Repository:** `HearthShift-AI` (Flagship Project #04)  
 **Authors:** Applied Mathematics, Simulation, and Research Integrity Team  
 
@@ -20,7 +20,7 @@ This report establishes the research integrity, cross-language parity, and numer
 2. **Elimination of Quadrature Error:** Closed-form analytic integration of piecewise normal moments eliminates the **₹227.80 cliff swing error** inherent to 5-point Gauss-Hermite quadrature, executing in under $0.05\text{ ms}$ on client devices.
 3. **Formal Proof of Non-Double-Counting:** We prove that counterfactual bill evaluation in `src/core/simulation/scenario-engine.ts` computes the exact mathematical delta between baseline and proposed states, confirming that the statutory cliff bonus (₹478.40) is an explanatory decomposition rather than an additive distortion.
 4. **4-Tier Savings Provenance Hierarchy:** A rigorous data provenance specification classifies all energy and financial savings claims into four verifiable tiers (`SIMULATED`, `USER_REPORTED`, `METER_OBSERVED`, `MEASUREMENT_VERIFIED`), preventing ungrounded algorithmic optimism.
-5. **Empirical Risk Control vs. Formal Guarantees:** We delineate the formal boundaries of Probably Approximately Correct (PAC) comfort risk constraints from absolute physical safety guarantees.
+5. **Empirical Model Risk Bounds vs. Physical Reality:** We delineate the conditional nature of empirical Bayesian comfort bounds and modeled $Q_{0.05}$ estimates from deterministic software billing arithmetic and physical household guarantees (which are not claimed).
 6. **Physical Appliance Catalog:** Explicit thermodynamic formulas, coefficient of performance (COP) curves, standing loss equations, and behavioral limits are cataloged for all controllable loads.
 
 ---
@@ -213,7 +213,7 @@ expect(result.proposedBillInr).toBe(1507.0); // 490 kWh
 expect(result.netSavingsInr).toBe(575.0);    // 2082.0 - 1507.0 = 575.0 (includes the 478.40 bonus)
 expect(result.cliffBonusInr).toBe(478.40);   // Reported as component of 575.0
 ```
-This guarantees mathematical consistency and zero double-counting.
+This ensures deterministic mathematical consistency and eliminates cliff double-counting inside software scenario evaluation.
 
 ---
 
@@ -248,53 +248,52 @@ To maintain research integrity and prevent deceptive or uncalibrated claims, Hea
 - **Reporting Requirement:** Labeled as *"User Confirmed (Unverified by Meter)"*.
 - **Confidence Level Assignment:** `medium`.
 
-### 5.3 Tier 3: `METER_OBSERVED` (Aggregate Utility / Interval Verification)
-- **Definition:** The savings are empirically observed through statistically significant reductions in aggregate utility bill totals or whole-home smart meter interval streams across a post-intervention billing cycle:
-  $$E_{\text{post}} < E_{\text{baseline}} - z_{0.95} \cdot \sigma_{\text{weather}}$$
-- **Data Prerequisite:** At least one full billing cycle (or $\ge 14$ days of smart meter intervals) post-intervention, weather-normalized against degree-days.
-- **Reporting Requirement:** Labeled as *"Verified by Whole-Home Meter"*.
-- **Confidence Level Assignment:** `high`.
-- **Limitation:** Cannot isolate individual appliance contributions if multiple changes occurred simultaneously.
+### 5.3 Tier 3: `METER_OBSERVED` (Aggregate Utility / Interval Observation)
+- **Definition:** The delta is observed in aggregate utility bill totals or whole-home interval meter streams across a post-intervention billing period, accompanied by explicit confounding caveats and weather-normalization metadata (`MeasurementVerificationDetails`).
+- **Data Prerequisite:** At least one full billing cycle (or $\ge 14$ days of smart meter intervals) post-intervention.
+- **Reporting Requirement:** Labeled as *"Meter Observed (Not IPMVP Option C Certified)"*.
+- **Confidence Level Assignment:** `medium` or `high` (observational only).
+- **Critical M&V Boundary:** **Weather normalization alone does NOT establish EVO IPMVP Option C compliance**, and HearthShift AI v1 does **NOT** claim IPMVP Option C or ASHRAE Guideline 14 certification. Whole-home bill observations remain confounded by unmeasured occupancy, appliance additions, and seasonal noise unless a $\ge 12$-month baseline regression ($\text{CV(RMSE)} \le 15\%$, $|\text{NMBE}| \le 5\%$), non-routine adjustments, and autocorrelation-corrected Fractional Savings Uncertainty ($\text{FSU}$) are satisfied (see [`MV-METHODOLOGY-REVIEW.md`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/docs/pilot/MV-METHODOLOGY-REVIEW.md)).
 
-### 5.4 Tier 4: `MEASUREMENT_VERIFIED` (Sub-Metered Physical Validation)
-- **Definition:** The savings are verified by direct device-level current transformer (CT) clamp monitoring, smart plug interval logging, or high-frequency appliance power signature analysis isolating the specific device.
+### 5.4 Tier 4: `MEASUREMENT_VERIFIED` (Sub-Metered or Audited Option C Schema)
+- **Definition:** Reserved for savings verified either by calibrated device-level sub-metering (CT clamp / smart plug logging isolating the controlled load, akin to IPMVP Option A/B) OR by an externally audited whole-facility M&V protocol satisfying full IPMVP Option C & ASHRAE Guideline 14 criteria.
   $$\Delta E_{\text{device}} = \int_{0}^T \left( P_{\text{baseline}}(t) - P_{\text{actual}}(t) \right) dt$$
-- **Data Prerequisite:** Dedicated sub-metered power series with calibrated sampling ($< 1\%$ measurement error).
-- **Reporting Requirement:** Labeled as *"Independently Measured & Verified"*.
-- **Confidence Level Assignment:** `high` (Gold Standard).
+- **Current v1 Implementation Status:** In `src/types/contracts.ts`, `MeasurementVerificationDetails` defines the **provenance metadata schema** (`weather_normalized`, `occupancy_verified`, `limitations`, `uncertainty_inr`). The v1 client app does **not** execute automated IPMVP Option C baseline regressions or FSU uncertainty propagation; therefore, single-home `MEASUREMENT_VERIFIED` status should not be asserted without an external audited M&V plan or dedicated sub-meter evidence.
 
 ---
 
-## 6. Distinction Between Empirical Risk Control and Formal Guarantees
+## 6. Distinction Between Empirical Model Bounds, Deterministic Billing, and Physical Reality
 
-In academic literature, algorithmic decision-making often conflates **Probably Approximately Correct (PAC) statistical risk bounds** with **deterministic physical guarantees**. HearthShift AI enforces strict formal distinctions:
+Decision-support literature frequently conflates **conditional Bayesian model bounds** with **deterministic physical household guarantees**. HearthShift AI enforces strict formal boundaries:
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
-│            EMPIRICAL RISK BOUNDS vs. PHYSICAL GUARANTEES               │
+│       EMPIRICAL MODEL BOUNDS vs. BILLING vs. PHYSICAL REALITY          │
 ├──────────────────────────┬─────────────────────────────────────────────┤
-│ Probabilistic Bounds     │ PAC Discomfort Risk P(D > D_max) <= delta   │
-│ Distributional Priors    │ Gaussian Preference theta ~ N(mu, Sigma)    │
-│ Formal Bill Determinism  │ Bitwise integer paise tariff calculator     │
-│ Physical Boundaries      │ NO override of device safety thermostats    │
-│ Failure Mode Management  │ Abstention when welfare falls below c_min   │
+│ Empirical Comfort Bound  │ Model-conditional P(D > D_max | theta~N)    │
+│ Empirical Savings Bound  │ Modeled Q_0.05(U(a)) under sigma_X = 8 kWh  │
+│ Software Arithmetic      │ Exact deterministic integer paise T(X)      │
+│ Physical Guarantees      │ NONE: no actuation, no guaranteed savings   │
+│ Failure Mode Management  │ Abstention when Q_0.05(U) <= c_min (₹30)    │
 └──────────────────────────┴─────────────────────────────────────────────┘
 ```
 
-### 6.1 The Nature of TR-VOI Risk Constraints
+### 6.1 Conditional Nature of TR-VOI Risk & Savings Bounds
 The chance constraint enforced by TR-VOI:
 $$P\left( D(a, \boldsymbol{\theta}^*) > D_{\max} \;\middle|\; \mathcal{D} \right) \le \delta \quad (\delta = 0.05)$$
-is an **empirical Bayesian risk control**. It guarantees that under the calibrated prior distribution $\boldsymbol{\theta} \sim \mathcal{N}(\boldsymbol{\mu}, \boldsymbol{\Sigma})$ and linear disruption features $\boldsymbol{\phi}(a)$, the predictive probability of discomfort exceeding $D_{\max}$ does not exceed $5\%$.
+and the conservative welfare lower bound $Q_{0.05}(U(a)) = \mathbb{E}[U(a)] - 1.645\sqrt{\text{Var}[U(a)]}$ are **conditional empirical Bayesian model bounds**, **NOT physical guarantees**. Specifically:
+- They hold *only* relative to the current Gaussian belief $\boldsymbol{\theta} \sim \mathcal{N}(\boldsymbol{\mu}, \boldsymbol{\Sigma})$, linear disruption features $\boldsymbol{\phi}(a)$, and nominal modeled baseline volatility $\sigma_X = 8.0\text{ kWh}$.
+- They **do not guarantee** that a real household will experience zero discomfort, achieve a specific INR bill reduction, or never cross the 500 kWh tariff cliff under real-world weather or occupancy shifts.
 
 ### 6.2 Key Assumptions & Vulnerabilities to Domain Shift
 1. **Gaussianity of Latent Preferences:** Real-world human discomfort may exhibit asymmetric, heavy-tailed distributions (e.g., sudden intolerable irritability during severe heatwaves).
-2. **Exogenous Meteorological Shocks:** An unpredicted $+4^\circ\text{C}$ outdoor heatwave increases indoor heat infiltration, forcing an AC unit with an unchanged setpoint to consume substantially more power than the baseline model predicted.
+2. **Exogenous Meteorological & Appliance Shocks:** An unpredicted $+4^\circ\text{C}$ outdoor heatwave or higher-wattage AC unit than the nominal $1.5\text{ TR}$ catalog prior alters actual consumption far beyond $\sigma_X = 8.0\text{ kWh}$.
 3. **Multi-Occupant Disagreement:** The model treats the household as a unitary decision agent with parameter vector $\boldsymbol{\theta}$. Intra-household friction (e.g., one occupant preferring 22°C while another prefers 25°C) violates single-agent preference coherence.
 
-### 6.3 Absolute Formal Determinism in Billing
-While comfort is probabilistic, **billing evaluation is deterministic**:
-- For any specified consumption $X \in \mathbb{R}_+$, $T(X)$ produces an exact, bitwise reproducible integer paise value.
-- The tariff calculation is provably immune to floating-point rounding drift, LLM hallucinations, or prompt-injection distortions.
+### 6.3 Deterministic Software Arithmetic vs. Physical Outcomes
+What **is** deterministic in software is the tariff function $T(X)$:
+- For any fixed scalar input $X \in \mathbb{R}_+$, $T(X)$ produces an exact, bitwise-reproducible integer paise bill under the encoded TNPDCL schedule, immune to floating-point rounding drift or LLM hallucination.
+- However, future realized meter consumption $X_{\text{actual}}$ is stochastic and physically governed by household behavior, equipment efficiency, and weather; hence deterministic billing arithmetic applies strictly to *given* kWh inputs, never as a guarantee of future household utility bills.
 
 ---
 
@@ -421,18 +420,17 @@ While $6.0\text{ kWh}$ represents modest volumetric savings (₹37.80 at ₹6.30
 
 ---
 
-## 8. Summary of Verifications & Sign-Off
+## 8. Summary of Software Verifications & Scope Boundary
 
-The research integrity evaluations and cross-language parity proofs detailed in this report confirm that HearthShift AI achieves complete mathematical equivalence between research benchmarks and production code.
+The cross-language parity checks and closed-form proofs detailed in this report confirm numerical and algorithmic equivalence between the Python research environment and the pure client-side TypeScript engine. **They verify software and mathematical parity only—not real-world field savings or IPMVP M&V compliance.**
 
-| Verification Dimension | Standard | Audit Result | Status |
+| Verification Dimension | Standard | Audit Result | Scope Status |
 | :--- | :--- | :--- | :---: |
-| **Cross-Language Parity** | Bitwise paise arithmetic match | 100% equivalence across Python and TypeScript | **VERIFIED** |
-| **Numerical Quadrature** | Closed-form piecewise normal integration | Eliminates ₹227.80 cliff swing error | **VERIFIED** |
-| **Cliff Non-Double-Counting** | Theorem 2 exact delta evaluation | Proved and verified in `scenario-engine.ts` | **VERIFIED** |
-| **Savings Provenance** | 4-tier hierarchy enforcement | `contracts.ts` and UI verified | **VERIFIED** |
-| **Risk Control Clarity** | PAC statistical bounds vs physical limits | Formally documented and bounded | **VERIFIED** |
-| **Physical Appliance Catalog** | Complete thermodynamic formulations | All 4 major appliance categories cataloged | **VERIFIED** |
+| **Cross-Language Parity** | Integer paise & TR-VOI fixture match | Parity across Python and TypeScript fixtures | **VERIFIED (Software)** |
+| **Numerical Quadrature** | Closed-form piecewise normal integration | Eliminates ₹227.80 GH-5 cliff swing artifact | **VERIFIED (Math)** |
+| **Cliff Non-Double-Counting** | Theorem 2 exact delta evaluation | Verified in `scenario-engine.ts` unit tests | **VERIFIED (Software)** |
+| **Savings Provenance Schema** | 4-tier `SavingsBasis` types | `contracts.ts` and UI badges aligned | **VERIFIED (Schema)** |
+| **Model Risk vs. Physical Reality** | Bayesian bounds vs. physical guarantees | Explicitly bounded; zero physical guarantees | **DOCUMENTED** |
+| **IPMVP Option C / Human Field Trial** | ASHRAE 14 + Stage 1/2 Field Protocols | Not claimed / pending Stage 1 & Stage 2 execution | **PENDING PHASE 4A/4B** |
 
-**Gate G & Gate H Sign-Off Verdict: 100% APPROVED**  
-The research integrity, numerical accuracy, and field-pilot protocols meet all requirements for Phase 3 publication and field deployment.
+**Scope Verdict:** Software numerical parity and mathematical bounds are verified for **pre-pilot readiness**. Empirical human usability ([`USABILITY-STUDY-PROTOCOL.md`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/docs/pilot/USABILITY-STUDY-PROTOCOL.md)), powered RCT efficacy testing ([`FIELD-PILOT-PROTOCOL.md`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/docs/pilot/FIELD-PILOT-PROTOCOL.md)), and formal M&V verification ([`MV-METHODOLOGY-REVIEW.md`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/docs/pilot/MV-METHODOLOGY-REVIEW.md)) remain **unexecuted / not claimed** as of November 25, 2026.

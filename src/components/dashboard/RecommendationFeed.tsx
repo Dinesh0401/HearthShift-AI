@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { db } from '../../lib/db';
 import { TNPDCL_LT1A_2026_MAY10 } from '../../core/tariff/tariffs/tnpdcl-lt1a';
+import type { TariffPlan } from '../../core/tariff/types';
 import {
   generateHouseholdRecommendation,
   DEFAULT_INITIAL_BELIEF,
@@ -13,26 +14,28 @@ import type { LatentPreferenceBelief } from '../../core/optimization/tr-voi';
 import type { Recommendation, AdaptiveQuestion } from '../../types/contracts';
 import { AdaptiveQueryModal } from './AdaptiveQueryModal';
 import { useLanguage } from '../../locales/i18n';
-import { 
-  Lightbulb, 
-  ShieldAlert, 
-  ShieldCheck, 
-  Check, 
-  ThumbsUp, 
-  ThumbsDown, 
-  Star, 
-  Info, 
-  Zap, 
-  TrendingDown 
+import {
+  Lightbulb,
+  ShieldAlert,
+  ShieldCheck,
+  Check,
+  ThumbsUp,
+  ThumbsDown,
+  Star,
+  Info,
+  Zap,
+  TrendingDown,
 } from 'lucide-react';
 
 interface RecommendationFeedProps {
   latestUnitsKwh: number;
+  tariff?: TariffPlan;
   onActionLogged?: () => void;
 }
 
 export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
   latestUnitsKwh,
+  tariff = TNPDCL_LT1A_2026_MAY10,
   onActionLogged,
 }) => {
   const { t, language } = useLanguage();
@@ -44,52 +47,66 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
   const [feedbackToast, setFeedbackToast] = useState<string | null>(null);
 
   // Evaluate recommendation
-  const runEngine = useCallback(async (currentBelief: LatentPreferenceBelief, askedIds: string[]) => {
-    try {
-      await db.initialize();
-      const bCount = await db.bills.count();
-      const rCount = await db.readings.count();
+  const runEngine = useCallback(
+    async (currentBelief: LatentPreferenceBelief, askedIds: string[]) => {
+      try {
+        await db.initialize();
+        const bCount = await db.bills.count();
+        const rCount = await db.readings.count();
 
-      let spanDays = 0;
-      if (rCount > 0) {
-        const first = await db.readings.orderBy('timestamp').first();
-        const last = await db.readings.orderBy('timestamp').reverse().first();
-        if (first && last) {
-          const diffMs = new Date(last.timestamp).getTime() - new Date(first.timestamp).getTime();
-          spanDays = Math.max(0.1, diffMs / (1000 * 60 * 60 * 24));
+        let spanDays = 0;
+        if (rCount > 0) {
+          const first = await db.readings.orderBy('timestamp').first();
+          const last = await db.readings.orderBy('timestamp').reverse().first();
+          if (first && last) {
+            const diffMs = new Date(last.timestamp).getTime() - new Date(first.timestamp).getTime();
+            spanDays = Math.max(0.1, diffMs / (1000 * 60 * 60 * 24));
+          }
         }
+
+        const pref = await db.preferences.get('default_household');
+        const constraints =
+          pref?.comfort_constraints && pref.comfort_constraints.length > 0
+            ? pref.comfort_constraints
+            : rCount >= 168
+            ? [
+                {
+                  id: 'default_c',
+                  type: 'temperature_bound' as const,
+                  description: 'Default AC comfort bounds',
+                  flexibility: 'medium' as const,
+                  confidence: 1.0,
+                },
+              ]
+            : [];
+
+        const output = generateHouseholdRecommendation({
+          baselineKwh: latestUnitsKwh,
+          tariff,
+          belief: currentBelief,
+          askedQuestionIds: askedIds,
+          capabilityInputs: {
+            bills_count: bCount,
+            readings_count: rCount,
+            readings_span_days: spanDays,
+            comfort_constraints: constraints,
+            active_tariff: tariff,
+          },
+        });
+
+        setEngineOutput(output);
+
+        if (output.outcome === 'ask_question' && output.candidateQuestion) {
+          setActiveQuestion(output.candidateQuestion);
+        } else {
+          setActiveQuestion(null);
+        }
+      } catch (err) {
+        console.error('Failed to run recommendation engine', err);
       }
-
-      const pref = await db.preferences.get('default_household');
-      const constraints = pref?.comfort_constraints && pref.comfort_constraints.length > 0
-        ? pref.comfort_constraints
-        : (rCount >= 168 ? [{ id: 'default_c', type: 'temperature_bound' as const, description: 'Default AC comfort bounds', flexibility: 'medium' as const, confidence: 1.0 }] : []);
-
-      const output = generateHouseholdRecommendation({
-        baselineKwh: latestUnitsKwh,
-        tariff: TNPDCL_LT1A_2026_MAY10,
-        belief: currentBelief,
-        askedQuestionIds: askedIds,
-        capabilityInputs: {
-          bills_count: bCount,
-          readings_count: rCount,
-          readings_span_days: spanDays,
-          comfort_constraints: constraints,
-          active_tariff: TNPDCL_LT1A_2026_MAY10,
-        },
-      });
-
-      setEngineOutput(output);
-
-      if (output.outcome === 'ask_question' && output.candidateQuestion) {
-        setActiveQuestion(output.candidateQuestion);
-      } else {
-        setActiveQuestion(null);
-      }
-    } catch (err) {
-      console.error('Failed to run recommendation engine', err);
-    }
-  }, [latestUnitsKwh]);
+    },
+    [latestUnitsKwh, tariff]
+  );
 
   useEffect(() => {
     runEngine(belief, askedQuestionIds);
@@ -99,7 +116,17 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
   const handleAnswerQuestion = (responseVal: 1 | -1 | 0) => {
     if (!activeQuestion) return;
 
-    const updatedBelief = updateBeliefWithFeedback(belief, activeQuestion.category === 'cooling' ? 0 : activeQuestion.category === 'laundry' ? 1 : activeQuestion.category === 'water_heating' ? 2 : 3, responseVal);
+    const updatedBelief = updateBeliefWithFeedback(
+      belief,
+      activeQuestion.category === 'cooling'
+        ? 0
+        : activeQuestion.category === 'laundry'
+        ? 1
+        : activeQuestion.category === 'water_heating'
+        ? 2
+        : 3,
+      responseVal
+    );
     const updatedAsked = [...askedQuestionIds, activeQuestion.id];
 
     setBelief(updatedBelief);
@@ -127,7 +154,7 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
       });
 
       if (response === 'tried_it') {
-        // Log to savings ledger
+        // Log to savings ledger strictly as unverified user_reported (NOT meter-verified!)
         await db.savings.add({
           id: `sav_${Date.now()}`,
           recommendation_id: rec.id,
@@ -136,14 +163,20 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
           period_start: new Date().toISOString().slice(0, 10),
           period_end: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10),
           estimated_savings: rec.savings_estimate.point_estimate,
-          verified_actual_savings: rec.savings_estimate.lower_bound,
           basis: 'user_reported',
-          verified: true,
+          verified: false,
           notes: rec.action.title[language] ?? rec.action.title.en,
         });
 
         // Update belief: user is flexible
-        const featIdx = rec.action.appliance_category === 'cooling' ? 0 : rec.action.appliance_category === 'laundry' ? 1 : rec.action.appliance_category === 'water_heating' ? 2 : 3;
+        const featIdx =
+          rec.action.appliance_category === 'cooling'
+            ? 0
+            : rec.action.appliance_category === 'laundry'
+            ? 1
+            : rec.action.appliance_category === 'water_heating'
+            ? 2
+            : 3;
         const newBelief = updateBeliefWithFeedback(belief, featIdx, 1);
         setBelief(newBelief);
 
@@ -151,7 +184,14 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
         onActionLogged?.();
       } else if (response === 'impractical') {
         // Update belief: user is inflexible
-        const featIdx = rec.action.appliance_category === 'cooling' ? 0 : rec.action.appliance_category === 'laundry' ? 1 : rec.action.appliance_category === 'water_heating' ? 2 : 3;
+        const featIdx =
+          rec.action.appliance_category === 'cooling'
+            ? 0
+            : rec.action.appliance_category === 'laundry'
+            ? 1
+            : rec.action.appliance_category === 'water_heating'
+            ? 2
+            : 3;
         const newBelief = updateBeliefWithFeedback(belief, featIdx, -1);
         setBelief(newBelief);
 
@@ -172,7 +212,10 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
     <div className="space-y-6">
       {/* Toast Notification */}
       {feedbackToast && (
-        <div className="p-3 bg-emerald-700 text-white text-xs font-semibold rounded-lg shadow-md flex items-center gap-2 animate-fadeIn">
+        <div
+          role="status"
+          className="p-3 bg-emerald-700 text-white text-xs font-semibold rounded-lg shadow-md flex items-center gap-2 animate-fadeIn"
+        >
           <Check className="w-4 h-4 text-emerald-200" />
           <span>{feedbackToast}</span>
         </div>
@@ -190,14 +233,19 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
       {/* Main Container */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-blue-50/50 via-indigo-50/30 to-white">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-blue-600 rounded-lg text-white">
-              <Lightbulb className="w-5 h-5" />
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-blue-600 rounded-lg text-white">
+                <Lightbulb className="w-5 h-5" />
+              </div>
+              <div>
+                <h2 className="text-lg font-bold text-gray-900">{t('recommendationsTitle')}</h2>
+                <p className="text-xs text-gray-600 mt-0.5">{t('recommendationsSubtitle')}</p>
+              </div>
             </div>
-            <div>
-              <h2 className="text-lg font-bold text-gray-900">{t('recommendationsTitle')}</h2>
-              <p className="text-xs text-gray-600 mt-0.5">{t('recommendationsSubtitle')}</p>
-            </div>
+            <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+              {tariff.name}
+            </span>
           </div>
         </div>
 
@@ -224,7 +272,7 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
             </div>
           )}
 
-          {/* Case 3: Verified Actionable Recommendation Card */}
+          {/* Case 3: Modeled Actionable Recommendation Card */}
           {rec && (
             <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-6 hover:border-emerald-300 transition-colors">
               {/* Header: Title & Badges */}
@@ -242,9 +290,9 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
                 <div className="flex items-center gap-2 flex-wrap">
                   {/* Provenance Badge */}
                   <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200">
-                    {t('provenanceSimulated')}
+                    {t('modeledEstimateBadge')}
                   </span>
-                  {/* Confidence Badge */}
+                  {/* Comfort Bound Badge */}
                   <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
                     {t('conservativeLowerBoundBadge')}
                   </span>

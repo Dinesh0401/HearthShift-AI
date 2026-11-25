@@ -105,7 +105,7 @@ export const SavingsLedger: React.FC<SavingsLedgerProps> = ({ refreshTrigger = 0
               <p className="text-2xl font-bold font-mono text-emerald-700">
                 ₹{totalTrackedImpactInr.toFixed(2)}
               </p>
-              <p className="text-[10px] text-emerald-600 mt-0.5">Estimated & user-reported</p>
+              <p className="text-[10px] text-emerald-700 mt-0.5">Estimated, user-reported &amp; unadjusted</p>
             </div>
           </div>
 
@@ -118,7 +118,7 @@ export const SavingsLedger: React.FC<SavingsLedgerProps> = ({ refreshTrigger = 0
               <p className="text-2xl font-bold font-mono text-teal-700">
                 ₹{totalVerifiedSavingsInr.toFixed(2)}
               </p>
-              <p className="text-[10px] text-teal-600 mt-0.5">IPMVP counterfactual adjusted</p>
+              <p className="text-[10px] text-teal-700 mt-0.5">{t('mvRequiredNote')}</p>
             </div>
           </div>
 
@@ -131,7 +131,7 @@ export const SavingsLedger: React.FC<SavingsLedgerProps> = ({ refreshTrigger = 0
               <p className="text-2xl font-bold font-mono text-blue-700">
                 {records.length}
               </p>
-              <p className="text-[10px] text-blue-600 mt-0.5">Actions logged</p>
+              <p className="text-[10px] text-blue-700 mt-0.5">Actions logged</p>
             </div>
           </div>
         </div>
@@ -162,7 +162,7 @@ export const SavingsLedger: React.FC<SavingsLedgerProps> = ({ refreshTrigger = 0
                   <th className="px-4 py-3 text-left font-semibold text-gray-600">{t('recordAction')}</th>
                   <th className="px-4 py-3 text-left font-semibold text-gray-600">{t('recordSavings')}</th>
                   <th className="px-4 py-3 text-left font-semibold text-gray-600">{t('recordBasis')}</th>
-                  <th className="px-4 py-3 text-right font-semibold text-gray-600">Actions</th>
+                  <th className="px-4 py-3 text-right font-semibold text-gray-600">{t('colActions')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 bg-white">
@@ -184,6 +184,8 @@ export const SavingsLedger: React.FC<SavingsLedgerProps> = ({ refreshTrigger = 0
                       <button
                         type="button"
                         onClick={() => handleDelete(r.id)}
+                        title={t('deleteBtn')}
+                        aria-label={`Delete savings entry ${r.notes ?? r.id}`}
                         className="text-gray-400 hover:text-red-600 p-1 rounded transition-colors"
                       >
                         <Trash2 className="w-3.5 h-3.5" />

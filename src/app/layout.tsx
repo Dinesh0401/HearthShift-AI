@@ -22,12 +22,12 @@ export default function RootLayout({
           <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {children}
           </main>
-          <footer className="border-t border-slate-200 py-6 text-center text-xs text-slate-500">
+          <footer className="border-t border-slate-200 py-6 text-center text-xs text-slate-600 px-4">
             <p>
               HearthShift AI · Decision-Aware, Privacy-Minimal Household Energy Assistant
             </p>
-            <p className="mt-1 text-[11px] text-slate-400">
-              Deterministic Tariff Engine · 100% On-Device IndexedDB · Zero Cloud Telemetry
+            <p className="mt-1 text-[11px] text-slate-500">
+              Experimental Research Alpha · Not Utility-Certified or Guaranteed Savings · 100% On-Device IndexedDB
             </p>
           </footer>
         </LanguageProvider>

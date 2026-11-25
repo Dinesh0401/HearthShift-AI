@@ -15,11 +15,11 @@ Mixing Python scientific experiment scripts directly into the web application so
 We establish a clean, dual-track architectural separation:
 1. **Scientific Research Engine (`research/`):**
    * Implemented in Python 3.10+.
-   * Contains the synthetic household simulator (`hearthshift-sim`), public dataset loaders (LCL, REFIT, UCI), benchmark baseline implementations (B1–B5), ablation experiments, and statistical plotting scripts.
-   * Exports standardized algorithm specifications and JSON parameter test vectors.
+   * Contains the synthetic household simulator (`hearthshift-sim`), public dataset loaders (LCL, REFIT, UCI), benchmark baseline implementations (B1–B9), statistical power analysis (`research/experiments/power_analysis.py`), ablation experiments, and plotting scripts.
+   * Exports standardized algorithm specifications, power budgets (`research/results/power_analysis_phase4a.json`), and JSON parameter test vectors.
 2. **Production Web Application (`src/`):**
    * Implemented in strict TypeScript with Next.js / React.
-   * Implements the validated SPARE-HEM algorithms natively in TypeScript/WASM for zero-dependency client-side execution.
+   * Implements the validated SPARE-HEM algorithms natively in pure client-side TypeScript (with Web Workers such as `src/workers/csv-parser.worker.ts` for background CSV parsing; zero WebAssembly binaries) for zero-dependency client-side execution.
    * Validated against the research engine via automated cross-language conformance fixtures (`tests/fixtures/`).
 
 ## Consequences
