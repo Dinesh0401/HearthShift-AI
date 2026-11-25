@@ -25,6 +25,7 @@ import { ScenarioSimulator } from '../components/dashboard/ScenarioSimulator';
 import { RecommendationFeed } from '../components/dashboard/RecommendationFeed';
 import { SavingsLedger } from '../components/dashboard/SavingsLedger';
 import { PrivacyDataManager } from '../components/dashboard/PrivacyDataManager';
+import { ChangelogModal, AlphaFeedbackModal } from '../components/alpha/AlphaModals';
 import { useLanguage } from '../locales/i18n';
 import {
   Receipt,
@@ -39,6 +40,9 @@ import {
   AlertTriangle,
   Info,
   Trash2,
+  BookOpen,
+  FileText,
+  MessageSquarePlus,
 } from 'lucide-react';
 
 type ActiveTab = 'bills' | 'import' | 'intervals' | 'simulator' | 'recommendations' | 'savings' | 'privacy';
@@ -52,6 +56,8 @@ export default function DashboardPage() {
   const [activeTariffId, setActiveTariffId] = useState<string>(TNPDCL_LT1A_2026_MAY10.id);
   const [isDemoMode, setIsDemoMode] = useState<boolean>(false);
   const [isDemoBusy, setIsDemoBusy] = useState<boolean>(false);
+  const [showChangelog, setShowChangelog] = useState<boolean>(false);
+  const [showFeedback, setShowFeedback] = useState<boolean>(false);
 
   // Sync persisted region tariff & demo flag after mount
   useEffect(() => {
@@ -280,7 +286,50 @@ export default function DashboardPage() {
             <p className="font-medium text-slate-700">{t('tariffVerificationNote')}</p>
           </div>
         </details>
+
+        {/* How HearthShift Works + Changelog & Zero-Telemetry Feedback Triggers */}
+        <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-3">
+          <details className="flex-1 rounded-xl border border-emerald-200/80 bg-emerald-50/40 px-4 py-2.5 text-xs text-slate-700">
+            <summary className="cursor-pointer font-semibold text-emerald-950 flex items-center gap-2 select-none">
+              <BookOpen className="w-4 h-4 text-emerald-700 shrink-0" />
+              <span>{t('howItWorksTitle')}</span>
+            </summary>
+            <ul className="mt-2.5 pt-2.5 border-t border-emerald-200/60 space-y-1.5 text-[11px] text-slate-700 leading-relaxed">
+              <li>{t('howItWorksStep1')}</li>
+              <li>{t('howItWorksStep2')}</li>
+              <li>{t('howItWorksStep3')}</li>
+              <li className="text-amber-900 font-medium pt-0.5">{t('howItWorksBoundaries')}</li>
+            </ul>
+          </details>
+
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => setShowChangelog(true)}
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold transition-colors"
+            >
+              <FileText className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+              <span>{t('openChangelogBtn')}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setShowFeedback(true)}
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-blue-200 bg-blue-50/70 hover:bg-blue-100 text-blue-900 text-xs font-semibold transition-colors"
+            >
+              <MessageSquarePlus className="w-3.5 h-3.5 text-blue-700 shrink-0" />
+              <span>{t('openFeedbackBtn')}</span>
+            </button>
+          </div>
+        </div>
       </div>
+
+      <ChangelogModal isOpen={showChangelog} onClose={() => setShowChangelog(false)} />
+      <AlphaFeedbackModal
+        isOpen={showFeedback}
+        onClose={() => setShowFeedback(false)}
+        activeTariffId={activeTariff.id}
+      />
 
       {/* Top Section: Capability Badge & Tariff Headroom Card */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

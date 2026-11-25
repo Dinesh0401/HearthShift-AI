@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
+import { isAllowedAppOrigin } from './helpers/origin';
 
 test.describe('HearthShift AI — Phase 4A Alpha Security, Same-Origin Privacy, Demo Mode & Real-User Workflow', () => {
   test.beforeAll(async () => {
@@ -35,15 +36,14 @@ test.describe('HearthShift AI — Phase 4A Alpha Security, Same-Origin Privacy, 
 
     page.on('request', (request) => {
       const url = request.url();
-      const isLocalOrigin =
-        url.startsWith('http://localhost:3008') || url.startsWith('http://127.0.0.1:3008');
+      const isAppOrigin = isAllowedAppOrigin(url) && !url.startsWith('data:') && !url.startsWith('blob:');
 
-      if (!isLocalOrigin && !url.startsWith('data:') && !url.startsWith('blob:')) {
+      if (!isAllowedAppOrigin(url)) {
         externalRequests.push(`${request.method()} ${url}`);
         return;
       }
 
-      if (isLocalOrigin) {
+      if (isAppOrigin) {
         const method = request.method();
         const postData = request.postData();
         if (method !== 'GET' && method !== 'HEAD') {

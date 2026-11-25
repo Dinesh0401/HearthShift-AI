@@ -67,41 +67,43 @@ Per [`next.config.mjs`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI
 
 Managed HTTPS edge hosting eliminates Node.js server maintenance and guarantees zero application backend attack surface.
 
-### Option 1A: Vercel (Using `vercel.json`)
+> [!TIP]
+> **Phase 4B Preferred Hosting Target: Cloudflare Pages**
+> Cloudflare Pages directly deploys Next.js static exports (`NEXT_STATIC_EXPORT=true npm run build` → `out/`) and honors `out/_headers` natively with zero server runtime. Review the complete preview → production checklist in [`PHASE-4B-CLOUDFLARE-DEPLOYMENT-CHECKLIST.md`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/docs/release/PHASE-4B-CLOUDFLARE-DEPLOYMENT-CHECKLIST.md).
 
-[`vercel.json`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/vercel.json) configures strict security headers on `/(.*)` at the Vercel edge network.
+### Option 1A: Cloudflare Pages (Recommended Primary Target — `out/` + `public/_headers`)
 
-1. **Project Settings:**
-   - **Framework Preset:** Next.js
-   - **Install Command:** `npm ci`
-   - **Build Command:** `npm run build` (or `NEXT_STATIC_EXPORT=true npm run build` with Output Directory `out` if strict static-only artifact hosting is preferred)
-   - **Environment Variables:** Set only optional non-secret flags from [`.env.example`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/.env.example) (`NEXT_PUBLIC_APP_ENV=production`, `NEXT_PUBLIC_DEMO_ENABLED=true`). Do **not** configure server secrets.
-   - **Platform Analytics:** Disable Vercel Speed Insights and Web Analytics in the Vercel dashboard to preserve the strict **zero outbound telemetry** invariant.
-2. **Deploy (with authorized credentials):**
+[`public/_headers`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/public/_headers) is copied automatically into `out/_headers` during `next build` when `NEXT_STATIC_EXPORT=true`, enforcing all 8 security headers at Cloudflare edge nodes.
+
+1. **Build & Local Static Verification:**
    ```bash
-   npx vercel --prod
+   NEXT_STATIC_EXPORT=true npm run build
+   npm run verify:static
+   npm run test:e2e:static
    ```
-
-### Option 1B: Cloudflare Pages / Netlify (Static Export + `public/_headers`)
-
-[`public/_headers`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/public/_headers) is copied automatically into `out/_headers` during `next build` when `NEXT_STATIC_EXPORT=true`, enforcing identical security headers at Cloudflare Pages and Netlify edge nodes.
-
-1. **Build Configuration:**
+2. **Cloudflare Pages Project Settings:**
    - **Build Command:** `NEXT_STATIC_EXPORT=true npm run build`
    - **Build Output / Publish Directory:** `out`
-   - **Environment Variables:** `NEXT_STATIC_EXPORT=true`, `NEXT_PUBLIC_APP_ENV=production`
-   - **Platform Analytics:** Disable Cloudflare Web Analytics / Netlify Analytics injection so no third-party `<script>` tags violate `script-src 'self' 'unsafe-inline'` or `connect-src 'self'`.
-2. **Deploy (with authorized credentials):**
-   - **Cloudflare Pages:**
-     ```bash
-     NEXT_STATIC_EXPORT=true npm run build
-     npx wrangler pages deploy out --project-name hearthshift-ai
-     ```
-   - **Netlify:**
-     ```bash
-     NEXT_STATIC_EXPORT=true npm run build
-     npx netlify deploy --prod --dir=out
-     ```
+   - **Environment Variables:** `NEXT_STATIC_EXPORT=true`, `NEXT_PUBLIC_APP_ENV=production`, `NEXT_PUBLIC_DEMO_ENABLED=true`
+   - **Platform Analytics:** Ensure **Cloudflare Web Analytics** is disabled so zero injected analytics beacons violate `connect-src 'self'` or `script-src 'self' 'unsafe-inline'`.
+3. **Preview -> Production Deploy (Requires Authorized Operator Login):**
+   ```bash
+   npx wrangler login
+   npx wrangler pages deploy out --project-name hearthshift-ai --branch preview
+   # Verify live preview URL first (`curl -sI` + `E2E_BASE_URL=<PREVIEW_URL> npx playwright test`)
+   npx wrangler pages deploy out --project-name hearthshift-ai --branch main
+   ```
+
+### Option 1B: Vercel / Netlify Alternatives
+
+[`vercel.json`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/vercel.json) configures identical security headers on `/(.*)` at the Vercel edge network; Netlify likewise consumes `out/_headers`. Keep Vercel Speed Insights / Web Analytics and Netlify Analytics disabled.
+```bash
+# Vercel (Node or static export)
+npx vercel --prod
+
+# Netlify (Static export)
+NEXT_STATIC_EXPORT=true npm run build && npx netlify deploy --prod --dir=out
+```
 
 ---
 

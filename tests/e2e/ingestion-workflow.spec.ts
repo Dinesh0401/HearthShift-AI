@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
+import { isAllowedAppOrigin } from './helpers/origin';
 
 test.describe('HearthShift AI — Full Ingestion & Privacy Verification Workflow', () => {
   test.beforeAll(async () => {
@@ -19,13 +20,7 @@ test.describe('HearthShift AI — Full Ingestion & Privacy Verification Workflow
     const externalTelemetryRequests: string[] = [];
     page.on('request', (request) => {
       const url = request.url();
-      // Allow internal Next.js assets on localhost
-      if (
-        !url.startsWith('http://localhost:3008') &&
-        !url.startsWith('http://127.0.0.1:3008') &&
-        !url.startsWith('data:') &&
-        !url.startsWith('blob:')
-      ) {
+      if (!isAllowedAppOrigin(url)) {
         externalTelemetryRequests.push(url);
       }
     });
