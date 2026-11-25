@@ -10,4 +10,7 @@ test-results/
 playwright-report/
 out/
 .playwright/
+__pycache__/
+*.pyc
+*.pyo
 
