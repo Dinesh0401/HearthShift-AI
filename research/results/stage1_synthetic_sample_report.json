@@ -1,0 +1,376 @@
+{
+  "report_type": "SYNTHETIC_SAMPLE_OUTPUT_NOT_HUMAN_DATA",
+  "is_synthetic_fixture": true,
+  "sample_size_n": 8,
+  "small_sample_epistemic_note": "Cohort N=8 is strictly formative usability testing. Small-N metrics cannot establish population-wide statistical efficacy, bill reduction, or energy savings; inspect individual sessions and 95% Clopper-Pearson intervals.",
+  "task_completion_summary": {
+    "total_step_attempts": 80,
+    "unassisted_count": 75,
+    "assisted_count": 4,
+    "failed_count": 1,
+    "overall_unassisted_rate": 0.9375,
+    "per_step": [
+      {
+        "step_number": 1,
+        "step_name": "Step 1: Onboarding & Advisory Disclaimer Check",
+        "unassisted_count": 8,
+        "assisted_count": 0,
+        "failed_count": 0,
+        "unassisted_rate": 1.0,
+        "unassisted_ci95": [
+          0.6306,
+          1.0
+        ],
+        "failure_rate": 0.0,
+        "median_seconds": 62.5,
+        "iqr_seconds": [
+          57.2,
+          69.0
+        ],
+        "exceeds_30pct_failure_threshold": false
+      },
+      {
+        "step_number": 2,
+        "step_name": "Step 2: Language Toggle & Capability Inspection",
+        "unassisted_count": 8,
+        "assisted_count": 0,
+        "failed_count": 0,
+        "unassisted_rate": 1.0,
+        "unassisted_ci95": [
+          0.6306,
+          1.0
+        ],
+        "failure_rate": 0.0,
+        "median_seconds": 44.5,
+        "iqr_seconds": [
+          39.5,
+          46.8
+        ],
+        "exceeds_30pct_failure_threshold": false
+      },
+      {
+        "step_number": 3,
+        "step_name": "Step 3: Manual Historical Bill Entry",
+        "unassisted_count": 7,
+        "assisted_count": 1,
+        "failed_count": 0,
+        "unassisted_rate": 0.875,
+        "unassisted_ci95": [
+          0.4735,
+          0.9968
+        ],
+        "failure_rate": 0.0,
+        "median_seconds": 100.0,
+        "iqr_seconds": [
+          92.2,
+          114.5
+        ],
+        "exceeds_30pct_failure_threshold": false
+      },
+      {
+        "step_number": 4,
+        "step_name": "Step 4: Tariff Headroom & 500 kWh Cliff Interpretation",
+        "unassisted_count": 8,
+        "assisted_count": 0,
+        "failed_count": 0,
+        "unassisted_rate": 1.0,
+        "unassisted_ci95": [
+          0.6306,
+          1.0
+        ],
+        "failure_rate": 0.0,
+        "median_seconds": 59.5,
+        "iqr_seconds": [
+          51.0,
+          63.0
+        ],
+        "exceeds_30pct_failure_threshold": false
+      },
+      {
+        "step_number": 5,
+        "step_name": "Step 5: Interval CSV Import & Worker Feedback",
+        "unassisted_count": 6,
+        "assisted_count": 1,
+        "failed_count": 1,
+        "unassisted_rate": 0.75,
+        "unassisted_ci95": [
+          0.3491,
+          0.9681
+        ],
+        "failure_rate": 0.125,
+        "median_seconds": 101.0,
+        "iqr_seconds": [
+          87.5,
+          124.8
+        ],
+        "exceeds_30pct_failure_threshold": false
+      },
+      {
+        "step_number": 6,
+        "step_name": "Step 6: Interval Chart & Standby Baseload Review",
+        "unassisted_count": 8,
+        "assisted_count": 0,
+        "failed_count": 0,
+        "unassisted_rate": 1.0,
+        "unassisted_ci95": [
+          0.6306,
+          1.0
+        ],
+        "failure_rate": 0.0,
+        "median_seconds": 64.0,
+        "iqr_seconds": [
+          58.0,
+          70.2
+        ],
+        "exceeds_30pct_failure_threshold": false
+      },
+      {
+        "step_number": 7,
+        "step_name": "Step 7: Counterfactual Scenario Exploration",
+        "unassisted_count": 7,
+        "assisted_count": 1,
+        "failed_count": 0,
+        "unassisted_rate": 0.875,
+        "unassisted_ci95": [
+          0.4735,
+          0.9968
+        ],
+        "failure_rate": 0.0,
+        "median_seconds": 110.0,
+        "iqr_seconds": [
+          98.0,
+          115.0
+        ],
+        "exceeds_30pct_failure_threshold": false
+      },
+      {
+        "step_number": 8,
+        "step_name": "Step 8: Recommendation & Q0.05 Bound Audit",
+        "unassisted_count": 7,
+        "assisted_count": 1,
+        "failed_count": 0,
+        "unassisted_rate": 0.875,
+        "unassisted_ci95": [
+          0.4735,
+          0.9968
+        ],
+        "failure_rate": 0.0,
+        "median_seconds": 95.5,
+        "iqr_seconds": [
+          89.5,
+          104.0
+        ],
+        "exceeds_30pct_failure_threshold": false
+      },
+      {
+        "step_number": 9,
+        "step_name": "Step 9: Adaptive EVSI Modal & Provenance Ledger",
+        "unassisted_count": 8,
+        "assisted_count": 0,
+        "failed_count": 0,
+        "unassisted_rate": 1.0,
+        "unassisted_ci95": [
+          0.6306,
+          1.0
+        ],
+        "failure_rate": 0.0,
+        "median_seconds": 73.0,
+        "iqr_seconds": [
+          67.8,
+          79.0
+        ],
+        "exceeds_30pct_failure_threshold": false
+      },
+      {
+        "step_number": 10,
+        "step_name": "Step 10: Privacy Export, Feedback Review & Wipe",
+        "unassisted_count": 8,
+        "assisted_count": 0,
+        "failed_count": 0,
+        "unassisted_rate": 1.0,
+        "unassisted_ci95": [
+          0.6306,
+          1.0
+        ],
+        "failure_rate": 0.0,
+        "median_seconds": 73.5,
+        "iqr_seconds": [
+          69.5,
+          82.2
+        ],
+        "exceeds_30pct_failure_threshold": false
+      }
+    ]
+  },
+  "sus_summary": {
+    "per_participant": [
+      {
+        "participant_id": "SYN-P01",
+        "locale": "en",
+        "device": "desktop",
+        "sus_score": 80.0
+      },
+      {
+        "participant_id": "SYN-P02",
+        "locale": "ta",
+        "device": "mobile",
+        "sus_score": 72.5
+      },
+      {
+        "participant_id": "SYN-P03",
+        "locale": "en",
+        "device": "desktop",
+        "sus_score": 82.5
+      },
+      {
+        "participant_id": "SYN-P04",
+        "locale": "ta",
+        "device": "desktop",
+        "sus_score": 72.5
+      },
+      {
+        "participant_id": "SYN-P05",
+        "locale": "en",
+        "device": "mobile",
+        "sus_score": 77.5
+      },
+      {
+        "participant_id": "SYN-P06",
+        "locale": "ta",
+        "device": "mobile",
+        "sus_score": 65.0
+      },
+      {
+        "participant_id": "SYN-P07",
+        "locale": "en",
+        "device": "desktop",
+        "sus_score": 92.5
+      },
+      {
+        "participant_id": "SYN-P08",
+        "locale": "ta",
+        "device": "desktop",
+        "sus_score": 75.0
+      }
+    ],
+    "mean": 77.19,
+    "sd": 8.18,
+    "median": 76.25,
+    "iqr": [
+      72.5,
+      80.62
+    ],
+    "min": 65.0,
+    "max": 92.5
+  },
+  "seq_and_burden_summary": {
+    "seq_manual_bill_median": 6.0,
+    "seq_csv_import_median": 5.0,
+    "qb1_intrusiveness_mean": 1.75,
+    "qb2_effort_mean": 1.88,
+    "willingness_to_try_median": 4.0,
+    "low_tolerance_or_high_burden_fraction": 0.25
+  },
+  "safety_comprehension": {
+    "SAF-1": {
+      "first_attempt_pass_count": 7,
+      "first_attempt_pass_rate": 0.875,
+      "first_attempt_ci95": [
+        0.4735,
+        0.9968
+      ],
+      "post_debrief_pass_count": 8,
+      "post_debrief_pass_rate": 1.0,
+      "post_debrief_ci95": [
+        0.6306,
+        1.0
+      ],
+      "initial_misconception_detected": true
+    },
+    "SAF-2": {
+      "first_attempt_pass_count": 8,
+      "first_attempt_pass_rate": 1.0,
+      "first_attempt_ci95": [
+        0.6306,
+        1.0
+      ],
+      "post_debrief_pass_count": 8,
+      "post_debrief_pass_rate": 1.0,
+      "post_debrief_ci95": [
+        0.6306,
+        1.0
+      ],
+      "initial_misconception_detected": false
+    },
+    "SAF-3": {
+      "first_attempt_pass_count": 7,
+      "first_attempt_pass_rate": 0.875,
+      "first_attempt_ci95": [
+        0.4735,
+        0.9968
+      ],
+      "post_debrief_pass_count": 8,
+      "post_debrief_pass_rate": 1.0,
+      "post_debrief_ci95": [
+        0.6306,
+        1.0
+      ],
+      "initial_misconception_detected": true
+    },
+    "SAF-4": {
+      "first_attempt_pass_count": 8,
+      "first_attempt_pass_rate": 1.0,
+      "first_attempt_ci95": [
+        0.6306,
+        1.0
+      ],
+      "post_debrief_pass_count": 8,
+      "post_debrief_pass_rate": 1.0,
+      "post_debrief_ci95": [
+        0.6306,
+        1.0
+      ],
+      "initial_misconception_detected": false
+    }
+  },
+  "defect_counts": {
+    "S0": 0,
+    "S1": 0,
+    "S2": 2,
+    "S3": 1
+  },
+  "defects": [
+    {
+      "id": "SYN-DEF-01",
+      "step": 5,
+      "severity": "S2",
+      "note": "Synthetic test case: Tamil CSV button label took >90s prompt on mobile.",
+      "participant_id": "SYN-P02"
+    },
+    {
+      "id": "SYN-DEF-02",
+      "step": 8,
+      "severity": "S2",
+      "note": "Synthetic test case: initial SAF-1 misconception regarding 'Tried It!' vs manual AC remote control.",
+      "participant_id": "SYN-P04"
+    },
+    {
+      "id": "SYN-DEF-03",
+      "step": 5,
+      "severity": "S3",
+      "note": "Synthetic test case: mobile CSV file picker explanation unclear on small Android viewport.",
+      "participant_id": "SYN-P06"
+    }
+  ],
+  "go_no_go_gates": {
+    "zero_s0_s1_defects": true,
+    "saf1_saf2_post_debrief_100pct": true,
+    "saf1_saf2_first_attempt_100pct_no_copy_remediation_needed": false,
+    "saf3_saf4_post_debrief_ge_90pct": true,
+    "unassisted_completion_ge_80pct": true,
+    "no_single_task_gt_30pct_failure": true,
+    "mean_sus_ge_70": true,
+    "c_ask_escalation_triggered": false
+  },
+  "stage2_go_without_ui_remediation": false
+}

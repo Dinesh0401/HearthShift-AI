@@ -190,8 +190,9 @@ HearthShift AI treats user privacy not merely as an administrative policy, but a
 
 ### 4.1 Zero Cloud Telemetry Enforcement
 - **Network Request Suppression:** The web application is engineered with zero remote endpoints. Runtime network monitoring confirms $0$ outbound analytics requests, $0$ performance logging calls, and $0$ remote tracking pixels.
-- **Service Worker / PWA Caching:** Core static assets (JavaScript/TypeScript bundles, CSS, public tariff definitions; zero WebAssembly binaries) are cached locally, allowing the application to operate offline after initial load.
+- **Static Hosting & Browser-Profile Persistence (No Offline Service Worker Cache in `v0.1.0-alpha`):** While `public/manifest.json` provides web-app metadata and open browser sessions compute strictly in memory and local IndexedDB (`HearthShiftDB`), initial page loads and reloads require network access to the HTTPS host (no offline Service Worker cache is shipped yet). Records persist across tab closes inside the device's browser profile until explicitly wiped, evicted under disk pressure, or closed in an Incognito/Private window.
 - **Self-Contained Decision Engine:** TR-VOI evaluations, numerical integrations, and database operations execute purely in-memory on the client machine.
+- **Authoritative Regulatory Mapping:** All TNPDCL LT-1A tariff examples and official order mappings are audited in [`REGULATORY-SOURCE-TRACEABILITY.md`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/docs/pilot/REGULATORY-SOURCE-TRACEABILITY.md).
 
 ### 4.2 Local IndexedDB Architecture
 Data persistence is handled through Dexie.js wrapping the browser's IndexedDB engine:

@@ -1,12 +1,13 @@
 # HearthShift AI — Stage 1 Usability & Safety Comprehension Study Protocol
 ## Phase 4A Stage 3 Human-Factors Pre-Pilot (`N = 5 to 10` Households)
 
-**Document Status:** Proposed Pre-Pilot Protocol (Pending Ethics Review & Recruitment — Not Executed)  
-**Study Role:** Phase 4A Stage 3 Deliverable — Field Evaluation Stage 1 (Pre-Pilot Usability & Safety Comprehension Check, strictly preceding the Stage 2 Powered RCT)  
-**Version:** 1.0.0  
+**Document Status:** Phase 4C-A Pre-Study Protocol (Frozen Methods · Pending Ethics Review & Authorization — Not Executed)  
+**Study Role:** Stage 1 Pre-Pilot Usability & Safety Comprehension Check (strictly preceding any Stage 2 Powered RCT)  
+**Version:** 2.0.0 (Phase 4C-A Methodological & Privacy Revision)  
 **Date:** November 25, 2026  
+**Target Live URL:** `https://hearthshift-ai.pages.dev/`  
 **Target Cohort:** $N = 5\text{ to }10$ Consenting Adult Domestic Electricity Consumers (Tamil Nadu / LT-1A context)  
-**Related Protocols:** [`FIELD-PILOT-PROTOCOL.md`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/docs/pilot/FIELD-PILOT-PROTOCOL.md) · [`MV-METHODOLOGY-REVIEW.md`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/docs/pilot/MV-METHODOLOGY-REVIEW.md)
+**Companion Materials:** [`PHASE-4C-USABILITY-STUDY-EXECUTION-KIT.md`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/docs/pilot/PHASE-4C-USABILITY-STUDY-EXECUTION-KIT.md) · [`REGULATORY-SOURCE-TRACEABILITY.md`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/docs/pilot/REGULATORY-SOURCE-TRACEABILITY.md) · [`FIELD-PILOT-PROTOCOL.md`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/docs/pilot/FIELD-PILOT-PROTOCOL.md) · [`MV-METHODOLOGY-REVIEW.md`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/docs/pilot/MV-METHODOLOGY-REVIEW.md) · [`stage1_usability_scoring.py`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/research/experiments/stage1_usability_scoring.py)
 
 ---
 
@@ -45,11 +46,12 @@ Per formative human-factors engineering standards (Nielsen & Landauer, 1993; Vir
   - Households relying on continuous life-support or critical medical electrical equipment.
   - Individuals involved in developing or auditing HearthShift AI (to prevent expert-bias distortion).
 
-### 2.2 Informed Consent & Study Safeguards
+### 2.2 Informed Consent, Browser-Profile Storage & Free-Text Feedback Governance
 1. **Explicit Experimental Status:** Consent form states clearly that HearthShift AI is a research prototype, provides advisory estimates only, does **not** connect to utility meters or control appliances, and offers **no guarantee** of financial savings.
-2. **Local-First Data Protection During Sessions:** Participants run the application in their own browser session (or a clean private/guest browser profile on a study device wiped immediately post-session via `deleteAllUserData()`). Moderators **must not** record consumer service numbers, street addresses, or raw bill PDFs in study logs.
-3. **Voluntary Participation & Withdrawal:** Participants may skip any task, decline to upload personal CSVs (using provided anonymized sample CSVs instead), or withdraw at any time without penalty.
-4. **Session Format:** 45–60 minute moderated session (in-person or screen-shared remote), conducted in English or Tamil according to participant preference, followed by structured debriefing.
+2. **Accurate Browser-Profile Storage Disclosure:** Consent documents accurately explain that entered bills and CSV readings are stored locally in browser `IndexedDB` (`HearthShiftDB`), which **persists inside the device's browser profile across tab closes and browser restarts** until erased via `Delete All My Data`, site-data clearing, or Private/Incognito exit. Shared-device risk, untrusted browser extensions (`<all_urls>`), and **unencrypted** local JSON exports (`exportAllUserData()`) are explicitly disclosed.
+3. **What Moderators May vs. May Not Record:** Moderators may record anonymized participant codes (`P-01`..`P-10`), device/locale metadata, task codes (`2/1/0`), timings, SUS/SEQ/QB ratings, first-attempt vs. post-debrief safety outcomes, defect logs, and manually redacted qualitative observations. Moderators **must never** record consumer service numbers, phone numbers, names, addresses, or raw electricity bill documents.
+4. **Feedback Review, Storage, Retention & Withdrawal:** Even though the app's feedback JSON draft excludes structured `HearthShiftDB` records, participants could type personal details in free-text comments; therefore **manual PII redaction review** by participant and moderator is mandatory prior to exporting/sharing feedback. Study scorecards and redacted feedback exports are stored in an access-restricted encrypted directory by the PI/moderator, raw identifiable scratch notes/recordings (if any) are purged within 30 days after transcription, and participants may withdraw in-session (immediate local IndexedDB wipe) or post-session via Participant ID up until anonymized Stage 1 analysis freeze.
+5. **Voluntary Participation & Session Format:** 45–60 minute moderated session (in-person or screen-shared remote) in English or Tamil; participants may skip any task or use the synthetic dataset without uploading personal records.
 
 ---
 
@@ -76,10 +78,13 @@ Participants complete the following **10 standardized tasks** sequentially using
 
 Every session records quantitative scores and verbatim observations across the **9 required constructs** below using a standardized moderator scoring sheet (`Session ID`, `Locale`, `Device/Browser`, `Date`).
 
-### Construct 1: Task Completion (10-Step Real-User Flow)
-- **Metric:** Per-step completion code $\in \{\text{2 = Unassisted Success}, \text{1 = Assisted Success (prompt needed)}, \text{0 = Failed / Abandoned}\}$.
-- **Timing & Errors:** Wall-clock seconds per step; count of validation/navigation errors per step.
-- **Stage 1 Benchmark:** Unassisted completion $\ge 80\%$ across Steps 1–10; zero tasks with $>30\%$ failure rate before Stage 2 launch.
+### Construct 1: Task Completion (10-Step Frozen Real-User Flow)
+- **Frozen Outcome Codes (Never Merged):**
+  - `2 = Unassisted Success`: Participant completes the step independently using UI cues alone within task time, without moderator prompt.
+  - `1 = Assisted Success`: Participant required a standardized neutral hint after $> 90\text{ s}$ stall before completing the step.
+  - `0 = Failed / Abandoned`: Participant cannot complete the step or declines/abandons after standardized hint.
+- **Timing & Reporting:** Wall-clock seconds per step; report `Unassisted`, `Assisted`, and `Failed` counts separately with individual participant trajectories and exact 95% Clopper-Pearson intervals (`stage1_usability_scoring.py`).
+- **Stage 1 Benchmark:** Unassisted (`2`) completion $\ge 80\%$ across all participant-step attempts; zero tasks with $> 30\%$ failure (`0`) rate before Stage 2 launch.
 
 ### Construct 2: Comprehension of Recommendations & Uncertainty Bounds ($Q_{0.05}$ vs. Expectation)
 Structured teach-back questions asked immediately after Steps 7 and 8 (scored `Correct`, `Partial`, `Incorrect`):
@@ -94,8 +99,10 @@ Structured teach-back questions asked immediately after Steps 7 and 8 (scored `C
 - **Instrument 3B (Friction Log):** Moderator logs utility-bill terminology confusion (e.g., billing dates vs. assessment date, bi-monthly vs. monthly kWh confusion, CSV header mismatch, unit W vs. kWh confusion).
 - **Stage 1 Benchmark:** Median SEQ $\ge 5.0 / 7.0$ for both manual bill entry and CSV import.
 
-### Construct 4: Perceived Usefulness & Usability (SUS + Domain Likert)
-- **Instrument 4A (Standard 10-Item SUS):** Administered at end of session using Brooke's standard 10 alternating items ($1\text{--}5$ scale, transformed to $0\text{--}100$).
+### Construct 4: Perceived Usefulness & Usability (Standardized Brooke SUS + Domain Likert)
+- **Instrument 4A (Standard 10-Item Brooke 1996 SUS):** Administered at session end using the 10 alternating items (`1 = Strongly Disagree` to `5 = Strongly Agree`). Scored via exact standard formula:
+  $$\text{SUS} = 2.5 \times \left[\sum_{i \in \{1,3,5,7,9\}} (x_i - 1) + \sum_{j \in \{2,4,6,8,10\}} (5 - x_j)\right] \in [0, 100]$$
+  implemented and tested in [`stage1_usability_scoring.py`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/research/experiments/stage1_usability_scoring.py). Report individual participant SUS scores alongside mean/SD and median/IQR—recognizing $N = 5\text{--}10$ cannot establish statistically validated population benchmarks.
 - **Instrument 4B (Perceived Usefulness 5-Point Likert, $1 = \text{Strongly Disagree}$ to $5 = \text{Strongly Agree}$):**
   - *PU-1:* "The 500 kWh tariff headroom display helps me understand how my bill jumps."
   - *PU-2:* "The counterfactual simulator helps me compare practical appliance adjustments."
@@ -119,8 +126,8 @@ Evaluates whether TR-VOI's annoyance/privacy hurdle ($c_{\text{ask}} = 200\text{
   - Lack of geyser timer / difficulty accessing power strips,
   - Effort vs. perceived INR savings below participant's personal threshold (informs $c_{\min} = \text{₹}30.00$ calibration).
 
-### Construct 7: Misunderstandings or Unsafe Interpretations (Mandatory Safety Gate)
-Moderators administer **4 explicit safety-probe scenarios** using structured prompts and log any spontaneous unsafe statement:
+### Construct 7: Misunderstandings or Unsafe Interpretations (Dual-Stage Mandatory Safety Gate)
+Moderators administer **4 explicit safety-probe scenarios** using structured prompts BEFORE providing educational debriefing. **CRITICAL METHODOLOGICAL RULE:** Moderators **MUST record both (a) First-Attempt Unprompted Score (`PASS_INITIAL` vs. `MISCONCEPTION_INITIAL`) and (b) Post-Debrief Re-Test Score (`PASS_POST_DEBRIEF` vs. `FAILED_POST_DEBRIEF`) separately** so UI copy failures are never concealed behind verbal moderator correction.
 
 | Safety Probe ID | Probe Question | Unsafe / Misunderstood Response (Flagged) | Required Safe Comprehension |
 | :--- | :--- | :--- | :--- |
@@ -130,11 +137,12 @@ Moderators administer **4 explicit safety-probe scenarios** using structured pro
 | **SAF-4 (Medical / Heat Priority)** | *"During an extreme heatwave or if an ill/elderly family member needs cooler air, what should you do with the app's recommendation?"* | Feels obligated to follow app recommendation despite health/comfort distress. | Prioritizes health and safety; dismisses (`Impractical`) without hesitation. |
 
 > [!WARNING]
-> **MANDATORY SAFETY REMEDIATION GATE:**
-> Any single **SAF-1** (false automation) or **SAF-2** (thermal safety bypass) failure triggers: (1) immediate verbal debriefing correction by the moderator before the participant leaves, and (2) mandatory UI warning copy / visual redesign and re-verification prior to Stage 2 RCT approval.
+> **DUAL-STAGE SAFETY REMEDIATION & REPORTING GATE:**
+> - **In-Session Ethical Duty:** Any **SAF-1** through **SAF-4** initial misconception triggers immediate verbal debriefing before the participant leaves so no person leaves with an unsafe belief.
+> - **Pre-RCT Software Remediation Rule:** Any **SAF-1** (false automation) or **SAF-2** (thermal safety bypass) **first-attempt failure** triggers mandatory UI copy/design revision and re-verification prior to Stage 2 RCT approval—even if the participant understood after moderator correction.
 
-### Construct 8: Privacy Concerns (Local Storage vs. Cloud)
-- **Instrument 8A (Mental Model Check):** *"Where are the electricity bills and CSV files you just entered stored right now? Could the HearthShift developers read them from a server?"* (Scored: `Accurate Local-Only Model` vs. `Assumes Cloud Upload` vs. `Unsure`).
+### Construct 8: Privacy Concerns (Browser-Profile Persistence & Risk Mental Model)
+- **Instrument 8A (Mental Model Check):** *"Where do the electricity bills and CSV files you entered live if you close this tab and reopen the browser later? Who can access your browser profile, and is an exported JSON file encrypted?"* (Scored accurately: `Understands Browser-Profile Persistence + Unencrypted Export`, `Thinks Ephemeral to Tab Only`, `Assumes Cloud Upload`, `Unsure`).
 - **Instrument 8B (Trust & Control Likert, $1\text{--}5$):**
   - *PR-1:* Comfort entering real household bills knowing data stays in browser `IndexedDB` (`HearthShiftDB`).
   - *PR-2:* Understanding that clicking **Export JSON** (`exportAllUserData()`) creates an **unencrypted local file** on their device (so they control sharing it, and must protect that file themselves).
@@ -151,11 +159,11 @@ Every UI bug, crash, worker stall, layout overflow, or confusing bilingual trans
 
 ---
 
-## 5. Stage 1 $\to$ Stage 2 Go/No-Go Release Criteria
+## 5. Stage 1 $\to$ Stage 2 Go/No-Go Criteria & Small-Sample Reporting Rules
 
 Stage 2 powered RCT recruitment ([`FIELD-PILOT-PROTOCOL.md`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/docs/pilot/FIELD-PILOT-PROTOCOL.md)) **cannot** commence until all Stage 1 exit gates are satisfied:
 
 1. **Zero Unresolved S0 Defects & Zero S1 Blockers** remaining in the candidate Stage 2 build.
-2. **Safety Comprehension Rate:** $100\%$ of post-remediation participants pass **SAF-1** and **SAF-2**, and $\ge 90\%$ pass **SAF-3** and **SAF-4** without prompting after any required UI copy refinements.
-3. **Workflow Viability:** Unassisted completion $\ge 80\%$ across Steps 1–10; mean SUS $\ge 70$ (with remediation plan for any subscale $< 70$).
-4. **Honest Reporting Check:** All Stage 1 write-ups explicitly report only usability, comprehension, burden, and defect metrics—with **zero savings efficacy claims**.
+2. **First-Attempt + Post-Debrief Safety Comprehension:** $100\%$ first-attempt and post-debrief pass on **SAF-1** and **SAF-2** (after any required UI copy remediation), and $\ge 90\%$ pass on **SAF-3** and **SAF-4**.
+3. **Workflow Viability:** Unassisted (`2`) completion $\ge 80\%$ across Steps 1–10; zero steps with $> 30\%$ failure (`0`); mean SUS $\ge 70$ (reported alongside median/IQR and individual scores).
+4. **Statistical Honesty & Small-Sample Boundaries:** Because $N = 5\text{--}10$ yields wide Binomial confidence intervals (e.g., $8/8 = 100\%$ has exact 95% Clopper-Pearson lower bound $63.1\%$), all Stage 1 reports must present individual participant observations, exact 95% Clopper-Pearson intervals, and clear disavowals against population-level usability, bill reduction, or energy-savings efficacy claims.

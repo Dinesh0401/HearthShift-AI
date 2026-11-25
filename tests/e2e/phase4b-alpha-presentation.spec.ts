@@ -99,6 +99,7 @@ test.describe('HearthShift AI — Phase 4B Static Alpha UX, Manifest, Changelog 
     await expect(
       feedbackDialog.getByText(/NEVER reads IndexedDB bills, interval CSVs, or consumer references/i)
     ).toBeVisible();
+    await expect(feedbackDialog.getByText(/manually review/i).first()).toBeVisible();
 
     await feedbackDialog
       .locator('#feedback-notes')

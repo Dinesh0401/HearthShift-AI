@@ -1,0 +1,262 @@
+{
+  "fixture_status": "SYNTHETIC_PRE_STUDY_TEST_FIXTURE_NOT_HUMAN_DATA",
+  "study_protocol": "Stage 1 Usability & Safety Comprehension Study (N=5-10)",
+  "generated_for": "Phase 4C-A Reproducible Scoring Verification",
+  "target_url": "https://hearthshift-ai.pages.dev/",
+  "warning": "ALL SESSIONS BELOW ARE SYNTHETIC TEST FIXTURES FOR SCRIPT VERIFICATION. ZERO REAL HUMAN PARTICIPANTS HAVE BEEN TESTED.",
+  "sessions": [
+    {
+      "participant_id": "SYN-P01",
+      "is_synthetic": true,
+      "locale": "en",
+      "device": "desktop",
+      "data_mode": "safe_demo",
+      "task_outcomes": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+      "task_seconds": [55, 38, 95, 48, 88, 52, 92, 85, 64, 70],
+      "seq_manual_bill": 6,
+      "seq_csv_import": 6,
+      "sus_items": [4, 2, 5, 2, 4, 2, 4, 2, 5, 2],
+      "qb_1_intrusiveness": 1,
+      "qb_2_effort": 2,
+      "question_tolerance": "2-3",
+      "willingness_to_try": 4,
+      "safety_first_attempt": {
+        "SAF-1": true,
+        "SAF-2": true,
+        "SAF-3": true,
+        "SAF-4": true
+      },
+      "safety_post_debrief": {
+        "SAF-1": true,
+        "SAF-2": true,
+        "SAF-3": true,
+        "SAF-4": true
+      },
+      "defects": []
+    },
+    {
+      "participant_id": "SYN-P02",
+      "is_synthetic": true,
+      "locale": "ta",
+      "device": "mobile",
+      "data_mode": "synthetic_sandbox_bill",
+      "task_outcomes": [2, 2, 2, 2, 1, 2, 2, 2, 2, 2],
+      "task_seconds": [72, 46, 128, 66, 175, 74, 118, 102, 88, 94],
+      "seq_manual_bill": 5,
+      "seq_csv_import": 4,
+      "sus_items": [4, 2, 4, 2, 4, 2, 4, 3, 4, 2],
+      "qb_1_intrusiveness": 2,
+      "qb_2_effort": 2,
+      "question_tolerance": "2-3",
+      "willingness_to_try": 4,
+      "safety_first_attempt": {
+        "SAF-1": true,
+        "SAF-2": true,
+        "SAF-3": false,
+        "SAF-4": true
+      },
+      "safety_post_debrief": {
+        "SAF-1": true,
+        "SAF-2": true,
+        "SAF-3": true,
+        "SAF-4": true
+      },
+      "defects": [
+        {
+          "id": "SYN-DEF-01",
+          "step": 5,
+          "severity": "S2",
+          "note": "Synthetic test case: Tamil CSV button label took >90s prompt on mobile."
+        }
+      ]
+    },
+    {
+      "participant_id": "SYN-P03",
+      "is_synthetic": true,
+      "locale": "en",
+      "device": "desktop",
+      "data_mode": "safe_demo",
+      "task_outcomes": [2, 2, 2, 2, 2, 2, 1, 2, 2, 2],
+      "task_seconds": [60, 40, 84, 52, 79, 60, 145, 96, 70, 62],
+      "seq_manual_bill": 7,
+      "seq_csv_import": 6,
+      "sus_items": [5, 1, 4, 2, 5, 2, 4, 2, 4, 2],
+      "qb_1_intrusiveness": 2,
+      "qb_2_effort": 2,
+      "question_tolerance": "1",
+      "willingness_to_try": 5,
+      "safety_first_attempt": {
+        "SAF-1": true,
+        "SAF-2": true,
+        "SAF-3": true,
+        "SAF-4": true
+      },
+      "safety_post_debrief": {
+        "SAF-1": true,
+        "SAF-2": true,
+        "SAF-3": true,
+        "SAF-4": true
+      },
+      "defects": []
+    },
+    {
+      "participant_id": "SYN-P04",
+      "is_synthetic": true,
+      "locale": "ta",
+      "device": "desktop",
+      "data_mode": "safe_demo",
+      "task_outcomes": [2, 2, 2, 2, 2, 2, 2, 1, 2, 2],
+      "task_seconds": [65, 49, 110, 62, 104, 65, 108, 138, 76, 80],
+      "seq_manual_bill": 6,
+      "seq_csv_import": 5,
+      "sus_items": [4, 2, 4, 2, 4, 3, 4, 2, 4, 2],
+      "qb_1_intrusiveness": 1,
+      "qb_2_effort": 2,
+      "question_tolerance": "2-3",
+      "willingness_to_try": 4,
+      "safety_first_attempt": {
+        "SAF-1": false,
+        "SAF-2": true,
+        "SAF-3": true,
+        "SAF-4": true
+      },
+      "safety_post_debrief": {
+        "SAF-1": true,
+        "SAF-2": true,
+        "SAF-3": true,
+        "SAF-4": true
+      },
+      "defects": [
+        {
+          "id": "SYN-DEF-02",
+          "step": 8,
+          "severity": "S2",
+          "note": "Synthetic test case: initial SAF-1 misconception regarding 'Tried It!' vs manual AC remote control."
+        }
+      ]
+    },
+    {
+      "participant_id": "SYN-P05",
+      "is_synthetic": true,
+      "locale": "en",
+      "device": "mobile",
+      "data_mode": "synthetic_sandbox_bill",
+      "task_outcomes": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+      "task_seconds": [58, 44, 101, 59, 98, 63, 100, 91, 69, 75],
+      "seq_manual_bill": 6,
+      "seq_csv_import": 5,
+      "sus_items": [4, 2, 4, 2, 4, 2, 5, 2, 4, 2],
+      "qb_1_intrusiveness": 2,
+      "qb_2_effort": 1,
+      "question_tolerance": "4+",
+      "willingness_to_try": 4,
+      "safety_first_attempt": {
+        "SAF-1": true,
+        "SAF-2": true,
+        "SAF-3": true,
+        "SAF-4": true
+      },
+      "safety_post_debrief": {
+        "SAF-1": true,
+        "SAF-2": true,
+        "SAF-3": true,
+        "SAF-4": true
+      },
+      "defects": []
+    },
+    {
+      "participant_id": "SYN-P06",
+      "is_synthetic": true,
+      "locale": "ta",
+      "device": "mobile",
+      "data_mode": "safe_demo",
+      "task_outcomes": [2, 2, 1, 2, 0, 2, 2, 2, 2, 2],
+      "task_seconds": [75, 52, 148, 70, 195, 81, 114, 110, 82, 89],
+      "seq_manual_bill": 5,
+      "seq_csv_import": 3,
+      "sus_items": [3, 2, 4, 3, 4, 2, 4, 3, 3, 2],
+      "qb_1_intrusiveness": 3,
+      "qb_2_effort": 3,
+      "question_tolerance": "1",
+      "willingness_to_try": 3,
+      "safety_first_attempt": {
+        "SAF-1": true,
+        "SAF-2": true,
+        "SAF-3": true,
+        "SAF-4": true
+      },
+      "safety_post_debrief": {
+        "SAF-1": true,
+        "SAF-2": true,
+        "SAF-3": true,
+        "SAF-4": true
+      },
+      "defects": [
+        {
+          "id": "SYN-DEF-03",
+          "step": 5,
+          "severity": "S3",
+          "note": "Synthetic test case: mobile CSV file picker explanation unclear on small Android viewport."
+        }
+      ]
+    },
+    {
+      "participant_id": "SYN-P07",
+      "is_synthetic": true,
+      "locale": "en",
+      "device": "desktop",
+      "data_mode": "safe_demo",
+      "task_outcomes": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+      "task_seconds": [49, 35, 82, 46, 86, 51, 90, 84, 62, 68],
+      "seq_manual_bill": 7,
+      "seq_csv_import": 6,
+      "sus_items": [5, 1, 5, 2, 5, 1, 4, 2, 5, 1],
+      "qb_1_intrusiveness": 1,
+      "qb_2_effort": 1,
+      "question_tolerance": "2-3",
+      "willingness_to_try": 5,
+      "safety_first_attempt": {
+        "SAF-1": true,
+        "SAF-2": true,
+        "SAF-3": true,
+        "SAF-4": true
+      },
+      "safety_post_debrief": {
+        "SAF-1": true,
+        "SAF-2": true,
+        "SAF-3": true,
+        "SAF-4": true
+      },
+      "defects": []
+    },
+    {
+      "participant_id": "SYN-P08",
+      "is_synthetic": true,
+      "locale": "ta",
+      "device": "desktop",
+      "data_mode": "synthetic_sandbox_bill",
+      "task_outcomes": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+      "task_seconds": [68, 45, 99, 60, 108, 69, 112, 95, 78, 72],
+      "seq_manual_bill": 6,
+      "seq_csv_import": 5,
+      "sus_items": [4, 2, 4, 2, 4, 2, 4, 2, 4, 2],
+      "qb_1_intrusiveness": 2,
+      "qb_2_effort": 2,
+      "question_tolerance": "2-3",
+      "willingness_to_try": 4,
+      "safety_first_attempt": {
+        "SAF-1": true,
+        "SAF-2": true,
+        "SAF-3": true,
+        "SAF-4": true
+      },
+      "safety_post_debrief": {
+        "SAF-1": true,
+        "SAF-2": true,
+        "SAF-3": true,
+        "SAF-4": true
+      },
+      "defects": []
+    }
+  ]
+}
