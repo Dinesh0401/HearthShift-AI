@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useLanguage } from '../../locales/i18n';
-import { ShieldCheck, WifiOff, Globe, Zap } from 'lucide-react';
+import { ShieldCheck, Cpu, Globe, Zap } from 'lucide-react';
 
 export const Header: React.FC = () => {
   const { language, setLanguage, t } = useLanguage();
@@ -42,9 +42,9 @@ export const Header: React.FC = () => {
             <span className="sm:hidden">100% On-Device</span>
           </div>
 
-          {/* Offline Ready Badge */}
+          {/* Local Browser Compute Badge */}
           <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-xs">
-            <WifiOff className="w-3.5 h-3.5 text-gray-500 shrink-0" />
+            <Cpu className="w-3.5 h-3.5 text-gray-600 shrink-0" />
             <span>{t('offlineStatus')}</span>
           </div>
 

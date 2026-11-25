@@ -40,7 +40,7 @@ const MAX_REFERENCE_LENGTH = 64;
  * Strips angle brackets and ASCII control characters from optional text fields
  * to maintain clean storage and prevent CSV/HTML injection in exports.
  */
-function sanitizePlainTextInput(raw: string, maxLength: number): string {
+export function sanitizePlainTextInput(raw: string, maxLength: number): string {
   const cleaned = Array.from(raw)
     .filter((ch) => {
       const code = ch.charCodeAt(0);

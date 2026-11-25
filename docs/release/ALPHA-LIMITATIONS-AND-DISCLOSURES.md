@@ -87,5 +87,6 @@ Per [`docs/pilot/MV-METHODOLOGY-REVIEW.md`](file:///c:/Users/sjdin/Downloads/Pro
 ## 5. Browser Storage, Input Limits & Runtime Boundaries
 
 - **Pure Client-Side JavaScript/TypeScript Execution:** Uses standard browser JS/TS and optional Web Worker concurrency (zero WebAssembly binaries).
+- **No Offline Service Worker Caching Yet:** While [`public/manifest.json`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/public/manifest.json) provides basic web-app metadata and loaded browser sessions compute locally without server calls, no Service Worker cache is registered in `v0.1.0-alpha`; opening or reloading the site requires network connectivity to reach the host.
 - **CSV Import Bounds:** Enforces `25 MB` max file size and `500,000` max rows (`csv-parser.ts`) to prevent browser tab memory exhaustion; files exceeding these limits or containing abnormal gaps/meter resets without rollover modulus omit unverified intervals rather than fabricating values.
 - **Local IndexedDB Persistence Risks:** Subject to browser disk-pressure eviction, automatic deletion on Private/Incognito exit, plaintext local storage unless OS disk encryption is enabled, and visibility to browser extensions with broad host permissions (`<all_urls>`). Always use **Export All Data (JSON)** for personal backups and **Delete All My Data** before leaving shared machines.
