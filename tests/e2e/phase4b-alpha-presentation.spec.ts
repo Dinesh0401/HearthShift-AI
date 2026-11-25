@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { isAllowedAppOrigin } from './helpers/origin';
+import { isAllowedAppOrigin, assertHostedTargetSafety } from './helpers/origin';
 
 test.describe('HearthShift AI — Phase 4B Static Alpha UX, Manifest, Changelog & Zero-Telemetry Feedback', () => {
   test('verifies static PWA assets, product guide, v0.1.0-alpha changelog, honest offline disclosures, and zero-PII feedback draft', async ({
@@ -7,7 +7,10 @@ test.describe('HearthShift AI — Phase 4B Static Alpha UX, Manifest, Changelog 
   }) => {
     const externalRequests: string[] = [];
     const sameOriginMutationsOrBodies: { url: string; method: string; postData: string | null }[] = [];
+    const sameOriginSensitiveQueries: string[] = [];
     const cspViolations: string[] = [];
+
+    const sensitiveTokens = ['PRIVATE-METER-9988', '515', 'kwh', 'hearthshift_feedback'];
 
     page.on('request', (request) => {
       const url = request.url();
@@ -22,6 +25,15 @@ test.describe('HearthShift AI — Phase 4B Static Alpha UX, Manifest, Changelog 
           sameOriginMutationsOrBodies.push({ url, method, postData });
         } else if (postData) {
           sameOriginMutationsOrBodies.push({ url, method, postData });
+        }
+        const qIdx = url.indexOf('?');
+        if (qIdx !== -1) {
+          const queryPart = url.slice(qIdx).toLowerCase();
+          for (const token of sensitiveTokens) {
+            if (queryPart.includes(token.toLowerCase())) {
+              sameOriginSensitiveQueries.push(url);
+            }
+          }
         }
       }
     });
@@ -40,6 +52,7 @@ test.describe('HearthShift AI — Phase 4B Static Alpha UX, Manifest, Changelog 
     const rootRes = await page.goto('/');
     expect(rootRes?.status()).toBe(200);
     const headers = rootRes!.headers();
+    assertHostedTargetSafety(page.url(), headers);
     expect(headers['content-security-policy']).toContain("default-src 'self'");
     expect(headers['x-frame-options']).toBe('DENY');
 
@@ -99,6 +112,12 @@ test.describe('HearthShift AI — Phase 4B Static Alpha UX, Manifest, Changelog 
 
     await page.screenshot({ path: 'tests/e2e/screenshots/phase4b-feedback-modal.png' });
 
+    // Verify external draft links stay hidden until explicit consent toggle is checked
+    await expect(feedbackDialog.getByRole('link', { name: /Open GitHub Issue/i })).toHaveCount(0);
+    await feedbackDialog.getByRole('checkbox').check();
+    await expect(feedbackDialog.getByRole('link', { name: /Open GitHub Issue/i })).toBeVisible();
+    await expect(feedbackDialog.getByRole('link', { name: /Email Draft/i })).toBeVisible();
+
     const [fbDownload] = await Promise.all([
       page.waitForEvent('download'),
       feedbackDialog.getByRole('button', { name: /Download Draft/i }).click(),
@@ -121,6 +140,7 @@ test.describe('HearthShift AI — Phase 4B Static Alpha UX, Manifest, Changelog 
 
     expect(externalRequests).toEqual([]);
     expect(sameOriginMutationsOrBodies).toEqual([]);
+    expect(sameOriginSensitiveQueries).toEqual([]);
     expect(cspViolations).toEqual([]);
   });
 });

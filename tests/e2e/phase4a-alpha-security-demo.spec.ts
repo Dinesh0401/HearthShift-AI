@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
-import { isAllowedAppOrigin } from './helpers/origin';
+import { isAllowedAppOrigin, assertHostedTargetSafety } from './helpers/origin';
 
 test.describe('HearthShift AI — Phase 4A Alpha Security, Same-Origin Privacy, Demo Mode & Real-User Workflow', () => {
   test.beforeAll(async () => {
@@ -86,6 +86,7 @@ test.describe('HearthShift AI — Phase 4A Alpha Security, Same-Origin Privacy, 
     const response = await page.goto('/');
     expect(response).not.toBeNull();
     const headers = response!.headers();
+    assertHostedTargetSafety(page.url(), headers);
     expect(headers['content-security-policy']).toContain("default-src 'self'");
     expect(headers['content-security-policy']).toContain("connect-src 'self'");
     expect(headers['content-security-policy']).toContain("object-src 'none'");

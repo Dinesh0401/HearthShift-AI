@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { X, Copy, Download, Check, ExternalLink, FileText, MessageSquarePlus, ShieldCheck } from 'lucide-react';
+import { X, Copy, Download, Check, ExternalLink, Mail, FileText, MessageSquarePlus, ShieldCheck } from 'lucide-react';
 import { sanitizePlainTextInput } from '../../core/ingestion/manual-bill';
 import { useLanguage } from '../../locales/i18n';
 
@@ -119,6 +119,7 @@ export const AlphaFeedbackModal: React.FC<AlphaFeedbackModalProps> = ({
   const [rating, setRating] = useState<number | null>(null);
   const [notes, setNotes] = useState('');
   const [copied, setCopied] = useState(false);
+  const [externalConsent, setExternalConsent] = useState(false);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -180,6 +181,7 @@ export const AlphaFeedbackModal: React.FC<AlphaFeedbackModalProps> = ({
     `Scrubbed alpha feedback summary (0 private household records attached):\n\n\`\`\`json\n${payloadJson}\n\`\`\``
   );
   const githubIssueUrl = `https://github.com/Dinesh0401/HearthShift-AI/issues/new?title=${issueTitle}&body=${issueBody}`;
+  const mailtoUrl = `mailto:?subject=${issueTitle}&body=${encodeURIComponent(payloadJson)}`;
 
   return (
     <div
@@ -285,7 +287,18 @@ export const AlphaFeedbackModal: React.FC<AlphaFeedbackModalProps> = ({
           </pre>
         </div>
 
-        {/* Local Actions */}
+        {/* Explicit Consent Gate for External Draft Links */}
+        <label className="flex items-start gap-2.5 p-2.5 rounded-xl border border-slate-200 bg-slate-50 text-xs text-slate-700 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={externalConsent}
+            onChange={(e) => setExternalConsent(e.target.checked)}
+            className="mt-0.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+          />
+          <span className="leading-relaxed">{t('feedbackConsentLabel')}</span>
+        </label>
+
+        {/* Local & Consent-Gated External Actions */}
         <div className="flex flex-wrap items-center gap-2 pt-1">
           <button
             type="button"
@@ -305,15 +318,27 @@ export const AlphaFeedbackModal: React.FC<AlphaFeedbackModalProps> = ({
             <span>{t('feedbackDownloadBtn')}</span>
           </button>
 
-          <a
-            href={githubIssueUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-gray-300 hover:bg-gray-50 text-gray-800 text-xs font-semibold transition-colors ml-auto"
-          >
-            <span>{t('feedbackGithubBtn')}</span>
-            <ExternalLink className="w-3.5 h-3.5" />
-          </a>
+          {externalConsent && (
+            <div className="flex flex-wrap items-center gap-2 ml-auto">
+              <a
+                href={mailtoUrl}
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-gray-300 hover:bg-gray-50 text-gray-800 text-xs font-semibold transition-colors"
+              >
+                <Mail className="w-3.5 h-3.5" />
+                <span>{t('feedbackMailtoBtn')}</span>
+              </a>
+
+              <a
+                href={githubIssueUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-gray-300 hover:bg-gray-50 text-gray-800 text-xs font-semibold transition-colors"
+              >
+                <span>{t('feedbackGithubBtn')}</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+          )}
         </div>
 
         <p className="text-[11px] text-gray-500 border-t border-gray-100 pt-2.5 leading-relaxed">

@@ -43,8 +43,10 @@ export const translations = {
     feedbackCopyBtn: 'Copy Scrubbed Draft',
     feedbackCopiedMsg: 'Draft Copied!',
     feedbackDownloadBtn: 'Download Draft (.json)',
-    feedbackExternalLabel: 'External submission is strictly manual: copying or downloading stays local. Only clicking Open GitHub Issue opens github.com with this previewed draft.',
+    feedbackExternalLabel: 'External submission is strictly manual: copying or downloading stays local. Confirm consent below to unlock manual external GitHub/email draft links.',
+    feedbackConsentLabel: 'I confirm this scrubbed draft contains 0 private household records and consent to opening an external draft I review before sending.',
     feedbackGithubBtn: 'Open GitHub Issue',
+    feedbackMailtoBtn: 'Email Draft',
     closeModalBtn: 'Close',
 
     // Tabs
@@ -225,8 +227,10 @@ export const translations = {
     feedbackCopyBtn: 'நகலெடு (Copy)',
     feedbackCopiedMsg: 'நகலெடுக்கப்பட்டது!',
     feedbackDownloadBtn: 'பதிவிறக்கு (.json)',
-    feedbackExternalLabel: 'அனுப்புவது முற்றிலும் உங்கள் விருப்பம் மட்டுமே: நகலெடுத்தல்/பதிவிறக்கம் உள்ளூரிலேயே நிகழும்.',
+    feedbackExternalLabel: 'அனுப்புவது முற்றிலும் உங்கள் விருப்பம் மட்டுமே: நகலெடுத்தல்/பதிவிறக்கம் உள்ளூரிலேயே நிகழும். கீழே ஒப்புதல் அளித்தால் மட்டுமே வெளி இணைப்புகள் திறக்கப்படும்.',
+    feedbackConsentLabel: 'இதில் 0 வீட்டுப் பதிவுகள் உள்ளன என்பதை உறுதிப்படுத்துகிறேன்; நான் சரிபார்த்த பின்பே வெளி வரைவு திறக்க சம்மதிக்கிறேன்.',
     feedbackGithubBtn: 'GitHub Issue திறக்க',
+    feedbackMailtoBtn: 'மின்னஞ்சல் வரைவு',
     closeModalBtn: 'மூடு',
 
     // Tabs

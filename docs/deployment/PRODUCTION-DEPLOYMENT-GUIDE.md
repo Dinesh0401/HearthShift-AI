@@ -68,31 +68,28 @@ Per [`next.config.mjs`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI
 Managed HTTPS edge hosting eliminates Node.js server maintenance and guarantees zero application backend attack surface.
 
 > [!TIP]
-> **Phase 4B Preferred Hosting Target: Cloudflare Pages**
-> Cloudflare Pages directly deploys Next.js static exports (`NEXT_STATIC_EXPORT=true npm run build` → `out/`) and honors `out/_headers` natively with zero server runtime. Review the complete preview → production checklist in [`PHASE-4B-CLOUDFLARE-DEPLOYMENT-CHECKLIST.md`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/docs/release/PHASE-4B-CLOUDFLARE-DEPLOYMENT-CHECKLIST.md).
+> **Phase 4B Preferred Hosting Target: Cloudflare Pages via GitHub Integration**
+> Connect the GitHub repository directly to Cloudflare Pages using `npm run build:static` and output directory `out` (production branch `main`, Cloudflare Web Analytics disabled). Automated Git integration preserves preview deployments for every branch/PR. Review [`PHASE-4B-CLOUDFLARE-DEPLOYMENT-CHECKLIST.md`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/docs/release/PHASE-4B-CLOUDFLARE-DEPLOYMENT-CHECKLIST.md).
 
-### Option 1A: Cloudflare Pages (Recommended Primary Target — `out/` + `public/_headers`)
+### Option 1A: Cloudflare Pages (Recommended Primary Target — GitHub Integration + `out/` + `public/_headers`)
 
-[`public/_headers`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/public/_headers) is copied automatically into `out/_headers` during `next build` when `NEXT_STATIC_EXPORT=true`, enforcing all 8 security headers at Cloudflare edge nodes.
+[`public/_headers`](file:///c:/Users/sjdin/Downloads/Project6/HearthShift-AI/public/_headers) is copied automatically into `out/_headers` during `npm run build:static`, enforcing all 8 security headers at Cloudflare edge nodes. Do **not** create a competing Direct Upload project if Git-connected Pages CI/CD is planned.
 
 1. **Build & Local Static Verification:**
    ```bash
-   NEXT_STATIC_EXPORT=true npm run build
+   npm run build:static
    npm run verify:static
    npm run test:e2e:static
    ```
-2. **Cloudflare Pages Project Settings:**
-   - **Build Command:** `NEXT_STATIC_EXPORT=true npm run build`
+2. **Cloudflare Pages Project Settings (GitHub Integration):**
+   - **Framework Preset:** Next.js (Static HTML Export)
+   - **Production Branch:** `main`
+   - **Build Command:** `npm run build:static`
    - **Build Output / Publish Directory:** `out`
-   - **Environment Variables:** `NEXT_STATIC_EXPORT=true`, `NEXT_PUBLIC_APP_ENV=production`, `NEXT_PUBLIC_DEMO_ENABLED=true`
-   - **Platform Analytics:** Ensure **Cloudflare Web Analytics** is disabled so zero injected analytics beacons violate `connect-src 'self'` or `script-src 'self' 'unsafe-inline'`.
-3. **Preview -> Production Deploy (Requires Authorized Operator Login):**
-   ```bash
-   npx wrangler login
-   npx wrangler pages deploy out --project-name hearthshift-ai --branch preview
-   # Verify live preview URL first (`curl -sI` + `E2E_BASE_URL=<PREVIEW_URL> npx playwright test`)
-   npx wrangler pages deploy out --project-name hearthshift-ai --branch main
-   ```
+   - **Environment Variables:** `NEXT_PUBLIC_APP_ENV=production`, `NEXT_PUBLIC_DEMO_ENABLED=true` (`build:static` already sets `NEXT_STATIC_EXPORT=true` cross-platform)
+   - **Platform Analytics:** Ensure **Cloudflare Web Analytics** is **Disabled** so zero injected analytics beacons violate `connect-src 'self'` or `script-src 'self' 'unsafe-inline'`.
+3. **Preview -> Production Verification (Requires Authorized Operator Login):**
+   - Push changes to a preview branch / PR or `main`, inspect the Cloudflare Pages **Preview HTTPS URL** (`curl -sI <PREVIEW_URL>/` + `E2E_BASE_URL=<PREVIEW_URL> npx playwright test`), and only promote/verify Production once Preview checks pass.
 
 ### Option 1B: Vercel / Netlify Alternatives
 

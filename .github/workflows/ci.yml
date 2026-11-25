@@ -63,7 +63,7 @@ jobs:
         run: npm run test:e2e
 
       - name: Build static export bundle (Cloudflare Pages target)
-        run: NEXT_STATIC_EXPORT=true npm run build
+        run: npm run build:static
 
       - name: Verify static export artifacts, headers, and zero secrets
         run: npm run verify:static

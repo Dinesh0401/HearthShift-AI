@@ -1,3 +1,5 @@
+import { expect } from '@playwright/test';
+
 /**
  * Origin and telemetry classifier shared across Playwright E2E specs so the same
  * security assertions execute cleanly against Next.js localhost, local static `out/`,
@@ -25,4 +27,28 @@ export function isAllowedAppOrigin(url: string): boolean {
     url.startsWith(`http://127.0.0.1:${port}/`) ||
     url === `http://127.0.0.1:${port}`
   );
+}
+
+/**
+ * When `E2E_BASE_URL` is provided for hosted Gate 3/4/6 checks, verifies tests
+ * actually hit that hosted non-localhost origin and enforces HTTPS/HSTS headers.
+ */
+export function assertHostedTargetSafety(
+  actualPageUrl: string,
+  responseHeaders: Record<string, string>
+): void {
+  const configuredBase = process.env.E2E_BASE_URL;
+  if (!configuredBase) {
+    return;
+  }
+
+  const expected = new URL(configuredBase);
+  const actual = new URL(actualPageUrl);
+  expect(actual.origin).toBe(expected.origin);
+  expect(actual.hostname).not.toMatch(/^(localhost|127\.0\.0\.1)$/i);
+
+  if (expected.protocol === 'https:') {
+    expect(actual.protocol).toBe('https:');
+    expect(responseHeaders['strict-transport-security']).toContain('max-age=');
+  }
 }
