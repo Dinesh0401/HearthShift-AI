@@ -83,8 +83,8 @@ test.describe('HearthShift AI — Phase 3.1 Production MVP Reliability & Parity 
     // Interact with simulator controls:
     // Change AC setpoint to +1.0°C
     await page.getByRole('button', { name: '+1°C' }).click();
-    // Toggle water heater trim
-    await page.getByText(/Trim immersion\/geyser runtime/i).click();
+    // Toggle water heater trim switch
+    await page.getByRole('switch', { name: /Trim water heater duration/i }).click();
 
     // Verify Laundry Shift honesty disclaimer
     await expect(

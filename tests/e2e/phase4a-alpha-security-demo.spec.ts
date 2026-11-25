@@ -98,7 +98,9 @@ test.describe('HearthShift AI — Phase 4A Alpha Security, Same-Origin Privacy, 
     const alphaSummary = page.getByText(/Experimental Research Alpha — Advisory Models Only/i);
     await expect(alphaSummary).toBeVisible();
     await alphaSummary.click();
-    await expect(page.getByText(/does not claim utility certification or IPMVP Option C compliance/i)).toBeVisible();
+    await expect(
+      page.getByText(/not utility-certified billing statements, guaranteed physical savings, or IPMVP Option C verified outcomes/i)
+    ).toBeVisible();
 
     // ══════════════════════════════════════════════════════════
     // 3. Safe Demo Mode Regression Test (Synthetic Data, Zero Fake Verified Savings)

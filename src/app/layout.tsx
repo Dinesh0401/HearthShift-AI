@@ -7,6 +7,10 @@ export const metadata: Metadata = {
   title: 'HearthShift AI — Privacy-First Home Energy Intelligence',
   description:
     'Decision-aware, privacy-minimal energy intelligence for households. Local-first IndexedDB computation, deterministic tariff engine, and conservative optimization.',
+  manifest: '/manifest.json',
+  icons: {
+    icon: '/icon.svg',
+  },
 };
 
 export default function RootLayout({

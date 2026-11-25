@@ -1,0 +1,16 @@
+{
+  "name": "HearthShift AI",
+  "short_name": "HearthShift",
+  "description": "Local-first, privacy-minimal household electricity decision assistant with deterministic tariffs and TR-VOI optimization.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#059669",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
