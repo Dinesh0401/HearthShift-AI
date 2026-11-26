@@ -4,9 +4,9 @@ import { LanguageProvider } from '../locales/i18n';
 import { Header } from '../components/layout/Header';
 
 export const metadata: Metadata = {
-  title: 'HearthShift AI — Privacy-First Home Energy Intelligence',
+  title: 'HearthShift AI — Home Energy & Tariff Assistant',
   description:
-    'Decision-aware, privacy-minimal energy intelligence for households. Local-first IndexedDB computation, deterministic tariff engine, and conservative optimization.',
+    'Clear electricity bill tracking, tariff threshold alerts, and conservative modeled recommendations running locally in your browser.',
   manifest: '/manifest.json',
   icons: {
     icon: '/icon.svg',
@@ -20,19 +20,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen flex flex-col bg-slate-50 text-slate-900 antialiased selection:bg-emerald-500 selection:text-white">
+      <body className="min-h-screen flex flex-col bg-[#F9FAFB] text-zinc-900 antialiased selection:bg-emerald-600 selection:text-white">
         <LanguageProvider>
           <Header />
-          <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
             {children}
           </main>
-          <footer className="border-t border-slate-200 py-6 text-center text-xs text-slate-600 px-4">
-            <p>
-              HearthShift AI · Decision-Aware, Privacy-Minimal Household Energy Assistant
-            </p>
-            <p className="mt-1 text-[11px] text-slate-500">
-              Experimental Research Alpha · Not Utility-Certified or Guaranteed Savings · 100% On-Device IndexedDB
-            </p>
+          <footer className="border-t border-zinc-200/80 bg-white py-5 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-zinc-500">
+              <span>HearthShift AI · Local-first household energy assistant</span>
+              <span>Experimental alpha · Modeled estimates only · 100% on-device IndexedDB</span>
+            </div>
           </footer>
         </LanguageProvider>
       </body>
