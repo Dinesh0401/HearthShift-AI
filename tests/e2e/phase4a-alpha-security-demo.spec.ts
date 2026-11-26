@@ -226,6 +226,8 @@ test.describe('HearthShift AI — Phase 4A Alpha Security, Same-Origin Privacy, 
       const w = window.innerWidth;
       const offenders = [...document.querySelectorAll('*')]
         .filter((el) => {
+          const scrollParent = el.closest('.overflow-x-auto');
+          if (scrollParent && scrollParent !== el) return false;
           const rect = el.getBoundingClientRect();
           return rect.width > 0 && rect.right > w + 1;
         })
