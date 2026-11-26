@@ -255,6 +255,30 @@ test.describe('HearthShift AI — Phase 4A Alpha Security, Same-Origin Privacy, 
     ]);
     expect(download.suggestedFilename()).toContain('hearthshift_backup_');
 
+    const downloadPath = await download.path();
+    expect(downloadPath).not.toBeNull();
+    const exportedBackup = JSON.parse(fs.readFileSync(downloadPath!, 'utf-8'));
+    expect(exportedBackup.app).toBe('HearthShift AI');
+    expect(exportedBackup.export_schema_version).toBe(2);
+    expect(exportedBackup).not.toHaveProperty('readings_sample');
+    expect(exportedBackup.bills_count).toBe(1);
+    expect(exportedBackup.bills).toHaveLength(1);
+    expect(exportedBackup.readings_count).toBe(192);
+    expect(exportedBackup.readings).toHaveLength(192);
+    for (const tableKey of [
+      'meta',
+      'tariffs',
+      'preferences',
+      'recommendations',
+      'feedback',
+      'savings',
+      'scenarios',
+      'questions',
+    ]) {
+      expect(Array.isArray(exportedBackup[tableKey])).toBe(true);
+    }
+    expect(exportedBackup.savings.length).toBeGreaterThanOrEqual(1);
+
     await page.getByRole('button', { name: 'Delete All My Data' }).click();
     await page.getByRole('button', { name: 'Yes, Delete Everything' }).click();
     await expect(

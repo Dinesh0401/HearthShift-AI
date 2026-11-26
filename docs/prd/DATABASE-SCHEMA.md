@@ -124,4 +124,4 @@ Maintains schema version and migration state.
    * Atomically clears all 8 private user tables (`bills`, `readings`, `preferences`, `recommendations`, `feedback`, `savings`, `scenarios`, `questions`).
    * Retains official public `tariffs` definitions so the user can continue using the calculator immediately.
 2. **Transparent Data Export (`exportAllUserData`):**
-   * Serializes all user tables into a standalone JSON file that the user can download and audit. Zero obfuscation or proprietary lock-in.
+   * Atomically reads all 10 IndexedDB tables (`meta`, `tariffs`, `bills`, `readings`, `preferences`, `recommendations`, `feedback`, `savings`, `scenarios`, `questions`) in a read transaction and serializes every record—including full interval `readings` without truncation—into a standalone JSON file (`export_schema_version: 2`) that the user can download and audit. Zero obfuscation or proprietary lock-in.

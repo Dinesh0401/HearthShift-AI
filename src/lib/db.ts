@@ -195,6 +195,8 @@ export class HearthShiftDB extends Dexie {
    */
   async exportAllUserData(): Promise<Record<string, unknown>> {
     const [
+      meta,
+      tariffs,
       bills,
       readings,
       preferences,
@@ -202,30 +204,52 @@ export class HearthShiftDB extends Dexie {
       feedback,
       savings,
       scenarios,
-      meta,
-    ] = await Promise.all([
-      this.bills.toArray(),
-      this.readings.toArray(),
-      this.preferences.toArray(),
-      this.recommendations.toArray(),
-      this.feedback.toArray(),
-      this.savings.toArray(),
-      this.scenarios.toArray(),
-      this.meta.toArray(),
-    ]);
+      questions,
+    ] = await this.transaction(
+      'r',
+      [
+        this.meta,
+        this.tariffs,
+        this.bills,
+        this.readings,
+        this.preferences,
+        this.recommendations,
+        this.feedback,
+        this.savings,
+        this.scenarios,
+        this.questions,
+      ],
+      async () =>
+        Promise.all([
+          this.meta.toArray(),
+          this.tariffs.toArray(),
+          this.bills.toArray(),
+          this.readings.toArray(),
+          this.preferences.toArray(),
+          this.recommendations.toArray(),
+          this.feedback.toArray(),
+          this.savings.toArray(),
+          this.scenarios.toArray(),
+          this.questions.toArray(),
+        ])
+    );
 
     return {
       exported_at: new Date().toISOString(),
+      export_schema_version: 2,
       app: 'HearthShift AI',
       meta,
+      tariffs,
+      bills_count: bills.length,
       bills,
       readings_count: readings.length,
-      readings_sample: readings.slice(0, 100), // Avoid JSON explosion in UI previews
+      readings,
       preferences,
       recommendations,
       feedback,
       savings,
       scenarios,
+      questions,
     };
   }
 }
