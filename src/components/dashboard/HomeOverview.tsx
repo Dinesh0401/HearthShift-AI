@@ -98,7 +98,6 @@ export const HomeOverview: React.FC<HomeOverviewProps> = ({
   const [activeQuestion, setActiveQuestion] = useState<AdaptiveQuestion | null>(null);
   const [toast, setToast] = useState<string | null>(null);
 
-  const hasData = billsCount > 0 || readingsCount > 0;
   const usageKwh = latestBill ? latestBill.total_units_kwh : 0;
 
   const evaluateAction = useCallback(
@@ -458,7 +457,9 @@ export const HomeOverview: React.FC<HomeOverviewProps> = ({
                 {crossedThreshold
                   ? t('cliffWarningTitle')
                   : nearThreshold
-                  ? t('subsidyEligibility')
+                  ? language === 'ta'
+                    ? `${cliffThreshold} kWh எல்லையை நெருங்குகிறீர்கள் — கடப்பதைத் தவிர்க்கவும்`
+                    : `Approaching ${cliffThreshold} kWh threshold — crossing adds ₹${cliffCostDeltaInr.toFixed(0)}`
                   : t('subsidyEligibility')}
               </span>
             </p>

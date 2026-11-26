@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { db } from '../lib/db';
+import { db, type StoredBillEntry } from '../lib/db';
 import { evaluateCapabilityState, type CapabilityEvaluation } from '../core/capabilities/policy';
 import {
   SUPPORTED_TARIFF_CATALOG,
@@ -15,8 +15,9 @@ import {
   loadSyntheticDemoHousehold,
   clearDemoDataset,
 } from '../core/demo/synthetic-household';
-import { CapabilityBadge } from '../components/ingestion/CapabilityBadge';
+import { HomeOverview } from '../components/dashboard/HomeOverview';
 import { TariffHeadroomCard } from '../components/dashboard/TariffHeadroomCard';
+import { CapabilityBadge } from '../components/ingestion/CapabilityBadge';
 import { ManualBillForm } from '../components/ingestion/ManualBillForm';
 import { BillHistoryTable } from '../components/dashboard/BillHistoryTable';
 import { CsvDropzone } from '../components/ingestion/CsvDropzone';
@@ -26,12 +27,16 @@ import { RecommendationFeed } from '../components/dashboard/RecommendationFeed';
 import { SavingsLedger } from '../components/dashboard/SavingsLedger';
 import { PrivacyDataManager } from '../components/dashboard/PrivacyDataManager';
 import { ChangelogModal, AlphaFeedbackModal } from '../components/alpha/AlphaModals';
+import { Card } from '../components/ui/Card';
+import { Badge } from '../components/ui/Badge';
+import { ExpandableDetails } from '../components/ui/Disclosure';
 import { useLanguage } from '../locales/i18n';
 import {
+  Home,
   Receipt,
   FileSpreadsheet,
   Activity,
-  Sliders,
+  SlidersHorizontal,
   Lightbulb,
   Award,
   ShieldCheck,
@@ -45,21 +50,33 @@ import {
   MessageSquarePlus,
 } from 'lucide-react';
 
-type ActiveTab = 'bills' | 'import' | 'intervals' | 'simulator' | 'recommendations' | 'savings' | 'privacy';
+type ActiveTab =
+  | 'overview'
+  | 'bills'
+  | 'import'
+  | 'intervals'
+  | 'simulator'
+  | 'recommendations'
+  | 'savings'
+  | 'privacy';
 
 export default function DashboardPage() {
   const { t, language } = useLanguage();
-  const [activeTab, setActiveTab] = useState<ActiveTab>('bills');
+  const [activeTab, setActiveTab] = useState<ActiveTab>('overview');
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [latestUnits, setLatestUnits] = useState(380);
+  const [latestBill, setLatestBill] = useState<StoredBillEntry | null>(null);
+  const [billsCount, setBillsCount] = useState(0);
+  const [readingsCount, setReadingsCount] = useState(0);
+  const [readingsSpanDays, setReadingsSpanDays] = useState(0);
   const [evaluation, setEvaluation] = useState<CapabilityEvaluation | null>(null);
+  const [isLoadingState, setIsLoadingState] = useState(true);
   const [activeTariffId, setActiveTariffId] = useState<string>(TNPDCL_LT1A_2026_MAY10.id);
   const [isDemoMode, setIsDemoMode] = useState<boolean>(false);
   const [isDemoBusy, setIsDemoBusy] = useState<boolean>(false);
   const [showChangelog, setShowChangelog] = useState<boolean>(false);
   const [showFeedback, setShowFeedback] = useState<boolean>(false);
 
-  // Sync persisted region tariff & demo flag after mount
   useEffect(() => {
     if (typeof window !== 'undefined' && window.localStorage) {
       const savedTariffId = window.localStorage.getItem(ACTIVE_TARIFF_STORAGE_KEY);
@@ -94,12 +111,12 @@ export default function DashboardPage() {
         }
       }
 
-      const latestBill = await db.bills.orderBy('billing_period_start').reverse().first();
-      if (latestBill) {
-        setLatestUnits(latestBill.total_units_kwh);
-      } else {
-        setLatestUnits(380);
-      }
+      const newestBill = (await db.bills.orderBy('billing_period_start').reverse().first()) ?? null;
+      setBillsCount(bCount);
+      setReadingsCount(rCount);
+      setReadingsSpanDays(spanDays);
+      setLatestBill(newestBill);
+      setLatestUnits(newestBill ? newestBill.total_units_kwh : 380);
 
       const pref = await db.preferences.get('default_household');
       const constraints =
@@ -129,6 +146,8 @@ export default function DashboardPage() {
       setIsDemoMode(isSyntheticDemoMode());
     } catch (err) {
       console.error('Failed to load dashboard state from IndexedDB', err);
+    } finally {
+      setIsLoadingState(false);
     }
   }, [activeTariff]);
 
@@ -176,153 +195,49 @@ export default function DashboardPage() {
   };
 
   const tabItems: { id: ActiveTab; label: string; icon: React.ReactNode }[] = [
-    { id: 'bills', label: t('tabBills'), icon: <Receipt className="w-4 h-4 shrink-0" /> },
-    { id: 'import', label: t('tabImport'), icon: <FileSpreadsheet className="w-4 h-4 shrink-0" /> },
-    { id: 'intervals', label: t('tabIntervals'), icon: <Activity className="w-4 h-4 shrink-0" /> },
-    { id: 'simulator', label: t('tabSimulator'), icon: <Sliders className="w-4 h-4 shrink-0" /> },
-    { id: 'recommendations', label: t('tabRecommendations'), icon: <Lightbulb className="w-4 h-4 shrink-0" /> },
-    { id: 'savings', label: t('tabSavings'), icon: <Award className="w-4 h-4 shrink-0" /> },
-    { id: 'privacy', label: t('tabPrivacy'), icon: <ShieldCheck className="w-4 h-4 shrink-0" /> },
+    { id: 'overview', label: t('tabOverview'), icon: <Home className="w-4 h-4 shrink-0" strokeWidth={1.75} /> },
+    { id: 'bills', label: t('tabBills'), icon: <Receipt className="w-4 h-4 shrink-0" strokeWidth={1.75} /> },
+    { id: 'import', label: t('tabImport'), icon: <FileSpreadsheet className="w-4 h-4 shrink-0" strokeWidth={1.75} /> },
+    { id: 'intervals', label: t('tabIntervals'), icon: <Activity className="w-4 h-4 shrink-0" strokeWidth={1.75} /> },
+    { id: 'simulator', label: t('tabSimulator'), icon: <SlidersHorizontal className="w-4 h-4 shrink-0" strokeWidth={1.75} /> },
+    { id: 'recommendations', label: t('tabRecommendations'), icon: <Lightbulb className="w-4 h-4 shrink-0" strokeWidth={1.75} /> },
+    { id: 'savings', label: t('tabSavings'), icon: <Award className="w-4 h-4 shrink-0" strokeWidth={1.75} /> },
+    { id: 'privacy', label: t('tabPrivacy'), icon: <ShieldCheck className="w-4 h-4 shrink-0" strokeWidth={1.75} /> },
   ];
 
+  const verificationLabel =
+    activeCatalogEntry.verificationStatus === 'statutory_consumer_payable'
+      ? 'Statutory'
+      : activeCatalogEntry.verificationStatus === 'historical_baseline'
+      ? 'Historical'
+      : 'Reference';
+
   return (
-    <div className="space-y-6">
-      {/* Persistent Synthetic Demo Mode Banner */}
+    <div className="space-y-5">
+      {/* Compact Sample Household Banner (Only shown when Sample Mode active) */}
       {isDemoMode && (
         <div
           role="status"
-          className="rounded-2xl border-2 border-amber-400 bg-amber-50 p-4 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+          className="rounded-2xl border border-amber-200 bg-amber-50/80 px-4 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
         >
-          <div className="flex items-start gap-3">
-            <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-            <div>
-              <p className="text-xs sm:text-sm font-extrabold text-amber-950">
-                {t('demoModeBannerTitle')}
-              </p>
-              <p className="text-xs text-amber-900 mt-0.5 leading-relaxed">
-                {t('demoModeBannerDesc')}
-              </p>
+          <div className="flex items-start gap-2.5 min-w-0">
+            <AlertTriangle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+            <div className="min-w-0">
+              <p className="text-xs font-semibold text-amber-950">{t('demoModeBannerTitle')}</p>
+              <p className="text-xs text-amber-900/90 mt-0.5 leading-snug">{t('demoModeBannerDesc')}</p>
             </div>
           </div>
           <button
             type="button"
             onClick={handleClearDemo}
             disabled={isDemoBusy}
-            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-amber-900 hover:bg-amber-950 text-white text-xs font-bold shrink-0 transition-colors disabled:opacity-50"
+            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 min-h-[36px] rounded-xl bg-amber-900 hover:bg-amber-950 text-white text-xs font-medium shrink-0 transition-colors disabled:opacity-50"
           >
             <Trash2 className="w-3.5 h-3.5" />
-            {t('clearDemoBtn')}
+            <span>{t('clearDemoBtn')}</span>
           </button>
         </div>
       )}
-
-      {/* Control Strip: Region Tariff Selector & Safe Demo Mode Trigger */}
-      <div className="rounded-2xl border border-gray-200 bg-white p-4 sm:p-5 shadow-sm space-y-4">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          {/* Supported Tariff Region Selector */}
-          <div className="flex-1 space-y-1.5">
-            <label
-              htmlFor="region-tariff-selector"
-              className="flex items-center gap-1.5 text-xs font-bold text-gray-800"
-            >
-              <MapPin className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>{t('selectTariffRegion')}</span>
-            </label>
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2.5">
-              <select
-                id="region-tariff-selector"
-                aria-label={t('selectTariffRegion')}
-                value={activeTariffId}
-                onChange={handleTariffChange}
-                className="w-full sm:max-w-md rounded-xl border border-gray-300 bg-white px-3 py-2 text-xs sm:text-sm font-medium text-gray-900 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-              >
-                {SUPPORTED_TARIFF_CATALOG.map((entry) => (
-                  <option key={entry.plan.id} value={entry.plan.id}>
-                    {entry.regionLabel[language] ?? entry.regionLabel.en}
-                  </option>
-                ))}
-              </select>
-              <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-700 border border-slate-200 w-fit">
-                {activeCatalogEntry.verificationStatus === 'statutory_consumer_payable'
-                  ? 'Statutory Consumer-Payable'
-                  : activeCatalogEntry.verificationStatus === 'historical_baseline'
-                  ? 'Historical Baseline'
-                  : 'Generic Reference'}
-              </span>
-            </div>
-            <p className="text-[11px] text-gray-600 leading-relaxed">
-              {activeCatalogEntry.regulatoryNote[language] ?? activeCatalogEntry.regulatoryNote.en}
-            </p>
-          </div>
-
-          {/* Safe Demo Loader Button */}
-          {!isDemoMode && (
-            <div className="flex flex-col sm:items-end gap-1.5 pt-2 lg:pt-0 border-t lg:border-t-0 border-gray-100">
-              <button
-                type="button"
-                onClick={handleLoadDemo}
-                disabled={isDemoBusy}
-                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-900 text-xs font-bold transition-colors disabled:opacity-50"
-              >
-                <FlaskConical className="w-4 h-4 text-emerald-700 shrink-0" />
-                <span>{isDemoBusy ? 'Loading Demo...' : t('loadDemoBtn')}</span>
-              </button>
-              <span className="text-[11px] text-gray-500">
-                Synthetic 3 bills + 192h sample · 0 fake verified savings
-              </span>
-            </div>
-          )}
-        </div>
-
-        {/* Collapsible Supported Regions & Alpha Limitations Disclosure */}
-        <details className="rounded-xl border border-slate-200 bg-slate-50/80 px-4 py-2.5 text-xs text-slate-700">
-          <summary className="cursor-pointer font-semibold text-slate-800 flex items-center gap-2 select-none">
-            <Info className="w-4 h-4 text-blue-600 shrink-0" />
-            <span>{t('alphaDisclaimerTitle')}</span>
-          </summary>
-          <div className="mt-2.5 pt-2.5 border-t border-slate-200 space-y-2 text-[11px] text-slate-600 leading-relaxed">
-            <p>{t('alphaDisclaimerDesc')}</p>
-            <p>{t('supportedRegionsNote')}</p>
-            <p className="font-medium text-slate-700">{t('tariffVerificationNote')}</p>
-          </div>
-        </details>
-
-        {/* How HearthShift Works + Changelog & Zero-Telemetry Feedback Triggers */}
-        <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-3">
-          <details className="flex-1 rounded-xl border border-emerald-200/80 bg-emerald-50/40 px-4 py-2.5 text-xs text-slate-700">
-            <summary className="cursor-pointer font-semibold text-emerald-950 flex items-center gap-2 select-none">
-              <BookOpen className="w-4 h-4 text-emerald-700 shrink-0" />
-              <span>{t('howItWorksTitle')}</span>
-            </summary>
-            <ul className="mt-2.5 pt-2.5 border-t border-emerald-200/60 space-y-1.5 text-[11px] text-slate-700 leading-relaxed">
-              <li>{t('howItWorksStep1')}</li>
-              <li>{t('howItWorksStep2')}</li>
-              <li>{t('howItWorksStep3')}</li>
-              <li className="text-amber-900 font-medium pt-0.5">{t('howItWorksBoundaries')}</li>
-            </ul>
-          </details>
-
-          <div className="flex flex-wrap items-center gap-2 shrink-0">
-            <button
-              type="button"
-              onClick={() => setShowChangelog(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold transition-colors"
-            >
-              <FileText className="w-3.5 h-3.5 text-slate-500 shrink-0" />
-              <span>{t('openChangelogBtn')}</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setShowFeedback(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-blue-200 bg-blue-50/70 hover:bg-blue-100 text-blue-900 text-xs font-semibold transition-colors"
-            >
-              <MessageSquarePlus className="w-3.5 h-3.5 text-blue-700 shrink-0" />
-              <span>{t('openFeedbackBtn')}</span>
-            </button>
-          </div>
-        </div>
-      </div>
 
       <ChangelogModal isOpen={showChangelog} onClose={() => setShowChangelog(false)} />
       <AlphaFeedbackModal
@@ -331,123 +246,218 @@ export default function DashboardPage() {
         activeTariffId={activeTariff.id}
       />
 
-      {/* Top Section: Capability Badge & Tariff Headroom Card */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-1 flex flex-col">
+      {/* Unified SaaS Shell: Desktop Sidebar + Main Canvas / Mobile Scrollable Tabs */}
+      <div className="grid grid-cols-1 lg:grid-cols-[232px_minmax(0,1fr)] gap-6 lg:gap-8 items-start">
+        {/* Navigation Sidebar (Desktop) / Horizontal Scroll Tabs (Mobile & Tablet) */}
+        <aside className="lg:sticky lg:top-24 space-y-4">
+          <nav aria-label="Dashboard sections">
+            <div
+              role="tablist"
+              aria-label="Dashboard sections"
+              className="flex lg:flex-col gap-1.5 overflow-x-auto no-scrollbar pb-1 lg:pb-0"
+            >
+              {tabItems.map((tab) => {
+                const isSelected = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    id={`tab-${tab.id}`}
+                    type="button"
+                    role="tab"
+                    aria-selected={isSelected}
+                    aria-controls={`panel-${tab.id}`}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`flex items-center gap-2.5 min-h-[42px] px-3.5 py-2 rounded-xl text-xs sm:text-sm whitespace-nowrap shrink-0 lg:w-full text-left transition-colors ${
+                      isSelected
+                        ? 'bg-emerald-50 text-emerald-800 font-semibold border border-emerald-200/70'
+                        : 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100/80 border border-transparent font-medium'
+                    }`}
+                  >
+                    <span className={isSelected ? 'text-emerald-600' : 'text-zinc-400'}>
+                      {tab.icon}
+                    </span>
+                    <span>{tab.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </nav>
+
+          {/* Desktop Quick Info Card inside Sidebar */}
           {evaluation && (
-            <CapabilityBadge
-              mode={evaluation.mode}
-              reasons={evaluation.reasons}
-              nextStepGuidance={evaluation.next_step_guidance}
-              className="h-full"
-            />
+            <div className="hidden lg:block pt-2 border-t border-zinc-200/80">
+              <CapabilityBadge
+                mode={evaluation.mode}
+                reasons={evaluation.reasons}
+                nextStepGuidance={evaluation.next_step_guidance}
+              />
+            </div>
           )}
-        </div>
+        </aside>
 
-        <div className="lg:col-span-2">
-          <TariffHeadroomCard latestUnitsKwh={latestUnits} tariff={activeTariff} />
-        </div>
-      </div>
+        {/* Main Workspace Column */}
+        <div className="min-w-0 space-y-6">
+          {/* Compact Context Toolbar: Tariff Region + Sample + Utility Modals */}
+          <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-zinc-200/80">
+            <div className="flex flex-wrap items-center gap-2 min-w-0 flex-1">
+              <MapPin className="w-4 h-4 text-emerald-600 shrink-0" />
+              <label htmlFor="region-tariff-selector" className="sr-only">
+                {t('selectTariffRegion')}
+              </label>
+              <select
+                id="region-tariff-selector"
+                aria-label={t('selectTariffRegion')}
+                value={activeTariffId}
+                onChange={handleTariffChange}
+                className="min-h-[38px] max-w-full sm:max-w-xs rounded-xl border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-900 focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20"
+              >
+                {SUPPORTED_TARIFF_CATALOG.map((entry) => (
+                  <option key={entry.plan.id} value={entry.plan.id}>
+                    {entry.regionLabel[language] ?? entry.regionLabel.en}
+                  </option>
+                ))}
+              </select>
+              <Badge variant="neutral" className="hidden sm:inline-flex">
+                {verificationLabel}
+              </Badge>
+            </div>
 
-      {/* Main Accessible Tab Navigation */}
-      <div className="border-b border-gray-200">
-        <nav aria-label="Tabs">
-          <div
-            role="tablist"
-            aria-label="Dashboard sections"
-            className="flex flex-wrap lg:flex-nowrap gap-1 sm:gap-4 overflow-x-auto pb-1"
-          >
-            {tabItems.map((tab) => {
-              const isSelected = activeTab === tab.id;
-              return (
+            <div className="flex flex-wrap items-center gap-2 shrink-0">
+              {!isDemoMode && (
                 <button
-                  key={tab.id}
-                  id={`tab-${tab.id}`}
                   type="button"
-                  role="tab"
-                  aria-selected={isSelected}
-                  aria-controls={`panel-${tab.id}`}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 py-2.5 px-3 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap transition-colors ${
-                    isSelected
-                      ? 'border-emerald-600 text-emerald-700 font-bold'
-                      : 'border-transparent text-gray-600 hover:text-gray-800 hover:border-gray-300'
-                  }`}
+                  onClick={handleLoadDemo}
+                  disabled={isDemoBusy}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 min-h-[36px] rounded-xl bg-emerald-50 hover:bg-emerald-100/80 border border-emerald-200 text-emerald-800 text-xs font-medium transition-colors disabled:opacity-50"
                 >
-                  {tab.icon}
-                  <span>{tab.label}</span>
+                  <FlaskConical className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                  <span>{isDemoBusy ? 'Loading...' : t('loadDemoBtn')}</span>
                 </button>
-              );
-            })}
-          </div>
-        </nav>
-      </div>
-
-      {/* Tab Panels */}
-      <div role="tabpanel" id={`panel-${activeTab}`} aria-labelledby={`tab-${activeTab}`}>
-        {activeTab === 'bills' && (
-          <div className="space-y-8">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              <div className="lg:col-span-1">
-                <ManualBillForm activeTariffId={activeTariff.id} onSuccess={handleStateUpdated} />
-              </div>
-              <div className="lg:col-span-2">
-                <BillHistoryTable
-                  refreshTrigger={refreshTrigger}
-                  onBillDeleted={handleStateUpdated}
-                />
-              </div>
+              )}
+              <button
+                type="button"
+                onClick={() => setShowChangelog(true)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 min-h-[36px] rounded-xl border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 text-xs font-medium transition-colors"
+              >
+                <FileText className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
+                <span>{t('openChangelogBtn')}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowFeedback(true)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 min-h-[36px] rounded-xl border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 text-xs font-medium transition-colors"
+              >
+                <MessageSquarePlus className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
+                <span>{t('openFeedbackBtn')}</span>
+              </button>
             </div>
           </div>
-        )}
 
-        {activeTab === 'import' && (
-          <div className="space-y-6">
-            <CsvDropzone
-              onImportComplete={() => {
-                handleStateUpdated();
-                setActiveTab('intervals');
-              }}
-            />
-          </div>
-        )}
+          {/* Active Tab Content */}
+          <div role="tabpanel" id={`panel-${activeTab}`} aria-labelledby={`tab-${activeTab}`}>
+            {activeTab === 'overview' && (
+              <HomeOverview
+                tariff={activeTariff}
+                evaluation={evaluation}
+                latestBill={latestBill}
+                billsCount={billsCount}
+                readingsCount={readingsCount}
+                readingsSpanDays={readingsSpanDays}
+                isDemoMode={isDemoMode}
+                isLoading={isLoadingState}
+                isDemoBusy={isDemoBusy}
+                onLoadDemo={handleLoadDemo}
+                onNavigate={setActiveTab}
+                onActionLogged={handleStateUpdated}
+              />
+            )}
 
-        {activeTab === 'intervals' && (
-          <div className="space-y-6">
-            <IntervalChart
-              canVisualizeIntervals={evaluation?.permissions.can_visualize_intervals ?? false}
-              refreshTrigger={refreshTrigger}
-            />
-          </div>
-        )}
+            {activeTab === 'bills' && (
+              <div className="space-y-6">
+                <TariffHeadroomCard latestUnitsKwh={latestUnits} tariff={activeTariff} />
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                  <div className="lg:col-span-5">
+                    <ManualBillForm
+                      activeTariffId={activeTariff.id}
+                      onSuccess={handleStateUpdated}
+                    />
+                  </div>
+                  <div className="lg:col-span-7">
+                    <BillHistoryTable
+                      refreshTrigger={refreshTrigger}
+                      onBillDeleted={handleStateUpdated}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
 
-        {activeTab === 'simulator' && (
-          <div className="space-y-6">
-            <ScenarioSimulator baselineUnitsKwh={latestUnits} tariff={activeTariff} />
-          </div>
-        )}
+            {activeTab === 'import' && (
+              <CsvDropzone
+                onImportComplete={() => {
+                  handleStateUpdated();
+                  setActiveTab('intervals');
+                }}
+              />
+            )}
 
-        {activeTab === 'recommendations' && (
-          <div className="space-y-6">
-            <RecommendationFeed
-              latestUnitsKwh={latestUnits}
-              tariff={activeTariff}
-              onActionLogged={handleStateUpdated}
-            />
-          </div>
-        )}
+            {activeTab === 'intervals' && (
+              <IntervalChart
+                canVisualizeIntervals={evaluation?.permissions.can_visualize_intervals ?? false}
+                refreshTrigger={refreshTrigger}
+                onGoToImport={() => setActiveTab('import')}
+              />
+            )}
 
-        {activeTab === 'savings' && (
-          <div className="space-y-6">
-            <SavingsLedger refreshTrigger={refreshTrigger} />
-          </div>
-        )}
+            {activeTab === 'simulator' && (
+              <ScenarioSimulator baselineUnitsKwh={latestUnits} tariff={activeTariff} />
+            )}
 
-        {activeTab === 'privacy' && (
-          <div>
-            <PrivacyDataManager onDataPurged={handleStateUpdated} />
+            {activeTab === 'recommendations' && (
+              <RecommendationFeed
+                latestUnitsKwh={latestUnits}
+                tariff={activeTariff}
+                onActionLogged={handleStateUpdated}
+              />
+            )}
+
+            {activeTab === 'savings' && <SavingsLedger refreshTrigger={refreshTrigger} />}
+
+            {activeTab === 'privacy' && <PrivacyDataManager onDataPurged={handleStateUpdated} />}
           </div>
-        )}
+
+          {/* Progressive Reference Footer inside Workspace (Always accessible, never blocks fold) */}
+          <Card className="p-4 sm:p-5 bg-zinc-50/50">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <ExpandableDetails
+                summary={t('alphaDisclaimerTitle')}
+                icon={<Info className="w-3.5 h-3.5 text-zinc-500 shrink-0" />}
+              >
+                <div className="space-y-2 text-xs text-zinc-600 leading-relaxed">
+                  <p>{t('alphaDisclaimerDesc')}</p>
+                  <p>{t('supportedRegionsNote')}</p>
+                  <p className="font-medium text-zinc-800">{t('tariffVerificationNote')}</p>
+                  <p className="text-[11px] text-zinc-500">
+                    {activeCatalogEntry.regulatoryNote[language] ??
+                      activeCatalogEntry.regulatoryNote.en}
+                  </p>
+                </div>
+              </ExpandableDetails>
+
+              <ExpandableDetails
+                summary={t('howItWorksTitle')}
+                icon={<BookOpen className="w-3.5 h-3.5 text-emerald-600 shrink-0" />}
+              >
+                <ul className="space-y-1.5 text-xs text-zinc-600 leading-relaxed">
+                  <li>{t('howItWorksStep1')}</li>
+                  <li>{t('howItWorksStep2')}</li>
+                  <li>{t('howItWorksStep3')}</li>
+                  <li className="text-amber-800 font-medium pt-0.5">{t('howItWorksBoundaries')}</li>
+                </ul>
+              </ExpandableDetails>
+            </div>
+          </Card>
+        </div>
       </div>
     </div>
   );
