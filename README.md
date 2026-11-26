@@ -107,9 +107,12 @@ HearthShift-AI/
 # 1. Install JS dependencies
 npm ci
 
-# 2. Set up Python research environment (Windows PowerShell: research\.venv\Scripts\python.exe)
-python -m venv research/.venv
-research/.venv/Scripts/python -m pip install "numpy>=1.26.0" "scipy>=1.12.0" "pandas>=2.2.0" "pytest>=8.0.0"
+# 2. Create and activate an isolated Python research environment
+python -m venv .venv
+# macOS/Linux: source .venv/bin/activate
+# Windows PowerShell: .venv\Scripts\Activate.ps1
+python -m pip install -r research/requirements.txt
+python -m pip install pytest
 
 # 3. Run code quality, security audit, unit/parity & Python suites
 npm audit --omit=dev
