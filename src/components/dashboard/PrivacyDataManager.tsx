@@ -5,7 +5,9 @@ import { db } from '../../lib/db';
 import { rollbackBatch } from '../../core/storage/ingestion-storage';
 import { clearDemoModeFlag } from '../../core/demo/synthetic-household';
 import { useLanguage } from '../../locales/i18n';
-import { ShieldCheck, Download, Trash2, Undo2, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { Card, SectionHeader } from '../ui/Card';
+import { Badge } from '../ui/Badge';
+import { ShieldCheck, Download, Trash2, Undo2, CheckCircle2, AlertTriangle, X } from 'lucide-react';
 
 interface PrivacyDataManagerProps {
   onDataPurged?: () => void;
@@ -67,7 +69,7 @@ export const PrivacyDataManager: React.FC<PrivacyDataManagerProps> = ({
   const handleRollback = async (batchId: string) => {
     try {
       const deletedCount = await rollbackBatch(batchId);
-      setMessage(`Successfully rolled back batch ${batchId} (${deletedCount} readings removed).`);
+      setMessage(`Rolled back batch ${batchId} (${deletedCount} readings removed).`);
       await loadBatches();
       if (onDataPurged) onDataPurged();
     } catch (err) {
@@ -94,125 +96,107 @@ export const PrivacyDataManager: React.FC<PrivacyDataManagerProps> = ({
   };
 
   return (
-    <div className={`space-y-6 ${className}`}>
-      {/* Privacy Guarantee Banner */}
-      <div className="rounded-2xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50/60 dark:bg-emerald-950/20 p-6">
-        <div className="flex items-start gap-3">
-          <div className="p-2 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 rounded-xl shrink-0 mt-0.5">
-            <ShieldCheck className="w-6 h-6" />
-          </div>
-          <div>
-            <h3 className="text-base font-bold text-emerald-900 dark:text-emerald-100">
-              {t('privacyTitle')}
-            </h3>
-            <p className="mt-1 text-xs text-emerald-800/80 dark:text-emerald-300/80 leading-relaxed">
-              {t('privacyDescription')}
-            </p>
-          </div>
-        </div>
-
-        {/* Audit Status */}
-        <div className="mt-4 pt-4 border-t border-emerald-200 dark:border-emerald-800/60 flex items-center gap-2 text-xs text-emerald-800 dark:text-emerald-300 font-medium">
-          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-          <span>{t('networkAuditPassing')}</span>
-        </div>
-      </div>
-
-      {/* Browser Storage Limitations & Device Risks Notice */}
-      <div className="rounded-2xl border border-amber-200 dark:border-amber-900/60 bg-amber-50/70 dark:bg-amber-950/20 p-5">
-        <div className="flex items-start gap-3">
-          <div className="p-2 bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 rounded-xl shrink-0 mt-0.5">
-            <AlertTriangle className="w-5 h-5" />
-          </div>
-          <div>
-            <h4 className="text-sm font-bold text-amber-950 dark:text-amber-100">
-              {t('storageLimitationsTitle')}
-            </h4>
-            <p className="mt-1 text-xs text-amber-900/90 dark:text-amber-200/90 leading-relaxed">
-              {t('storageLimitationsDesc')}
-            </p>
-          </div>
-        </div>
-      </div>
+    <div className={`space-y-5 ${className}`}>
+      <SectionHeader title={t('privacyTitle')} subtitle={t('privacyDescription')} />
 
       {message && (
         <div
           role="status"
-          className="p-4 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300 text-xs flex items-center justify-between"
+          className="p-3.5 rounded-xl bg-zinc-900 text-white text-xs font-medium flex items-center justify-between gap-3"
         >
           <span>{message}</span>
           <button
             type="button"
             onClick={() => setMessage(null)}
             aria-label="Dismiss status message"
-            className="text-blue-600 hover:text-blue-800 font-bold ml-4"
+            className="text-zinc-400 hover:text-white p-1"
           >
-            ✕
+            <X className="w-4 h-4" />
           </button>
         </div>
       )}
 
-      {/* Action Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Export Data Card */}
-        <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm flex flex-col justify-between">
+      {/* Privacy & Network Status Card */}
+      <Card className="p-5 sm:p-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
+              <ShieldCheck className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-zinc-900">{t('networkAuditTitle')}</h3>
+              <p className="text-xs text-zinc-600 mt-0.5">{t('networkAuditPassing')}</p>
+            </div>
+          </div>
+          <Badge variant="emerald" dot>
+            <CheckCircle2 className="w-3 h-3" />
+            <span>{t('privacyBadgeShort')}</span>
+          </Badge>
+        </div>
+      </Card>
+
+      {/* Honest Browser Storage Risks Notice */}
+      <Card className="p-5 border-amber-200 bg-amber-50/60">
+        <div className="flex items-start gap-3">
+          <AlertTriangle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+          <div>
+            <h4 className="text-sm font-semibold text-zinc-900">{t('storageLimitationsTitle')}</h4>
+            <p className="mt-1 text-xs text-zinc-700 leading-relaxed">
+              {t('storageLimitationsDesc')}
+            </p>
+          </div>
+        </div>
+      </Card>
+
+      {/* Export & Purge Controls */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Card className="p-5 sm:p-6 flex flex-col justify-between gap-5">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <Download className="w-5 h-5 text-emerald-600" />
-              <h4 className="text-sm font-bold text-gray-900 dark:text-gray-100">
-                {t('exportBtn')}
-              </h4>
+              <Download className="w-4 h-4 text-emerald-600" />
+              <h4 className="text-sm font-semibold text-zinc-900">{t('exportBtn')}</h4>
             </div>
-            <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed mb-4">
-              {t('exportDesc')}
-            </p>
+            <p className="text-xs text-zinc-500 leading-relaxed">{t('exportDesc')}</p>
           </div>
 
           <button
             type="button"
             onClick={handleExportJson}
             disabled={isExporting}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gray-900 hover:bg-black dark:bg-gray-100 dark:hover:bg-white text-white dark:text-gray-900 text-xs font-semibold shadow transition-colors disabled:opacity-50"
+            className="w-full min-h-[44px] flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-medium transition-colors disabled:opacity-50"
           >
             <Download className="w-4 h-4" />
-            {isExporting ? 'Exporting...' : t('exportBtn')}
+            <span>{isExporting ? 'Exporting...' : t('exportBtn')}</span>
           </button>
-        </div>
+        </Card>
 
-        {/* Delete All Data Card */}
-        <div className="rounded-2xl border border-red-200 dark:border-red-900/60 bg-white dark:bg-gray-900 p-6 shadow-sm flex flex-col justify-between">
+        <Card className="p-5 sm:p-6 border-rose-200/80 flex flex-col justify-between gap-5">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <Trash2 className="w-5 h-5 text-red-600" />
-              <h4 className="text-sm font-bold text-red-600 dark:text-red-400">
-                {t('deleteBtnTitle')}
-              </h4>
+              <Trash2 className="w-4 h-4 text-rose-600" />
+              <h4 className="text-sm font-semibold text-rose-700">{t('deleteBtnTitle')}</h4>
             </div>
-            <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed mb-4">
-              {t('deleteBtnDesc')}
-            </p>
+            <p className="text-xs text-zinc-500 leading-relaxed">{t('deleteBtnDesc')}</p>
           </div>
 
           {confirmDelete ? (
-            <div className="space-y-2">
-              <p className="text-xs text-red-600 font-semibold text-center">
-                {t('deleteConfirmMsg')}
-              </p>
+            <div className="space-y-2.5">
+              <p className="text-xs text-rose-700 font-medium">{t('deleteConfirmMsg')}</p>
               <div className="flex gap-2">
                 <button
                   type="button"
                   onClick={handleDeleteAll}
                   disabled={isDeleting}
-                  className="flex-1 py-2 px-3 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition-colors"
+                  className="flex-1 min-h-[40px] py-2 px-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-medium transition-colors"
                 >
-                  {isDeleting ? 'Purging...' : 'Yes, Delete Everything'}
+                  {isDeleting ? 'Deleting...' : t('deleteConfirmBtn')}
                 </button>
                 <button
                   type="button"
                   onClick={() => setConfirmDelete(false)}
-                  className="py-2 px-3 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs font-semibold transition-colors"
+                  className="min-h-[40px] py-2 px-3 rounded-xl bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-700 text-xs font-medium transition-colors"
                 >
-                  Cancel
+                  {t('cancelBtn')}
                 </button>
               </div>
             </div>
@@ -220,54 +204,50 @@ export const PrivacyDataManager: React.FC<PrivacyDataManagerProps> = ({
             <button
               type="button"
               onClick={() => setConfirmDelete(true)}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-red-50 dark:bg-red-950/40 hover:bg-red-100 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-xs font-semibold transition-colors"
+              className="w-full min-h-[44px] flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 text-xs font-medium transition-colors"
             >
               <Trash2 className="w-4 h-4" />
-              {t('deleteBtnTitle')}
+              <span>{t('deleteBtnTitle')}</span>
             </button>
           )}
-        </div>
+        </Card>
       </div>
 
-      {/* CSV Batches Rollback Section */}
+      {/* CSV Batch Rollback */}
       {batches.length > 0 && (
-        <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
-          <div className="flex items-center gap-2 mb-3">
-            <Undo2 className="w-5 h-5 text-gray-500" />
-            <h4 className="text-sm font-bold text-gray-900 dark:text-gray-100">
-              Import Batches (Atomic Rollback Support)
-            </h4>
+        <Card className="p-5 sm:p-6">
+          <div className="flex items-center gap-2 mb-2">
+            <Undo2 className="w-4 h-4 text-zinc-500" />
+            <h4 className="text-sm font-semibold text-zinc-900">Import batches</h4>
           </div>
-          <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">
-            If an imported CSV file contains errors, you can completely rollback the entire batch without affecting other data.
+          <p className="text-xs text-zinc-500 mb-4">
+            Remove an imported CSV batch cleanly without affecting your utility bills or settings.
           </p>
 
           <div className="space-y-2">
             {batches.map((b) => (
               <div
                 key={b.id}
-                className="flex items-center justify-between p-3 rounded-xl bg-gray-50 dark:bg-gray-800/60 text-xs border border-gray-100 dark:border-gray-800"
+                className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-xl bg-zinc-50 border border-zinc-200/70 text-xs"
               >
                 <div>
-                  <span className="font-semibold text-gray-800 dark:text-gray-200">
-                    Batch: {b.id}
-                  </span>
-                  <span className="ml-3 text-gray-500">
-                    {b.count} readings recorded
+                  <span className="font-medium text-zinc-900">Batch: {b.id}</span>
+                  <span className="ml-3 text-zinc-500 tabular-nums">
+                    {b.count} readings
                   </span>
                 </div>
                 <button
                   type="button"
                   onClick={() => handleRollback(b.id)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 text-xs font-semibold transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-zinc-200 text-rose-600 hover:bg-rose-50 text-xs font-medium transition-colors"
                 >
                   <Undo2 className="w-3.5 h-3.5" />
-                  Rollback Batch
+                  <span>Rollback batch</span>
                 </button>
               </div>
             ))}
           </div>
-        </div>
+        </Card>
       )}
     </div>
   );

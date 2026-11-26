@@ -11,12 +11,9 @@ test.describe('HearthShift AI — Phase 3.1 Production MVP Reliability & Parity 
     }
   });
 
-  test('validates 7-tab navigation, cliff simulation, adaptive recommendations, 4-tier savings provenance, Tamil i18n, privacy purge, and 100% zero external telemetry', async ({
+  test('validates 8-tab SaaS navigation, cliff simulation, adaptive recommendations, 4-tier savings provenance, Tamil i18n, privacy purge, and zero telemetry', async ({
     page,
   }) => {
-    // ══════════════════════════════════════════════════════════
-    // 1. Strict Privacy & External Telemetry Monitor
-    // ══════════════════════════════════════════════════════════
     const externalTelemetryRequests: string[] = [];
     page.on('request', (request) => {
       const url = request.url();
@@ -25,23 +22,22 @@ test.describe('HearthShift AI — Phase 3.1 Production MVP Reliability & Parity 
       }
     });
 
-    // ══════════════════════════════════════════════════════════
-    // 2. Initial Page Load & Tab Existence Verification
-    // ══════════════════════════════════════════════════════════
     await page.goto('/');
 
     await expect(page.locator('h1')).toContainText('HearthShift AI');
-    await expect(page.getByText('100% On-Device · Zero External Telemetry · IndexedDB')).toBeVisible();
+    await expect(page.getByText('100% On-Device · IndexedDB')).toBeVisible();
 
-    // Verify all 7 navigation tabs exist (WAI-ARIA role="tab")
-    const billsTab = page.getByRole('tab', { name: /Bills & Slab Analysis/i });
-    const importTab = page.getByRole('tab', { name: /Smart Meter CSV Import/i });
-    const intervalsTab = page.getByRole('tab', { name: /Load Curves & Intervals/i });
-    const simulatorTab = page.getByRole('tab', { name: /Scenario Simulator/i });
-    const recsTab = page.getByRole('tab', { name: /Smart Recommendations/i });
-    const savingsTab = page.getByRole('tab', { name: /Savings Ledger/i });
-    const privacyTab = page.getByRole('tab', { name: /Privacy & Storage/i });
+    // Verify all 8 navigation tabs exist cleanly (WAI-ARIA role="tab")
+    const overviewTab = page.getByRole('tab', { name: /^Overview$/i });
+    const billsTab = page.getByRole('tab', { name: /^Bills$/i });
+    const importTab = page.getByRole('tab', { name: /Import CSV/i });
+    const intervalsTab = page.getByRole('tab', { name: /^Usage$/i });
+    const simulatorTab = page.getByRole('tab', { name: /^Simulator$/i });
+    const recsTab = page.getByRole('tab', { name: /Smart recommendations/i });
+    const savingsTab = page.getByRole('tab', { name: /Savings ledger/i });
+    const privacyTab = page.getByRole('tab', { name: /Privacy & data/i });
 
+    await expect(overviewTab).toBeVisible();
     await expect(billsTab).toBeVisible();
     await expect(importTab).toBeVisible();
     await expect(intervalsTab).toBeVisible();
@@ -50,52 +46,30 @@ test.describe('HearthShift AI — Phase 3.1 Production MVP Reliability & Parity 
     await expect(savingsTab).toBeVisible();
     await expect(privacyTab).toBeVisible();
 
-    // ══════════════════════════════════════════════════════════
-    // 3. Bill Ingestion & 500 kWh Cliff Boundary Setup
-    // ══════════════════════════════════════════════════════════
-    // Record a 505 kWh bill to test cliff avoidance right above the 500 kWh boundary
+    // Record 505 kWh bill
+    await billsTab.click();
     await page.locator('input[name="billing_period_start"]').fill('2026-05-01');
     await page.locator('input[name="billing_period_end"]').fill('2026-06-30');
     await page.locator('input[name="total_units_kwh"]').fill('505');
-    await page.getByRole('button', { name: /Save Bill Locally/i }).click();
-
-    await expect(page.getByText('Electricity bill successfully saved locally in IndexedDB.')).toBeVisible();
+    await page.getByRole('button', { name: /^Save bill$/i }).click();
+    await expect(page.getByText('Bill saved locally in IndexedDB.')).toBeVisible();
     await expect(page.getByRole('cell', { name: '505 kWh' })).toBeVisible();
 
-    // ══════════════════════════════════════════════════════════
-    // 4. Scenario Simulator & Cliff Avoidance Banner
-    // ══════════════════════════════════════════════════════════
+    // Scenario Simulator & Cliff Avoidance
     await simulatorTab.click();
-
-    // Verify baseline shows 505.0 kWh
     await expect(page.getByText('505.0')).toBeVisible();
+    await expect(page.getByText(/Threshold cliff avoided — subsidy protected/i)).toBeVisible();
 
-    // Baseline 505 kWh with default actions (-15 kWh AC, -6 kWh Standby = 484 kWh) crosses below 500 kWh cliff!
-    // Verify the Cliff Avoidance Alert is rendered dynamically
-    await expect(
-      page.getByText(/₹478\.40 TARIFF CLIFF JUMP AVOIDED!/i)
-    ).toBeVisible();
-
-    // Interact with simulator controls:
-    // Change AC setpoint to +1.0°C
     await page.getByRole('button', { name: '+1°C' }).click();
-    // Toggle water heater trim switch
     await page.getByRole('switch', { name: /Trim water heater duration/i }).click();
-
-    // Verify Laundry Shift honesty disclaimer
     await expect(
-      page.getByText(/Under flat\/tiered tariff, shifting timing yields ₹0 direct savings/i)
+      page.getByText(/Under flat or slab tariffs, shifting time of use yields ₹0 direct savings/i)
     ).toBeVisible();
 
-    // Take Audit Screenshot 1: Simulator Cliff Avoidance
     await page.screenshot({ path: 'tests/e2e/screenshots/simulator-cliff.png' });
 
-    // ══════════════════════════════════════════════════════════
-    // 5. Ingestion of 8-Day Empirical Interval Data (192 Hours)
-    // ══════════════════════════════════════════════════════════
+    // Ingest 192 hourly intervals (8 days)
     await importTab.click();
-
-    // Build 192 hours (8 days) of hourly smart-meter readings to exceed >= 7 full days
     let hourlyCsv = 'timestamp,kwh\n';
     const startDate = new Date('2026-05-01T00:00:00Z');
     for (let h = 0; h < 192; h++) {
@@ -111,49 +85,41 @@ test.describe('HearthShift AI — Phase 3.1 Production MVP Reliability & Parity 
     });
 
     await expect(page.getByText(/CSV Validation Preview/i)).toBeVisible();
-    await expect(page.getByText('Resolution: hourly')).toBeVisible();
-
-    // Commit readings to IndexedDB
     await page.getByRole('button', { name: /Confirm & Save 192 Readings/i }).click();
 
-    // Verify unlocked in intervals tab
-    await expect(page.getByText(/OPTIMIZATION ELIGIBLE|INTERVAL MODE/).first()).toBeVisible();
-    await expect(page.getByText('Empirical Interval Load Profile')).toBeVisible();
-    await expect(page.getByText('Validated interval readings stored:')).toBeVisible();
+    await expect(page.getByText(/Ready for recommendations|Meter readings active/).first()).toBeVisible();
+    await expect(page.getByText('Hourly usage curve')).toBeVisible();
 
-    // ══════════════════════════════════════════════════════════
-    // 6. TR-VOI Adaptive Question & Certified Recommendation Card
-    // ══════════════════════════════════════════════════════════
+    // Recommendations Tab
     await recsTab.click();
 
-    // Wait for adaptive preference question modal if triggered by EVSI hurdle
-    const modalButton = page.getByRole('button', { name: /Yes \/ Comfortable/i });
+    const modalButton = page.getByRole('button', { name: /Yes, comfortable/i });
     try {
-      await modalButton.waitFor({ state: 'visible', timeout: 4000 });
-      await expect(page.getByText('EVSI Decision Gate Active')).toBeVisible();
+      await modalButton.waitFor({ state: 'visible', timeout: 3500 });
+      await expect(page.getByText(/Quick comfort check/i)).toBeVisible();
       await modalButton.click();
     } catch {
-      // If no question was triggered, recommendation is already visible
+      // Recommendation ready directly
     }
 
-    // Recommendation card is displayed
-    await expect(page.getByText(/95% Modeled Comfort Bound/i)).toBeVisible();
-    await expect(page.getByText('Modeled Estimate', { exact: true }).first()).toBeVisible();
-    await expect(page.getByText(/Regulatory Savings Rationale/i)).toBeVisible();
-    await expect(page.getByText(/Explicit Model Assumptions/i)).toBeVisible();
-    await expect(page.getByText(/Advisory Guidance: Manual household control only/i)).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Smart recommendations' })).toBeVisible();
+    await expect(page.getByText('Model-based estimate', { exact: true }).first()).toBeVisible();
+    await expect(page.getByText('95% comfort bound', { exact: true }).first()).toBeVisible();
 
-    // Take Audit Screenshot 2: Recommendation Card
+    // Expand details panel and verify Conservative estimate, Why this helps, and Assumptions
+    await page.locator('#panel-recommendations').getByRole('button', { name: /View details/i }).click();
+    await expect(page.getByText('Conservative estimate')).toBeVisible();
+    await expect(page.getByText('Why this helps')).toBeVisible();
+    await expect(page.getByText(/How this is modeled/i)).toBeVisible();
+    await expect(page.getByText(/Advisory only/i).first()).toBeVisible();
     await page.screenshot({ path: 'tests/e2e/screenshots/recommendation-card.png' });
 
-    // Click "Tried It!" button to log adopted action to savings ledger
-    await page.getByRole('button', { name: /Tried It!/i }).click();
-    await expect(page.getByText(/Action logged as unverified user-reported entry in Savings Ledger/i)).toBeVisible();
+    await page.getByRole('button', { name: /Mark as tried/i }).click();
+    await expect(
+      page.getByText(/Action logged as unverified user-reported entry in Savings ledger/i)
+    ).toBeVisible();
 
-    // ══════════════════════════════════════════════════════════
-    // 7. Savings Evidence Ledger & 4 Provenance Badges
-    // ══════════════════════════════════════════════════════════
-    // Seed extra records into IndexedDB so all 4 provenance tiers are audited in UI
+    // Seed all 4 provenance tiers into IndexedDB
     await page.evaluate(async () => {
       const request = window.indexedDB.open('HearthShiftDB');
       await new Promise((resolve) => {
@@ -162,7 +128,6 @@ test.describe('HearthShift AI — Phase 3.1 Production MVP Reliability & Parity 
           const tx = db.transaction(['savings'], 'readwrite');
           const store = tx.objectStore('savings');
 
-          // Formal M&V candidate record (not IPMVP-certified)
           store.put({
             id: 'sav_verified_mv',
             recommendation_id: 'rec_mv_01',
@@ -176,7 +141,6 @@ test.describe('HearthShift AI — Phase 3.1 Production MVP Reliability & Parity 
             notes: 'Counterfactual Normalized AC Setpoint +1°C (Pre-Pilot M&V Candidate)',
           });
 
-          // Meter Observed record (raw interval meter delta)
           store.put({
             id: 'sav_meter_obs',
             recommendation_id: 'rec_meter_02',
@@ -190,7 +154,6 @@ test.describe('HearthShift AI — Phase 3.1 Production MVP Reliability & Parity 
             notes: 'Raw Interval Delta: Power Strip Shutdown',
           });
 
-          // Pure Simulated record
           store.put({
             id: 'sav_sim_03',
             recommendation_id: 'rec_sim_03',
@@ -210,75 +173,48 @@ test.describe('HearthShift AI — Phase 3.1 Production MVP Reliability & Parity 
     });
 
     await savingsTab.click();
+    await expect(page.getByText('Tracked modeled & reported')).toBeVisible();
+    await expect(page.getByText('Formally verified savings')).toBeVisible();
+    await expect(page.getByText('Logged actions')).toBeVisible();
 
-    // Verify 3 Top Summary Metrics
-    await expect(page.getByText('Tracked Modeled & Reported Impact')).toBeVisible();
-    await expect(page.getByText('Formally M&V-Verified Savings')).toBeVisible();
-    await expect(page.getByText('Logged Efficiency Actions')).toBeVisible();
+    await expect(page.getByText('About verification tiers (Not IPMVP Option C certified)')).toBeVisible();
+    await page.locator('#panel-savings').getByRole('button', { name: /View details/i }).click();
+    await expect(page.getByText(/not verified causal savings/i)).toBeVisible();
 
-    // Verify M&V Counterfactual Scope Notice (honest non-IPMVP disclosure)
-    await expect(page.getByText('4-State Savings Provenance & M&V Scope (Not IPMVP-Certified)')).toBeVisible();
-    await expect(
-      page.getByText(/not yet IPMVP Option C certified/i)
-    ).toBeVisible();
-
-    // Verify provenance badges in the table
-    await expect(page.getByText(/🟢 Measurement Verified/).first()).toBeVisible();
-    await expect(page.getByText('🔵 User Reported').first()).toBeVisible();
-    await expect(page.getByText('🟣 Meter Observed').first()).toBeVisible();
-    await expect(page.getByText('🟡 Simulated').first()).toBeVisible();
-
-    // Take Audit Screenshot 3: Savings Ledger
+    await expect(page.getByText('Measurement Verified').first()).toBeVisible();
+    await expect(page.getByText('User Reported').first()).toBeVisible();
+    await expect(page.getByText('Meter Observed').first()).toBeVisible();
+    await expect(page.getByText('Simulated').first()).toBeVisible();
     await page.screenshot({ path: 'tests/e2e/screenshots/savings-ledger.png' });
 
-    // ══════════════════════════════════════════════════════════
-    // 8. Bilingual Tamil (தமிழ்) Verification
-    // ══════════════════════════════════════════════════════════
+    // Tamil Verification
     await page.getByLabel('Toggle language between English and Tamil').click();
-
-    // Assert Tamil app header and ledger titles
     await expect(page.getByText('ஹார்த்ஷிஃப்ட் AI').first()).toBeVisible();
-    await expect(page.getByText('சேமிப்பு விவரப் பதிவேடு').first()).toBeVisible();
-    await expect(page.getByText('முறையான M&V சரிபார்க்கப்பட்ட சேமிப்பு').first()).toBeVisible();
-
-    // Take Audit Screenshot 4: Tamil Interface
+    await expect(page.getByText('சேமிப்புப் பதிவேடு').first()).toBeVisible();
+    await expect(page.getByText('அதிகாரப்பூர்வ M&V சேமிப்பு').first()).toBeVisible();
     await page.screenshot({ path: 'tests/e2e/screenshots/tamil-interface.png' });
 
-    // Toggle back to English
     await page.getByLabel('Toggle language between English and Tamil').click();
     await expect(page.locator('h1')).toContainText('HearthShift AI');
 
-    // ══════════════════════════════════════════════════════════
-    // 9. Data Sovereign Purge & Unencrypted Backup Export
-    // ══════════════════════════════════════════════════════════
+    // Privacy Export & Wipe
     await privacyTab.click();
+    await expect(page.getByText(/0 external telemetry requests made/i)).toBeVisible();
 
-    await expect(page.getByText('Verified: 0 external telemetry requests made.')).toBeVisible();
-
-    // Test Export All Data (JSON)
     const [download] = await Promise.all([
       page.waitForEvent('download'),
-      page.getByRole('button', { name: 'Export All Data (JSON)' }).click(),
+      page.getByRole('button', { name: 'Export all data (JSON)' }).click(),
     ]);
     expect(download.suggestedFilename()).toContain('hearthshift_backup_');
 
-    // Test Permanent Data Purge
-    await page.getByRole('button', { name: 'Delete All My Data' }).click();
-    await expect(page.getByText('Are you sure you want to delete all local energy data?')).toBeVisible();
-    await page.getByRole('button', { name: 'Yes, Delete Everything' }).click();
+    await page.getByRole('button', { name: 'Delete all data' }).click();
+    await expect(page.getByText('Delete every local record permanently? This cannot be undone.')).toBeVisible();
+    await page.getByRole('button', { name: 'Yes, delete everything' }).click();
+    await expect(page.getByText('All household data was permanently wiped from IndexedDB.')).toBeVisible();
 
-    await expect(
-      page.getByText('All household data was permanently wiped from IndexedDB.')
-    ).toBeVisible();
-
-    // Reload page and verify empty state
     await page.reload();
-    await billsTab.click();
-    await expect(page.getByText('No electricity bills recorded yet.')).toBeVisible();
+    await expect(page.getByText('No electricity bill added yet')).toBeVisible();
 
-    // ══════════════════════════════════════════════════════════
-    // 10. Hard Security & Privacy Invariant: Zero External Telemetry
-    // ══════════════════════════════════════════════════════════
     expect(externalTelemetryRequests).toEqual([]);
   });
 });

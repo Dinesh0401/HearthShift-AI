@@ -8,7 +8,10 @@ import {
   resolveTnpdclTariffForPeriod,
 } from '../../core/tariff/tariffs/tnpdcl-lt1a';
 import { useLanguage } from '../../locales/i18n';
-import { Trash2, Receipt, AlertCircle, AlertTriangle } from 'lucide-react';
+import { Card } from '../ui/Card';
+import { Badge } from '../ui/Badge';
+import { Skeleton } from '../ui/Skeleton';
+import { Trash2, Receipt, AlertTriangle } from 'lucide-react';
 
 interface BillHistoryTableProps {
   refreshTrigger?: number;
@@ -79,90 +82,102 @@ export const BillHistoryTable: React.FC<BillHistoryTableProps> = ({
   const hasBoundaryCrossingBill = renderedBills.some((item) => item.crossesMay10Boundary);
 
   return (
-    <div className={`rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm ${className}`}>
-      <div className="flex items-center gap-2 mb-4">
-        <Receipt className="w-5 h-5 text-emerald-600" />
-        <h3 className="text-base font-bold text-gray-900 dark:text-gray-100">
-          {t('historyTitle')}
-        </h3>
+    <Card className={`p-5 sm:p-6 ${className}`}>
+      <div className="flex items-center justify-between gap-2 mb-4">
+        <div className="flex items-center gap-2">
+          <Receipt className="w-4 h-4 text-emerald-600" />
+          <h3 className="text-base font-semibold text-zinc-900">{t('historyTitle')}</h3>
+        </div>
+        {bills.length > 0 && <Badge variant="neutral">{bills.length}</Badge>}
       </div>
 
       {loading ? (
-        <div className="py-8 text-center text-xs text-gray-400">Loading bills from IndexedDB...</div>
+        <div className="space-y-2.5">
+          <Skeleton className="h-10" />
+          <Skeleton className="h-10" />
+          <Skeleton className="h-10" />
+        </div>
       ) : bills.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-gray-200 dark:border-gray-800 py-10 px-4 text-center">
-          <AlertCircle className="w-8 h-8 text-gray-300 dark:text-gray-600 mx-auto mb-2" />
-          <p className="text-xs text-gray-500 dark:text-gray-400 max-w-sm mx-auto">
+        <div className="rounded-xl border border-dashed border-zinc-200 py-10 px-4 text-center">
+          <Receipt className="w-7 h-7 text-zinc-300 mx-auto mb-2" />
+          <p className="text-xs text-zinc-500 max-w-sm mx-auto leading-relaxed">
             {t('noBillsYet')}
           </p>
         </div>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-gray-50 dark:bg-gray-800/60 text-gray-600 dark:text-gray-300 border-b border-gray-200 dark:border-gray-800">
+            <thead className="border-b border-zinc-200 text-zinc-500">
               <tr>
-                <th className="py-2.5 px-3 font-semibold">{t('colPeriod')}</th>
-                <th className="py-2.5 px-3 font-semibold text-right">{t('colUnits')}</th>
-                <th className="py-2.5 px-3 font-semibold text-right">{t('colGross')}</th>
-                <th className="py-2.5 px-3 font-semibold text-right">{t('colSubsidy')}</th>
-                <th className="py-2.5 px-3 font-semibold text-right">{t('colDuty')}</th>
-                <th className="py-2.5 px-3 font-semibold text-right">{t('colNet')}</th>
-                <th className="py-2.5 px-3 font-semibold text-center">{t('colActions')}</th>
+                <th className="py-2.5 pr-3 font-medium">{t('colPeriod')}</th>
+                <th className="py-2.5 px-3 font-medium text-right">{t('colUnits')}</th>
+                <th className="py-2.5 px-3 font-medium text-right hidden sm:table-cell">
+                  {t('colGross')}
+                </th>
+                <th className="py-2.5 px-3 font-medium text-right hidden sm:table-cell">
+                  {t('colSubsidy')}
+                </th>
+                <th className="py-2.5 px-3 font-medium text-right hidden md:table-cell">
+                  {t('colDuty')}
+                </th>
+                <th className="py-2.5 px-3 font-medium text-right">{t('colNet')}</th>
+                <th className="py-2.5 pl-3 font-medium text-center">{t('colActions')}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+            <tbody className="divide-y divide-zinc-100">
               {renderedBills.map(({ bill, tariff, breakdown, crossesMay10Boundary }) => (
-                  <tr key={bill.id} className="hover:bg-gray-50/50 dark:hover:bg-gray-800/40">
-                    <td className="py-3 px-3 font-medium text-gray-900 dark:text-gray-100">
-                      {bill.billing_period_start} → {bill.billing_period_end}
-                      <span className="block text-[10px] text-gray-500 dark:text-gray-400">
-                        {tariff.id}
-                        {bill.bill_reference_no ? ` · Ref: ${bill.bill_reference_no}` : ''}
-                      </span>
-                      {crossesMay10Boundary && (
-                        <span className="mt-1 inline-flex items-center gap-1 rounded bg-amber-50 border border-amber-200 px-1.5 py-0.5 text-[10px] font-medium text-amber-800 dark:bg-amber-950/40 dark:border-amber-800 dark:text-amber-300">
-                          <AlertTriangle className="w-3 h-3 shrink-0" />
-                          {t('boundaryCrossedBadge')}
-                        </span>
-                      )}
-                    </td>
-                    <td className="py-3 px-3 text-right font-semibold text-gray-800 dark:text-gray-200">
-                      {bill.total_units_kwh} kWh
-                    </td>
-                    <td className="py-3 px-3 text-right text-gray-600 dark:text-gray-400">
-                      ₹{(breakdown.gross_energy_charges_paise / 100).toFixed(2)}
-                    </td>
-                    <td className="py-3 px-3 text-right text-emerald-600 font-medium">
-                      -₹{(breakdown.total_subsidy_deductions_paise / 100).toFixed(2)}
-                    </td>
-                    <td className="py-3 px-3 text-right text-gray-600 dark:text-gray-400">
-                      ₹{(breakdown.electricity_duty_paise / 100).toFixed(2)}
-                    </td>
-                    <td className="py-3 px-3 text-right font-bold text-gray-900 dark:text-gray-100">
-                      ₹{(breakdown.net_payable_paise / 100).toFixed(2)}
-                    </td>
-                    <td className="py-3 px-3 text-center">
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(bill.id)}
-                        className="p-1 text-gray-400 hover:text-red-600 transition-colors rounded hover:bg-gray-100 dark:hover:bg-gray-800"
-                        title={t('deleteBtn')}
-                        aria-label={`Delete bill for ${bill.billing_period_start}`}
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </td>
-                  </tr>
+                <tr key={bill.id} className="hover:bg-zinc-50/70 transition-colors">
+                  <td className="py-3 pr-3 font-medium text-zinc-900">
+                    {bill.billing_period_start} → {bill.billing_period_end}
+                    <span className="block text-[11px] text-zinc-500 font-normal mt-0.5">
+                      {tariff.id}
+                      {bill.bill_reference_no ? ` · Ref: ${bill.bill_reference_no}` : ''}
+                    </span>
+                    {crossesMay10Boundary && (
+                      <Badge variant="amber" className="mt-1.5">
+                        <AlertTriangle className="w-3 h-3 shrink-0" />
+                        <span>{t('boundaryCrossedBadge')}</span>
+                      </Badge>
+                    )}
+                  </td>
+                  <td className="py-3 px-3 text-right font-medium text-zinc-800 tabular-nums whitespace-nowrap">
+                    {bill.total_units_kwh} kWh
+                  </td>
+                  <td className="py-3 px-3 text-right text-zinc-500 tabular-nums whitespace-nowrap hidden sm:table-cell">
+                    ₹{(breakdown.gross_energy_charges_paise / 100).toFixed(2)}
+                  </td>
+                  <td className="py-3 px-3 text-right text-emerald-700 font-medium tabular-nums whitespace-nowrap hidden sm:table-cell">
+                    -₹{(breakdown.total_subsidy_deductions_paise / 100).toFixed(2)}
+                  </td>
+                  <td className="py-3 px-3 text-right text-zinc-500 tabular-nums whitespace-nowrap hidden md:table-cell">
+                    ₹{(breakdown.electricity_duty_paise / 100).toFixed(2)}
+                  </td>
+                  <td className="py-3 px-3 text-right font-semibold text-zinc-900 tabular-nums whitespace-nowrap">
+                    ₹{(breakdown.net_payable_paise / 100).toFixed(2)}
+                  </td>
+                  <td className="py-3 pl-3 text-center">
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(bill.id)}
+                      className="p-2 text-zinc-400 hover:text-rose-600 transition-colors rounded-lg hover:bg-zinc-100"
+                      title={t('deleteBtn')}
+                      aria-label={`Delete bill for ${bill.billing_period_start}`}
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </td>
+                </tr>
               ))}
             </tbody>
           </table>
+
           {hasBoundaryCrossingBill && (
-            <p className="mt-3 rounded-lg bg-amber-50/80 border border-amber-200 px-3 py-2 text-[11px] text-amber-900 dark:bg-amber-950/30 dark:border-amber-800 dark:text-amber-200">
+            <p className="mt-3 rounded-xl bg-amber-50/70 border border-amber-200 px-3.5 py-2.5 text-xs text-amber-900 leading-relaxed">
               {t('boundaryCrossedNote')}
             </p>
           )}
         </div>
       )}
-    </div>
+    </Card>
   );
 };
