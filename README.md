@@ -25,7 +25,7 @@
 | **TR-VOI Decision & Active Query Engine** | **Complete (Software & Sim)** | Closed-form Gaussian cliff integration in TypeScript & Python; evaluated across `7,500` synthetic decisions ([Statistical Report](docs/research/STATISTICAL-EVALUATION-REPORT.md)) |
 | **Automated Tests & GitHub Actions CI** | **Passed (`15523c8`)** | `65/65` pytest, `86/86` Vitest, `tsc`, `eslint`, `5/5` prod/static/hosted Playwright specs ([CI Run `45670541360`](https://github.com/Dinesh0401/HearthShift-AI/actions/runs/45670541360)) |
 | **Regulatory Archive & Scoring Pipeline** | **Complete (Pre-Study)** | SHA-256 archived TNERC orders ([Traceability Matrix](docs/pilot/REGULATORY-SOURCE-TRACEABILITY.md)); hardened scorer (`24/24` negative/unit tests) |
-| **Research Oversight Package (`Phase 4C-B0`)** | **Submitted for Review** | Approval & pathway fields intentionally blank ([Oversight Package](docs/pilot/PHASE-4C-B0-OVERSIGHT-SUBMISSION-PACKAGE.md)) |
+| **Research Oversight Package (`Phase 4C-B0`)** | **Prepared; awaiting review / submission** | Approval & pathway fields intentionally blank ([Oversight Package](docs/pilot/PHASE-4C-B0-OVERSIGHT-SUBMISSION-PACKAGE.md)) |
 | **Real-User Usability Study (`N = 5–10`)** | **Pending Authorization** | `0` participants recruited; awaiting supervisor / institutional review determination ([Usability Protocol](docs/pilot/USABILITY-STUDY-PROTOCOL.md)) |
 | **Powered Household Efficacy RCT & Manuscript** | **Not Started** | Blocked behind Stage 1 gates & separate Stage 2 ethics clearance ([Field Pilot Protocol](docs/pilot/FIELD-PILOT-PROTOCOL.md)) |
 
@@ -116,7 +116,7 @@ npm audit --omit=dev
 npm run type-check
 npm run lint
 npm test -- --run                 # 86/86 Vitest tests across 10 files
-pytest research/tests             # 65/65 Python tests (set OPENBLAS_NUM_THREADS=1 on low-pagefile Windows)
+python -m pytest research/tests   # 65 passed on the verified alpha release
 
 # 4. Build & test Next.js production + Cloudflare static export bundles
 npm run build
@@ -126,7 +126,8 @@ npm run verify:static             # Audits 37 files in out/, 8 headers, 0 leaked
 npm run test:e2e:static           # 5/5 Playwright E2E specs against compiled out/ bundle
 
 # 5. Optional: verify the live Cloudflare Pages origin directly
-E2E_BASE_URL=https://hearthshift-ai.pages.dev npx playwright test
+# macOS/Linux: E2E_BASE_URL=https://hearthshift-ai.pages.dev npx playwright test
+# PowerShell: $env:E2E_BASE_URL='https://hearthshift-ai.pages.dev'; npx playwright test
 ```
 
 ---
@@ -165,4 +166,4 @@ Every deliverable uses GitHub-relative repository links cleanly:
 
 ---
 
-> **License / Reuse Notice:** Repository source and research protocols are provided for academic review and reproducible research verification; no separate `LICENSE` file is bundled in this alpha tag (`private: true` in `package.json`).
+> **License / Reuse Notice:** The repository is publicly viewable, but it currently has no `LICENSE` file. Public visibility does not itself grant permission to copy, modify, or redistribute the code. The `private: true` setting in `package.json` controls npm publication, not GitHub visibility or reuse rights.
