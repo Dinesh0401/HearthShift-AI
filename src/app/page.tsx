@@ -322,7 +322,7 @@ export default function DashboardPage() {
               </Badge>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2 shrink-0">
+            <div className="flex flex-wrap items-center gap-2 min-w-0 w-full sm:w-auto">
               {!isDemoMode && (
                 <button
                   type="button"
