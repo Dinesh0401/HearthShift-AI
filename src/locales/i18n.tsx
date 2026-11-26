@@ -263,7 +263,7 @@ export const translations = {
     appSubtitle: 'வீட்டு மின்சாரம் & கட்டண உதவியாளர்',
     appDescription: 'உங்கள் உலாவியிலேயே செயல்படும் பாதுகாப்பான மின்சார வழிகாட்டி.',
     privacyBadge: '100% உங்கள் சாதனத்தில் · IndexedDB',
-    privacyBadgeShort: 'சாதனத்தில் மட்டும்',
+    privacyBadgeShort: 'உள்ளூர்',
     offlineStatus: 'உள்ளூர் சேமிப்பு மட்டும்',
 
     // Region & Tariff Selector

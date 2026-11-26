@@ -249,8 +249,8 @@ export default function DashboardPage() {
       {/* Unified SaaS Shell: Desktop Sidebar + Main Canvas / Mobile Scrollable Tabs */}
       <div className="grid grid-cols-1 lg:grid-cols-[232px_minmax(0,1fr)] gap-6 lg:gap-8 items-start">
         {/* Navigation Sidebar (Desktop) / Horizontal Scroll Tabs (Mobile & Tablet) */}
-        <aside className="lg:sticky lg:top-24 space-y-4">
-          <nav aria-label="Dashboard sections">
+        <aside className="min-w-0 lg:sticky lg:top-24 space-y-4">
+          <nav aria-label="Dashboard sections" className="min-w-0 w-full">
             <div
               role="tablist"
               aria-label="Dashboard sections"
