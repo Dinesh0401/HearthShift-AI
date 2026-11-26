@@ -23,7 +23,7 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col bg-[#F9FAFB] text-zinc-900 antialiased selection:bg-emerald-600 selection:text-white">
         <LanguageProvider>
           <Header />
-          <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+          <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 lg:py-6">
             {children}
           </main>
           <footer className="border-t border-zinc-200/80 bg-white py-5 px-4 sm:px-6 lg:px-8">

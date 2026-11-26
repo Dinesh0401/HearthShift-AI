@@ -158,6 +158,7 @@ export const IntervalChart: React.FC<IntervalChartProps> = ({
                 strokeWidth={2}
                 fillOpacity={1}
                 fill="url(#kwhFill)"
+                isAnimationActive={false}
                 activeDot={{ r: 4, fill: '#059669' }}
               />
             </AreaChart>
