@@ -66,7 +66,7 @@ export const MetricCard: React.FC<MetricCardProps> = ({
   }[accent];
 
   return (
-    <Card className={`p-5 sm:p-6 flex flex-col justify-between ${className}`}>
+    <Card className={`p-4 sm:p-5 flex flex-col justify-between ${className}`}>
       <div className="flex items-start justify-between gap-2">
         <span className="text-xs font-medium text-zinc-500">{label}</span>
         {badge}

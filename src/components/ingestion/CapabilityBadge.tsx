@@ -50,28 +50,22 @@ export const CapabilityBadge: React.FC<CapabilityBadgeProps> = ({
   const current = meta[mode];
 
   return (
-    <Card className={`p-5 ${className}`} aria-live="polite">
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center shrink-0">
-            {current.icon}
-          </div>
-          <div className="min-w-0">
-            <span className="text-[11px] font-medium text-zinc-500 block">
-              {t('capabilityStatus')}
-            </span>
-            <span className="text-sm font-semibold text-zinc-900">{current.label}</span>
-          </div>
+    <Card className={`p-4 ${className}`} aria-live="polite">
+      <div className="space-y-2">
+        <div className="flex items-center gap-2 text-zinc-500">
+          <span className="shrink-0">{current.icon}</span>
+          <span className="text-[11px] font-medium">{t('capabilityStatus')}</span>
         </div>
-        <Badge variant={current.variant} dot>
+
+        <Badge variant={current.variant} dot className="w-fit">
           {current.label}
         </Badge>
       </div>
 
-      <p className="mt-3 text-xs text-zinc-600 leading-relaxed">{current.desc}</p>
+      <p className="mt-2.5 text-xs text-zinc-600 leading-relaxed">{current.desc}</p>
 
       {(reasons.length > 0 || nextStepGuidance) && (
-        <ExpandableDetails summary={t('viewDetails')} className="mt-3">
+        <ExpandableDetails summary={t('viewDetails')} className="mt-2.5">
           {reasons.length > 0 && (
             <ul className="list-disc pl-4 space-y-1 text-xs text-zinc-600">
               {reasons.map((r, idx) => (
@@ -80,7 +74,7 @@ export const CapabilityBadge: React.FC<CapabilityBadgeProps> = ({
             </ul>
           )}
           {nextStepGuidance && (
-            <p className="mt-2.5 text-xs font-medium text-zinc-800">{nextStepGuidance}</p>
+            <p className="mt-2 text-xs font-medium text-zinc-800">{nextStepGuidance}</p>
           )}
         </ExpandableDetails>
       )}

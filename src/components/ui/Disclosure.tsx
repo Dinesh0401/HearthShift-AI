@@ -39,7 +39,7 @@ export const ExpandableDetails: React.FC<ExpandableDetailsProps> = ({
         />
       </button>
       {open && (
-        <div className="mt-3 pt-3 border-t border-zinc-100 animate-fadeIn">
+        <div className="mt-3 pt-3 border-t border-zinc-100">
           {children}
         </div>
       )}

@@ -296,10 +296,10 @@ export default function DashboardPage() {
         </aside>
 
         {/* Main Workspace Column */}
-        <div className="min-w-0 space-y-6">
+        <div className="min-w-0 space-y-5">
           {/* Compact Context Toolbar: Tariff Region + Sample + Utility Modals */}
-          <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-zinc-200/80">
-            <div className="flex flex-wrap items-center gap-2 min-w-0 flex-1">
+          <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-zinc-200/80">
+            <div className="flex items-center gap-2 min-w-0 flex-1">
               <MapPin className="w-4 h-4 text-emerald-600 shrink-0" />
               <label htmlFor="region-tariff-selector" className="sr-only">
                 {t('selectTariffRegion')}
@@ -309,7 +309,7 @@ export default function DashboardPage() {
                 aria-label={t('selectTariffRegion')}
                 value={activeTariffId}
                 onChange={handleTariffChange}
-                className="min-h-[38px] max-w-full sm:max-w-xs rounded-xl border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-900 focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20"
+                className="min-h-[38px] w-full min-w-0 sm:w-auto sm:max-w-xs rounded-xl border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-900 focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20"
               >
                 {SUPPORTED_TARIFF_CATALOG.map((entry) => (
                   <option key={entry.plan.id} value={entry.plan.id}>
@@ -373,22 +373,16 @@ export default function DashboardPage() {
             )}
 
             {activeTab === 'bills' && (
-              <div className="space-y-6">
+              <div className="space-y-5">
                 <TariffHeadroomCard latestUnitsKwh={latestUnits} tariff={activeTariff} />
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                  <div className="lg:col-span-5">
-                    <ManualBillForm
-                      activeTariffId={activeTariff.id}
-                      onSuccess={handleStateUpdated}
-                    />
-                  </div>
-                  <div className="lg:col-span-7">
-                    <BillHistoryTable
-                      refreshTrigger={refreshTrigger}
-                      onBillDeleted={handleStateUpdated}
-                    />
-                  </div>
-                </div>
+                <ManualBillForm
+                  activeTariffId={activeTariff.id}
+                  onSuccess={handleStateUpdated}
+                />
+                <BillHistoryTable
+                  refreshTrigger={refreshTrigger}
+                  onBillDeleted={handleStateUpdated}
+                />
               </div>
             )}
 
