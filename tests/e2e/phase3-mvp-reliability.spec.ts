@@ -175,7 +175,7 @@ test.describe('HearthShift AI — Phase 3.1 Production MVP Reliability & Parity 
     await savingsTab.click();
     await expect(page.getByText('Tracked modeled & reported')).toBeVisible();
     await expect(page.getByText('Formally verified savings')).toBeVisible();
-    await expect(page.getByText('Logged actions')).toBeVisible();
+    await expect(page.getByText('Logged actions', { exact: true })).toBeVisible();
 
     await expect(page.getByText('About verification tiers (Not IPMVP Option C certified)')).toBeVisible();
     await page.locator('#panel-savings').getByRole('button', { name: /View details/i }).click();

@@ -224,7 +224,7 @@ export const HomeOverview: React.FC<HomeOverviewProps> = ({
   // Empty state before any household bill exists
   if (!latestBill) {
     return (
-      <div className="space-y-6 animate-fadeIn">
+      <div className="space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-zinc-900">
@@ -328,7 +328,7 @@ export const HomeOverview: React.FC<HomeOverviewProps> = ({
   const askQuestion = recOutput?.outcome === 'ask_question' ? recOutput.candidateQuestion : null;
 
   return (
-    <div className="space-y-5 animate-fadeIn">
+    <div className="space-y-4">
       {toast && (
         <div
           role="status"
@@ -405,7 +405,7 @@ export const HomeOverview: React.FC<HomeOverviewProps> = ({
 
       {/* Threshold Bar Card */}
       {cliffThreshold !== null && (
-        <Card className="p-5 sm:p-6">
+        <Card className="p-4 sm:p-5">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h3 className="text-sm font-semibold text-zinc-900">{t('overviewThresholdTitle')}</h3>
             <span className="text-xs font-medium text-zinc-500 tabular-nums">
@@ -506,7 +506,7 @@ export const HomeOverview: React.FC<HomeOverviewProps> = ({
 
       {/* Primary Suggested Action Card */}
       {rec && (
-        <Card className="p-5 sm:p-6">
+        <Card className="p-4 sm:p-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="space-y-1.5 min-w-0">
               <div className="flex flex-wrap items-center gap-2">
@@ -560,7 +560,12 @@ export const HomeOverview: React.FC<HomeOverviewProps> = ({
               <HelpCircle className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-zinc-900">{t('adaptiveQuestionTitle')}</h3>
+              <span className="text-xs font-medium text-zinc-500 block">
+                {t('overviewSuggestedActionTitle')}
+              </span>
+              <h3 className="text-sm sm:text-base font-semibold text-zinc-900 mt-0.5">
+                {t('adaptiveQuestionTitle')}
+              </h3>
               <p className="text-xs text-zinc-500 mt-0.5">{t('adaptiveQuestionSubtitle')}</p>
             </div>
           </div>

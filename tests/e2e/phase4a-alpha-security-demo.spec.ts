@@ -97,7 +97,7 @@ test.describe('HearthShift AI — Phase 4A Alpha Security, Same-Origin Privacy, 
     await expect(page.getByText(/provides advisory modeled estimates—not utility-certified bills/i)).toBeVisible();
 
     // 2. Load Sample Dataset & Verify Scannable Home Overview
-    await page.getByRole('button', { name: /Try sample data/i }).click();
+    await page.getByRole('button', { name: /Try sample data/i }).first().click();
 
     await expect(page.getByText('Sample household data active')).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Home overview' })).toBeVisible();
@@ -107,6 +107,14 @@ test.describe('HearthShift AI — Phase 4A Alpha Security, Same-Origin Privacy, 
     await expect(page.getByText('8 kWh over 500 kWh threshold').first()).toBeVisible();
     await expect(page.getByText('Ready for recommendations').first()).toBeVisible();
     await expect(page.getByText('Suggested action').first()).toBeVisible();
+
+    // If comfort check triggers before displaying action savings, answer it cleanly on Overview
+    const answerOnOverviewBtn = page.getByRole('button', { name: /View recommendation/i });
+    if (await answerOnOverviewBtn.isVisible().catch(() => false)) {
+      await answerOnOverviewBtn.click();
+      await page.getByRole('button', { name: /Yes, comfortable/i }).click();
+    }
+    await expect(page.getByText('Estimated savings').first()).toBeVisible();
 
     await page.screenshot({ path: 'tests/e2e/screenshots/phase4a-demo-mode.png' });
 
@@ -149,7 +157,7 @@ test.describe('HearthShift AI — Phase 4A Alpha Security, Same-Origin Privacy, 
     await expect(page.getByText(/Flat rate reference tariff/i)).toBeVisible();
 
     await regionSelector.selectOption('generic-tou-inr');
-    await expect(page.getByText(/Time-of-Use \(TOU\) tariff/i)).toBeVisible();
+    await expect(page.getByText(/Time-of-Use \(TOU\) tariff/i).first()).toBeVisible();
     await expect(page.getByText('Night Off-Peak').first()).toBeVisible();
 
     await regionSelector.selectOption('in-tnpdcl-lt1a-may2026');
