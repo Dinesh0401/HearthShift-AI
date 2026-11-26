@@ -14,17 +14,18 @@ import type { LatentPreferenceBelief } from '../../core/optimization/tr-voi';
 import type { Recommendation, AdaptiveQuestion } from '../../types/contracts';
 import { AdaptiveQueryModal } from './AdaptiveQueryModal';
 import { useLanguage } from '../../locales/i18n';
+import { Card, SectionHeader } from '../ui/Card';
+import { Badge } from '../ui/Badge';
+import { ExpandableDetails } from '../ui/Disclosure';
+import { EmptyState } from '../ui/EmptyState';
+import { Skeleton } from '../ui/Skeleton';
 import {
-  Lightbulb,
   ShieldAlert,
   ShieldCheck,
   Check,
   ThumbsUp,
   ThumbsDown,
-  Star,
-  Info,
-  Zap,
-  TrendingDown,
+  Lightbulb,
 } from 'lucide-react';
 
 interface RecommendationFeedProps {
@@ -45,11 +46,12 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
   const [engineOutput, setEngineOutput] = useState<RecommendationEngineOutput | null>(null);
   const [activeQuestion, setActiveQuestion] = useState<AdaptiveQuestion | null>(null);
   const [feedbackToast, setFeedbackToast] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Evaluate recommendation
   const runEngine = useCallback(
     async (currentBelief: LatentPreferenceBelief, askedIds: string[]) => {
       try {
+        setLoading(true);
         await db.initialize();
         const bCount = await db.bills.count();
         const rCount = await db.readings.count();
@@ -103,6 +105,8 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
         }
       } catch (err) {
         console.error('Failed to run recommendation engine', err);
+      } finally {
+        setLoading(false);
       }
     },
     [latestUnitsKwh, tariff]
@@ -112,7 +116,6 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
     runEngine(belief, askedQuestionIds);
   }, [runEngine, belief, askedQuestionIds]);
 
-  // Handle Question Answer
   const handleAnswerQuestion = (responseVal: 1 | -1 | 0) => {
     if (!activeQuestion) return;
 
@@ -137,7 +140,6 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
     setTimeout(() => setFeedbackToast(null), 3000);
   };
 
-  // Handle Feedback Button Clicks
   const handleFeedback = async (
     rec: Recommendation,
     response: 'useful' | 'impractical' | 'tried_it'
@@ -145,7 +147,6 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
     try {
       await db.initialize();
 
-      // Log feedback
       await db.feedback.add({
         id: `fb_${Date.now()}`,
         recommendation_id: rec.id,
@@ -154,7 +155,6 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
       });
 
       if (response === 'tried_it') {
-        // Log to savings ledger strictly as unverified user_reported (NOT meter-verified!)
         await db.savings.add({
           id: `sav_${Date.now()}`,
           recommendation_id: rec.id,
@@ -168,7 +168,6 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
           notes: rec.action.title[language] ?? rec.action.title.en,
         });
 
-        // Update belief: user is flexible
         const featIdx =
           rec.action.appliance_category === 'cooling'
             ? 0
@@ -177,13 +176,10 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
             : rec.action.appliance_category === 'water_heating'
             ? 2
             : 3;
-        const newBelief = updateBeliefWithFeedback(belief, featIdx, 1);
-        setBelief(newBelief);
-
+        setBelief(updateBeliefWithFeedback(belief, featIdx, 1));
         setFeedbackToast(t('actionCompleted'));
         onActionLogged?.();
       } else if (response === 'impractical') {
-        // Update belief: user is inflexible
         const featIdx =
           rec.action.appliance_category === 'cooling'
             ? 0
@@ -192,9 +188,7 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
             : rec.action.appliance_category === 'water_heating'
             ? 2
             : 3;
-        const newBelief = updateBeliefWithFeedback(belief, featIdx, -1);
-        setBelief(newBelief);
-
+        setBelief(updateBeliefWithFeedback(belief, featIdx, -1));
         setFeedbackToast(t('feedbackRecorded'));
       } else {
         setFeedbackToast(t('feedbackRecorded'));
@@ -207,21 +201,32 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
   };
 
   const rec = engineOutput?.recommendation;
+  const effortLabel = rec
+    ? rec.action.estimated_effort === 'minimal'
+      ? language === 'ta'
+        ? 'குறைந்த முயற்சி'
+        : 'Minimal effort'
+      : rec.action.estimated_effort === 'moderate'
+      ? language === 'ta'
+        ? 'மிதமான முயற்சி'
+        : 'Moderate effort'
+      : language === 'ta'
+      ? 'கணிசமான முயற்சி'
+      : 'Significant effort'
+    : '';
 
   return (
-    <div className="space-y-6">
-      {/* Toast Notification */}
+    <div className="space-y-5">
       {feedbackToast && (
         <div
           role="status"
-          className="p-3 bg-emerald-700 text-white text-xs font-semibold rounded-lg shadow-md flex items-center gap-2 animate-fadeIn"
+          className="p-3.5 bg-emerald-700 text-white text-xs font-medium rounded-xl flex items-center gap-2 animate-fadeIn"
         >
-          <Check className="w-4 h-4 text-emerald-200" />
+          <Check className="w-4 h-4 shrink-0" />
           <span>{feedbackToast}</span>
         </div>
       )}
 
-      {/* Adaptive Question Modal */}
       {activeQuestion && (
         <AdaptiveQueryModal
           question={activeQuestion}
@@ -230,159 +235,144 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
         />
       )}
 
-      {/* Main Container */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-blue-50/50 via-indigo-50/30 to-white">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-600 rounded-lg text-white">
-                <Lightbulb className="w-5 h-5" />
+      <SectionHeader
+        title={t('recommendationsTitle')}
+        subtitle={t('recommendationsSubtitle')}
+        action={<Badge variant="neutral">{tariff.name}</Badge>}
+      />
+
+      {loading ? (
+        <Card className="p-6 space-y-4">
+          <Skeleton className="h-6 w-2/3" />
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-12 w-40" />
+        </Card>
+      ) : engineOutput?.capabilityGated ? (
+        <EmptyState
+          icon={<ShieldAlert className="w-5 h-5 text-amber-600" />}
+          title={t('capabilityStatus')}
+          description={engineOutput.gateReason ?? t('overviewNeedMoreDataDesc')}
+        />
+      ) : engineOutput?.outcome === 'abstain' ? (
+        <EmptyState
+          icon={<ShieldCheck className="w-5 h-5 text-zinc-500" />}
+          title={t('abstentionTitle')}
+          description={t('abstentionReason')}
+        />
+      ) : rec ? (
+        <Card className="p-5 sm:p-6 space-y-5">
+          {/* Card Summary (Scannable in 3 Seconds) */}
+          <div className="flex flex-col md:flex-row md:items-start justify-between gap-5">
+            <div className="space-y-2.5 min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge variant="amber">{t('modeledEstimateBadge')}</Badge>
+                <Badge variant="emerald">{t('conservativeLowerBoundBadge')}</Badge>
+                <Badge variant="neutral">{effortLabel}</Badge>
               </div>
-              <div>
-                <h2 className="text-lg font-bold text-gray-900">{t('recommendationsTitle')}</h2>
-                <p className="text-xs text-gray-600 mt-0.5">{t('recommendationsSubtitle')}</p>
+
+              <h3 className="text-lg sm:text-xl font-semibold text-zinc-900">
+                {rec.action.title[language] ?? rec.action.title.en}
+              </h3>
+
+              <p className="text-sm text-zinc-600 leading-relaxed max-w-2xl">
+                {rec.action.description[language] ?? rec.action.description.en}
+              </p>
+            </div>
+
+            <div className="md:text-right shrink-0 pt-3 md:pt-0 border-t md:border-t-0 border-zinc-100">
+              <span className="text-xs font-medium text-zinc-500 block">
+                {t('expectedSavingsLabel')}
+              </span>
+              <span className="text-3xl sm:text-4xl font-semibold text-emerald-700 tabular-nums mt-0.5 block">
+                ₹{rec.savings_estimate.point_estimate.toFixed(2)}
+              </span>
+
+              <div className="mt-4 flex flex-wrap md:justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleFeedback(rec, 'tried_it')}
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 min-h-[44px] bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-medium rounded-xl transition-colors"
+                >
+                  <Check className="w-4 h-4" />
+                  <span>{t('feedbackTriedIt')}</span>
+                </button>
               </div>
             </div>
-            <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
-              {tariff.name}
-            </span>
           </div>
-        </div>
 
-        <div className="p-6">
-          {/* Case 1: Capability Gated */}
-          {engineOutput?.capabilityGated && (
-            <div className="p-6 bg-amber-50 rounded-xl border border-amber-200 text-center space-y-3">
-              <ShieldAlert className="w-8 h-8 text-amber-600 mx-auto" />
-              <h3 className="text-sm font-bold text-amber-900">{t('capabilityStatus')}</h3>
-              <p className="text-xs text-amber-800 max-w-lg mx-auto">
-                {engineOutput.gateReason}
-              </p>
-            </div>
-          )}
-
-          {/* Case 2: Abstention Output (Algorithm chose not to gamble) */}
-          {!engineOutput?.capabilityGated && engineOutput?.outcome === 'abstain' && (
-            <div className="p-6 bg-slate-50 rounded-xl border border-slate-200 text-center space-y-3">
-              <ShieldCheck className="w-8 h-8 text-slate-500 mx-auto" />
-              <h3 className="text-sm font-bold text-slate-800">{t('abstentionTitle')}</h3>
-              <p className="text-xs text-slate-600 max-w-lg mx-auto leading-relaxed">
-                {t('abstentionReason')}
-              </p>
-            </div>
-          )}
-
-          {/* Case 3: Modeled Actionable Recommendation Card */}
-          {rec && (
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-6 hover:border-emerald-300 transition-colors">
-              {/* Header: Title & Badges */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-100 pb-4">
-                <div>
-                  <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
-                    <Zap className="w-4 h-4 text-amber-500" />
-                    {rec.action.title[language] ?? rec.action.title.en}
-                  </h3>
-                  <p className="text-xs text-gray-600 mt-1">
-                    {rec.action.description[language] ?? rec.action.description.en}
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-2 flex-wrap">
-                  {/* Provenance Badge */}
-                  <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200">
-                    {t('modeledEstimateBadge')}
+          {/* Expandable Details: Bounds, Rationale, Limitations & Feedback Controls */}
+          <ExpandableDetails
+            summary={t('viewDetails')}
+            icon={<Lightbulb className="w-3.5 h-3.5 text-emerald-600" />}
+            className="pt-2 border-t border-zinc-100"
+          >
+            <div className="space-y-4">
+              {/* Conservative Bound + Provenance Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="p-3.5 rounded-xl bg-zinc-50 border border-zinc-200/80">
+                  <span className="text-xs font-medium text-zinc-500 block">
+                    {t('lowerBoundLabel')}
                   </span>
-                  {/* Comfort Bound Badge */}
-                  <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
-                    {t('conservativeLowerBoundBadge')}
-                  </span>
-                </div>
-              </div>
-
-              {/* Savings Matrix */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-xl border border-gray-200/80">
-                <div>
-                  <p className="text-xs text-gray-500 font-medium">{t('expectedSavingsLabel')}</p>
-                  <p className="text-xl font-bold font-mono text-gray-900">
-                    ₹{rec.savings_estimate.point_estimate.toFixed(2)}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs text-emerald-700 font-medium">{t('lowerBoundLabel')}</p>
-                  <p className="text-xl font-bold font-mono text-emerald-700">
+                  <span className="text-xl font-semibold text-zinc-900 tabular-nums mt-0.5 block">
                     ₹{rec.savings_estimate.lower_bound.toFixed(2)}
-                  </p>
+                  </span>
+                  <span className="text-[11px] text-zinc-500 mt-0.5 block">
+                    {t('lowerBoundHelp')}
+                  </span>
                 </div>
-                <div>
-                  <p className="text-xs text-gray-500 font-medium">{t('effortLabel')}</p>
-                  <p className="text-xs font-semibold uppercase tracking-wider text-gray-700 mt-1">
-                    {rec.action.estimated_effort} effort
+
+                <div className="p-3.5 rounded-xl bg-zinc-50 border border-zinc-200/80">
+                  <span className="text-xs font-medium text-zinc-500 block">
+                    {t('whyThisHelpsTitle')}
+                  </span>
+                  <p className="text-xs text-zinc-700 leading-relaxed mt-1">
+                    {rec.explanation[language] ?? rec.explanation.en}
                   </p>
                 </div>
               </div>
 
-              {/* Plain-Language Explanation */}
-              <div className="p-4 bg-blue-50/60 rounded-xl border border-blue-100 text-xs text-blue-900 space-y-1">
-                <p className="font-semibold text-blue-950 flex items-center gap-1.5">
-                  <TrendingDown className="w-4 h-4 text-blue-600" />
-                  Regulatory Savings Rationale
-                </p>
-                <p className="leading-relaxed">
-                  {rec.explanation[language] ?? rec.explanation.en}
-                </p>
-              </div>
-
-              {/* Model Assumptions Checklist */}
+              {/* Assumptions & Limitations */}
               {rec.assumptions.length > 0 && (
-                <div className="space-y-1.5 text-xs text-gray-600">
-                  <p className="font-semibold text-gray-800 flex items-center gap-1.5">
-                    <Info className="w-3.5 h-3.5 text-gray-500" />
-                    {t('assumptionsTitle')}
-                  </p>
-                  <ul className="list-disc pl-5 space-y-1 text-gray-600">
-                    {rec.assumptions.map((asm, i) => (
-                      <li key={i}>{asm[language] ?? asm.en}</li>
+                <div className="space-y-1.5 text-xs text-zinc-600">
+                  <p className="font-semibold text-zinc-800">{t('assumptionsTitle')}</p>
+                  <ul className="list-disc pl-5 space-y-1">
+                    {rec.assumptions.map((asm, idx) => (
+                      <li key={idx}>{asm[language] ?? asm.en}</li>
                     ))}
                   </ul>
                 </div>
               )}
 
-              {/* 1-Click User Feedback Interaction Bar */}
-              <div className="pt-4 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3">
-                <span className="text-xs text-gray-500 font-medium">Was this practical for your home?</span>
+              {/* Feedback Controls */}
+              <div className="pt-3 border-t border-zinc-100 flex flex-wrap items-center justify-between gap-3">
+                <span className="text-xs text-zinc-500">
+                  {language === 'ta'
+                    ? 'இது உங்கள் வீட்டிற்குப் பொருந்துகிறதா?'
+                    : 'Was this practical for your home?'}
+                </span>
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
                     onClick={() => handleFeedback(rec, 'useful')}
-                    className="py-1.5 px-3 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5"
+                    className="inline-flex items-center gap-1.5 px-3 py-2 min-h-[36px] bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-700 text-xs font-medium rounded-lg transition-colors"
                   >
                     <ThumbsUp className="w-3.5 h-3.5" />
-                    {t('feedbackUseful')}
+                    <span>{t('feedbackUseful')}</span>
                   </button>
-
                   <button
                     type="button"
                     onClick={() => handleFeedback(rec, 'impractical')}
-                    className="py-1.5 px-3 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5"
+                    className="inline-flex items-center gap-1.5 px-3 py-2 min-h-[36px] bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-700 text-xs font-medium rounded-lg transition-colors"
                   >
                     <ThumbsDown className="w-3.5 h-3.5" />
-                    {t('feedbackImpractical')}
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => handleFeedback(rec, 'tried_it')}
-                    className="py-1.5 px-3.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-colors flex items-center gap-1.5"
-                  >
-                    <Star className="w-3.5 h-3.5" />
-                    {t('feedbackTriedIt')}
+                    <span>{t('feedbackImpractical')}</span>
                   </button>
                 </div>
               </div>
             </div>
-          )}
-        </div>
-      </div>
+          </ExpandableDetails>
+        </Card>
+      ) : null}
     </div>
   );
 };
