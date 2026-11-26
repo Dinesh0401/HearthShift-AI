@@ -222,10 +222,26 @@ test.describe('HearthShift AI — Phase 4A Alpha Security, Same-Origin Privacy, 
     await page.getByLabel('Toggle language between English and Tamil').click();
     await expect(page.getByText('வீட்டு மின்சார சுருக்கம்').first()).toBeVisible();
     await expect(page.getByText('512', { exact: true }).first()).toBeVisible();
-    const mobileTaOverflow = await page.evaluate(
-      () => document.documentElement.scrollWidth > window.innerWidth
-    );
-    expect(mobileTaOverflow).toBe(false);
+    const mobileTaOverflow = await page.evaluate(() => {
+      const w = window.innerWidth;
+      const offenders = [...document.querySelectorAll('*')]
+        .filter((el) => {
+          const rect = el.getBoundingClientRect();
+          return rect.width > 0 && rect.right > w + 1;
+        })
+        .slice(0, 8)
+        .map((el) => ({
+          tag: el.tagName,
+          id: el.id,
+          cls: typeof el.className === 'string' ? el.className.slice(0, 60) : '',
+          right: Math.round(el.getBoundingClientRect().right),
+          scrollW: el.scrollWidth,
+          txt: (el.textContent || '').trim().slice(0, 40),
+        }));
+      return { docScrollW: document.documentElement.scrollWidth, w, offenders };
+    });
+    expect(mobileTaOverflow.offenders).toEqual([]);
+    expect(mobileTaOverflow.docScrollW).toBeLessThanOrEqual(mobileTaOverflow.w);
     await page.screenshot({ path: 'tests/e2e/screenshots/phase4a-mobile-a11y.png' });
 
     await page.getByLabel('Toggle language between English and Tamil').click();
