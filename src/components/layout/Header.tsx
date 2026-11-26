@@ -9,14 +9,14 @@ export const Header: React.FC = () => {
 
   return (
     <header className="border-b border-zinc-200/90 bg-white/95 backdrop-blur sticky top-0 z-40">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-2 sm:gap-3">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-2 sm:gap-3">
         {/* Brand */}
-        <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
-          <div className="w-8 h-8 rounded-xl bg-emerald-600 flex items-center justify-center text-white shrink-0">
-            <Zap className="w-4 h-4" strokeWidth={2} />
+        <div className="flex items-center gap-2 min-w-0">
+          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-emerald-600 flex items-center justify-center text-white shrink-0">
+            <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4" strokeWidth={2} />
           </div>
           <div className="flex items-baseline gap-2 min-w-0">
-            <h1 className="text-[15px] sm:text-lg font-semibold tracking-tight text-zinc-900 whitespace-nowrap">
+            <h1 className="text-sm sm:text-lg font-semibold tracking-tight text-zinc-900 truncate">
               {t('appName')}
             </h1>
             <span className="hidden sm:inline-flex shrink-0 whitespace-nowrap text-[11px] font-medium px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-600 border border-zinc-200">
@@ -39,7 +39,7 @@ export const Header: React.FC = () => {
           <button
             type="button"
             onClick={() => setLanguage(language === 'en' ? 'ta' : 'en')}
-            className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 min-h-[36px] rounded-lg bg-white border border-zinc-200 hover:bg-zinc-50 hover:border-zinc-300 text-zinc-700 text-[11px] sm:text-xs font-medium transition-colors whitespace-nowrap"
+            className="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 min-h-[34px] sm:min-h-[36px] rounded-lg bg-white border border-zinc-200 hover:bg-zinc-50 hover:border-zinc-300 text-zinc-700 text-[11px] sm:text-xs font-medium transition-colors whitespace-nowrap"
             aria-label="Toggle language between English and Tamil"
           >
             <Globe className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
