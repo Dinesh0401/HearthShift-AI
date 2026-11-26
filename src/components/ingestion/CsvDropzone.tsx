@@ -8,6 +8,10 @@ import {
   type CsvColumnMapping,
 } from '../../core/ingestion/csv-parser';
 import { commitValidatedReadings } from '../../core/storage/ingestion-storage';
+import { useLanguage } from '../../locales/i18n';
+import { Card } from '../ui/Card';
+import { Badge } from '../ui/Badge';
+import { UploadCloud, Check, AlertTriangle } from 'lucide-react';
 
 interface CsvDropzoneProps {
   onImportComplete?: (result: { batchId: string; count: number }) => void;
@@ -18,6 +22,7 @@ export const CsvDropzone: React.FC<CsvDropzoneProps> = ({
   onImportComplete,
   className = '',
 }) => {
+  const { t } = useLanguage();
   const [isDragging, setIsDragging] = useState(false);
   const [isParsing, setIsParsing] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -44,15 +49,13 @@ export const CsvDropzone: React.FC<CsvDropzoneProps> = ({
     setIsDragging(false);
 
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      const file = e.dataTransfer.files[0];
-      await processSelectedFile(file);
+      await processSelectedFile(e.dataTransfer.files[0]);
     }
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      await processSelectedFile(file);
+      await processSelectedFile(e.target.files[0]);
     }
   };
 
@@ -80,7 +83,7 @@ export const CsvDropzone: React.FC<CsvDropzoneProps> = ({
     try {
       const textContent = await file.text();
       const mapping: CsvColumnMapping = {
-        timezone_offset: '+05:30', // India Standard Time default
+        timezone_offset: '+05:30',
       };
 
       const result = await parseEnergyCsv(textContent, {
@@ -103,9 +106,7 @@ export const CsvDropzone: React.FC<CsvDropzoneProps> = ({
   };
 
   const handleCancelParsing = () => {
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
+    abortControllerRef.current?.abort();
   };
 
   const handleCommitReadings = async () => {
@@ -115,7 +116,7 @@ export const CsvDropzone: React.FC<CsvDropzoneProps> = ({
       setIsCommitting(true);
       const commitRes = await commitValidatedReadings(preview.readings, preview.file_name);
       setCommitSuccess(
-        `Successfully saved ${commitRes.records_committed.toLocaleString()} interval readings locally (Batch ID: ${commitRes.import_batch_id}).`
+        `Saved ${commitRes.records_committed.toLocaleString()} interval readings locally (Batch: ${commitRes.import_batch_id}).`
       );
       setPreview(null);
       if (onImportComplete) {
@@ -132,29 +133,32 @@ export const CsvDropzone: React.FC<CsvDropzoneProps> = ({
   };
 
   return (
-    <div className={`space-y-4 rounded-xl border border-gray-200 dark:border-gray-800 p-6 bg-white dark:bg-gray-900 shadow-sm ${className}`}>
-      <div className="border-b border-gray-200 dark:border-gray-800 pb-3">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-          Smart-Meter CSV Importer
-        </h3>
-        <p className="text-xs text-gray-500 dark:text-gray-400">
-          ஸ்மார்ட் மீட்டர் CSV பதிவேற்றம் · 15m, 30m, or 1-hour interval data. Zero network upload — parsed and stored locally.
-        </p>
+    <Card className={`p-5 sm:p-6 space-y-4 ${className}`}>
+      <div className="border-b border-zinc-100 pb-3">
+        <h3 className="text-base font-semibold text-zinc-900">{t('csvTitle')}</h3>
+        <p className="text-xs text-zinc-500 mt-0.5 leading-relaxed">{t('csvSubtitle')}</p>
       </div>
 
       {commitSuccess && (
-        <div className="p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 text-sm">
-          ✓ {commitSuccess}
+        <div
+          role="status"
+          className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-medium flex items-center gap-2"
+        >
+          <Check className="w-4 h-4 shrink-0 text-emerald-600" />
+          <span>{commitSuccess}</span>
         </div>
       )}
 
       {errorMsg && (
-        <div className="p-3 rounded-lg bg-red-50 dark:bg-red-950/40 text-red-800 dark:text-red-300 text-sm">
-          ⚠️ {errorMsg}
+        <div
+          role="alert"
+          className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-medium flex items-center gap-2"
+        >
+          <AlertTriangle className="w-4 h-4 shrink-0 text-rose-600" />
+          <span>{errorMsg}</span>
         </div>
       )}
 
-      {/* Drag & Drop Zone */}
       {!preview && !isParsing && (
         <div
           role="button"
@@ -170,19 +174,17 @@ export const CsvDropzone: React.FC<CsvDropzoneProps> = ({
               fileInputRef.current?.click();
             }
           }}
-          className={`flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-xl cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 ${
+          className={`flex flex-col items-center justify-center p-10 border border-dashed rounded-2xl cursor-pointer transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 ${
             isDragging
-              ? 'border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/20'
-              : 'border-gray-300 dark:border-gray-700 hover:border-emerald-400 bg-gray-50/50 dark:bg-gray-800/40'
+              ? 'border-emerald-600 bg-emerald-50/50'
+              : 'border-zinc-300 hover:border-emerald-500 bg-zinc-50/50'
           }`}
         >
-          <span className="text-3xl mb-2" aria-hidden="true">📁</span>
-          <p className="text-sm font-medium text-gray-800 dark:text-gray-200 text-center">
-            Drop smart-meter CSV file here, or click to browse
-          </p>
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-center">
-            Supports Low Carbon London, REFIT, or generic timestamp + kWh formats (up to 500,000 rows).
-          </p>
+          <div className="w-11 h-11 rounded-xl bg-white border border-zinc-200 flex items-center justify-center text-emerald-600 mb-3">
+            <UploadCloud className="w-5 h-5" />
+          </div>
+          <p className="text-sm font-medium text-zinc-900 text-center">{t('csvDropTitle')}</p>
+          <p className="text-xs text-zinc-500 mt-1 text-center">{t('csvDropHint')}</p>
           <input
             ref={fileInputRef}
             type="file"
@@ -193,14 +195,13 @@ export const CsvDropzone: React.FC<CsvDropzoneProps> = ({
         </div>
       )}
 
-      {/* Parsing Progress Bar */}
       {isParsing && (
-        <div className="p-6 border rounded-xl bg-gray-50 dark:bg-gray-800/50 space-y-3">
-          <div className="flex justify-between items-center text-xs font-medium text-gray-700 dark:text-gray-300">
-            <span>Parsing CSV in browser memory... ({parsedRows.toLocaleString()} rows verified)</span>
-            <span>{progress}%</span>
+        <div className="p-5 border border-zinc-200 rounded-xl bg-zinc-50 space-y-3">
+          <div className="flex justify-between items-center text-xs font-medium text-zinc-700">
+            <span>Parsing CSV on device ({parsedRows.toLocaleString()} rows)</span>
+            <span className="tabular-nums">{progress}%</span>
           </div>
-          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
+          <div className="w-full bg-zinc-200 rounded-full h-2 overflow-hidden">
             <div
               className="bg-emerald-600 h-2 rounded-full transition-all duration-150"
               style={{ width: `${progress}%` }}
@@ -210,65 +211,62 @@ export const CsvDropzone: React.FC<CsvDropzoneProps> = ({
             <button
               type="button"
               onClick={handleCancelParsing}
-              className="text-xs text-red-600 dark:text-red-400 hover:underline"
+              className="text-xs text-rose-600 hover:underline font-medium"
             >
-              Cancel Parsing (ரத்துசெய்)
+              {t('cancelBtn')}
             </button>
           </div>
         </div>
       )}
 
-      {/* Validation Preview Modal / Stage */}
       {preview && (
-        <div className="border border-emerald-200 dark:border-emerald-800/60 rounded-xl bg-emerald-50/30 dark:bg-emerald-950/20 p-5 space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="text-emerald-700 dark:text-emerald-400 font-bold text-sm">
+        <div className="border border-zinc-200 rounded-2xl bg-zinc-50/60 p-5 space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-sm font-semibold text-zinc-900">
                 CSV Validation Preview ({preview.file_name})
               </span>
-              <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300">
-                Resolution: {preview.detected_resolution}
-              </span>
+              <Badge variant="emerald">Resolution: {preview.detected_resolution}</Badge>
             </div>
             <button
               type="button"
               onClick={() => setPreview(null)}
-              className="text-xs text-gray-500 hover:text-gray-800 dark:hover:text-gray-200"
+              className="text-xs font-medium text-zinc-500 hover:text-zinc-900"
             >
-              Discard (விலக்கு)
+              Discard
             </button>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
-            <div className="p-2.5 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-              <span className="text-gray-500 block">Valid Readings</span>
-              <span className="text-sm font-bold text-gray-900 dark:text-gray-100">
+            <div className="p-3 rounded-xl bg-white border border-zinc-200">
+              <span className="text-zinc-500 block">Valid readings</span>
+              <span className="text-base font-semibold text-zinc-900 tabular-nums">
                 {preview.valid_readings_count.toLocaleString()}
               </span>
             </div>
-            <div className="p-2.5 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-              <span className="text-gray-500 block">Total Energy</span>
-              <span className="text-sm font-bold text-gray-900 dark:text-gray-100">
+            <div className="p-3 rounded-xl bg-white border border-zinc-200">
+              <span className="text-zinc-500 block">Total energy</span>
+              <span className="text-base font-semibold text-zinc-900 tabular-nums">
                 {preview.total_consumption_kwh.toLocaleString()} kWh
               </span>
             </div>
-            <div className="p-2.5 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-              <span className="text-gray-500 block">Average Daily</span>
-              <span className="text-sm font-bold text-gray-900 dark:text-gray-100">
+            <div className="p-3 rounded-xl bg-white border border-zinc-200">
+              <span className="text-zinc-500 block">Daily average</span>
+              <span className="text-base font-semibold text-zinc-900 tabular-nums">
                 {preview.average_daily_kwh} kWh/day
               </span>
             </div>
-            <div className="p-2.5 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-              <span className="text-gray-500 block">Duplicates / Errors</span>
-              <span className="text-sm font-bold text-gray-900 dark:text-gray-100">
+            <div className="p-3 rounded-xl bg-white border border-zinc-200">
+              <span className="text-zinc-500 block">Duplicates / errors</span>
+              <span className="text-base font-semibold text-zinc-900 tabular-nums">
                 {preview.duplicate_count} / {preview.error_count}
               </span>
             </div>
           </div>
 
           {preview.warnings.length > 0 && (
-            <div className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 text-xs space-y-1">
-              <span className="font-semibold block">Data Quality Notices:</span>
+            <div className="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200 text-amber-900 text-xs space-y-1">
+              <span className="font-semibold block">Data quality notices</span>
               <ul className="list-disc list-inside space-y-0.5">
                 {preview.warnings.map((w, idx) => (
                   <li key={idx}>{w}</li>
@@ -277,50 +275,53 @@ export const CsvDropzone: React.FC<CsvDropzoneProps> = ({
             </div>
           )}
 
-          {/* Sample Readings Table */}
           <div className="overflow-x-auto">
-            <span className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1 block">
-              Sample Verified Readings (First & Last Intervals):
+            <span className="text-xs font-medium text-zinc-600 mb-1.5 block">
+              Sample verified intervals
             </span>
-            <table className="w-full text-xs text-left border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-              <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
+            <table className="w-full text-xs text-left border border-zinc-200 rounded-xl overflow-hidden bg-white">
+              <thead className="bg-zinc-50 text-zinc-600 border-b border-zinc-200">
                 <tr>
-                  <th className="p-2">Timestamp (UTC / Offset)</th>
-                  <th className="p-2">Interval Energy (kWh)</th>
-                  <th className="p-2">Resolution</th>
+                  <th className="py-2 px-3 font-medium">Timestamp</th>
+                  <th className="py-2 px-3 font-medium text-right">Energy (kWh)</th>
+                  <th className="py-2 px-3 font-medium text-right">Resolution</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 dark:divide-gray-800 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+              <tbody className="divide-y divide-zinc-100 text-zinc-800">
                 {preview.sample_readings.map((r, i) => (
                   <tr key={i}>
-                    <td className="p-2 font-mono">{r.timestamp}</td>
-                    <td className="p-2 font-mono font-semibold">{r.value_kwh.toFixed(4)}</td>
-                    <td className="p-2">{r.resolution}</td>
+                    <td className="py-2 px-3 font-mono">{r.timestamp}</td>
+                    <td className="py-2 px-3 text-right font-mono font-medium tabular-nums">
+                      {r.value_kwh.toFixed(4)}
+                    </td>
+                    <td className="py-2 px-3 text-right">{r.resolution}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-2">
+          <div className="flex items-center justify-end gap-2.5 pt-1">
             <button
               type="button"
               onClick={() => setPreview(null)}
-              className="px-4 py-2 text-xs font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 rounded-lg"
+              className="px-4 py-2 min-h-[40px] text-xs font-medium text-zinc-700 bg-white border border-zinc-200 hover:bg-zinc-50 rounded-xl"
             >
-              Cancel (ரத்து)
+              {t('cancelBtn')}
             </button>
             <button
               type="button"
               disabled={isCommitting}
               onClick={handleCommitReadings}
-              className="px-5 py-2 text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 rounded-lg shadow-sm"
+              className="px-4 py-2 min-h-[40px] text-xs font-medium text-white bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 rounded-xl"
             >
-              {isCommitting ? 'Committing Locally...' : `Confirm & Save ${preview.valid_readings_count.toLocaleString()} Readings`}
+              {isCommitting
+                ? 'Saving...'
+                : `Confirm & Save ${preview.valid_readings_count.toLocaleString()} Readings`}
             </button>
           </div>
         </div>
       )}
-    </div>
+    </Card>
   );
 };

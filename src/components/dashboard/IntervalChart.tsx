@@ -5,25 +5,30 @@ import { db, type StoredEnergyReading } from '../../lib/db';
 import { useLanguage } from '../../locales/i18n';
 import {
   ResponsiveContainer,
-  LineChart,
-  Line,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   Tooltip,
   CartesianGrid,
-  Legend,
 } from 'recharts';
-import { Activity, Lock } from 'lucide-react';
+import { Activity, Lock, Upload } from 'lucide-react';
+import { Card } from '../ui/Card';
+import { Badge } from '../ui/Badge';
+import { EmptyState } from '../ui/EmptyState';
+import { Skeleton } from '../ui/Skeleton';
 
 interface IntervalChartProps {
   canVisualizeIntervals: boolean;
   refreshTrigger?: number;
+  onGoToImport?: () => void;
   className?: string;
 }
 
 export const IntervalChart: React.FC<IntervalChartProps> = ({
   canVisualizeIntervals,
   refreshTrigger = 0,
+  onGoToImport,
   className = '',
 }) => {
   const { t } = useLanguage();
@@ -57,107 +62,108 @@ export const IntervalChart: React.FC<IntervalChartProps> = ({
     };
   }, [canVisualizeIntervals, refreshTrigger]);
 
-  // Scientific Honesty Gating Banner for BASIC mode
   if (!canVisualizeIntervals) {
     return (
-      <div className={`rounded-2xl border border-amber-200 dark:border-amber-900/60 bg-amber-50/50 dark:bg-amber-950/20 p-8 text-center shadow-sm ${className}`}>
-        <div className="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto mb-4">
-          <Lock className="w-6 h-6" />
-        </div>
-        <h3 className="text-base font-bold text-amber-900 dark:text-amber-200">
-          {t('intervalDisabledTitle')}
-        </h3>
-        <p className="mt-2 text-xs text-amber-800/80 dark:text-amber-300/80 max-w-xl mx-auto leading-relaxed">
-          {t('intervalDisabledMsg')}
-        </p>
-
-        <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-gray-800 border border-amber-300 dark:border-amber-800 text-xs font-medium text-amber-900 dark:text-amber-200 shadow-sm">
-          <span>Required: 15-minute, 30-minute, or 1-hour interval CSV</span>
-        </div>
-      </div>
+      <EmptyState
+        icon={<Lock className="w-5 h-5 text-amber-600" />}
+        title={t('intervalDisabledTitle')}
+        description={t('intervalDisabledMsg')}
+        className={className}
+        action={
+          onGoToImport ? (
+            <button
+              type="button"
+              onClick={onGoToImport}
+              className="inline-flex items-center gap-2 px-4 py-2.5 min-h-[40px] rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium transition-colors"
+            >
+              <Upload className="w-3.5 h-3.5" />
+              <span>{t('overviewImportUnlockCta')}</span>
+            </button>
+          ) : undefined
+        }
+      />
     );
   }
 
-  // Sample data to prevent SVG rendering bottleneck if many thousands of rows
   const maxPlotPoints = 200;
   const step = Math.max(1, Math.floor(readings.length / maxPlotPoints));
-  const chartData = readings.filter((_, idx) => idx % step === 0).map((r) => {
-    const d = new Date(r.timestamp);
-    return {
-      time: `${d.toLocaleDateString([], { month: 'short', day: 'numeric' })} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`,
-      kwh: r.value_kwh,
-      watts: r.power_watts ?? (r.interval_duration_seconds ? Math.round((r.value_kwh * 3600000) / r.interval_duration_seconds) : undefined),
-    };
-  });
+  const chartData = readings
+    .filter((_, idx) => idx % step === 0)
+    .map((r) => {
+      const d = new Date(r.timestamp);
+      return {
+        time: `${d.toLocaleDateString([], { month: 'short', day: 'numeric' })} ${String(
+          d.getHours()
+        ).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`,
+        kwh: r.value_kwh,
+      };
+    });
 
   return (
-    <div className={`rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm ${className}`}>
-      {/* Chart Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 dark:border-gray-800 pb-4 mb-4">
-        <div className="flex items-center gap-2">
-          <Activity className="w-5 h-5 text-emerald-600" />
+    <Card className={`p-5 sm:p-6 ${className}`}>
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-zinc-100 pb-4 mb-5">
+        <div className="flex items-center gap-2.5">
+          <Activity className="w-4 h-4 text-emerald-600" />
           <div>
-            <h3 className="text-base font-bold text-gray-900 dark:text-gray-100">
-              {t('intervalChartTitle')}
-            </h3>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              {t('intervalChartSubtitle')}
-            </p>
+            <h3 className="text-base font-semibold text-zinc-900">{t('intervalChartTitle')}</h3>
+            <p className="text-xs text-zinc-500">{t('intervalChartSubtitle')}</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-3 text-xs">
-          <div className="px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
-            <span className="font-semibold">{t('totalReadingsCount')}</span> {readings.length}
-          </div>
-          <div className="px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
-            <span className="font-semibold">{t('totalEnergyIntegrated')}</span> {totalEnergy} kWh
-          </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge variant="emerald">
+            <span>{t('totalReadingsCount')}</span>
+            <span className="font-semibold tabular-nums">{readings.length}</span>
+          </Badge>
+          <Badge variant="neutral">
+            <span>{t('totalEnergyIntegrated')}</span>
+            <span className="font-semibold tabular-nums">{totalEnergy} kWh</span>
+          </Badge>
         </div>
       </div>
 
       {loading ? (
-        <div className="py-16 text-center text-xs text-gray-400">
-          Loading interval records...
-        </div>
+        <Skeleton className="h-72 w-full" />
       ) : readings.length === 0 ? (
-        <div className="py-16 text-center text-xs text-gray-400">
-          No interval records found. Upload a smart-meter CSV in the Import tab.
+        <div className="py-14 text-center text-xs text-zinc-500">
+          No interval records found yet.
         </div>
       ) : (
-        <div className="h-72 w-full pt-2">
+        <div className="h-72 w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" opacity={0.6} />
-              <XAxis dataKey="time" tick={{ fontSize: 10 }} minTickGap={20} stroke="#94a3b8" />
-              <YAxis
-                tick={{ fontSize: 10 }}
-                stroke="#94a3b8"
-                label={{ value: 'Energy (kWh)', angle: -90, position: 'insideLeft', style: { fontSize: 10, fill: '#64748b' } }}
-              />
+            <AreaChart data={chartData} margin={{ top: 8, right: 16, left: -12, bottom: 0 }}>
+              <defs>
+                <linearGradient id="kwhFill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#059669" stopOpacity={0.18} />
+                  <stop offset="95%" stopColor="#059669" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f4f4f5" />
+              <XAxis dataKey="time" tick={{ fontSize: 11, fill: '#71717a' }} minTickGap={24} stroke="#e4e4e7" />
+              <YAxis tick={{ fontSize: 11, fill: '#71717a' }} stroke="#e4e4e7" />
               <Tooltip
                 contentStyle={{
                   backgroundColor: '#ffffff',
                   borderRadius: '0.75rem',
-                  border: '1px solid #e2e8f0',
-                  boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+                  border: '1px solid #e4e4e7',
+                  boxShadow: '0 4px 12px rgb(0 0 0 / 0.06)',
                   fontSize: '12px',
                 }}
               />
-              <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }} />
-              <Line
+              <Area
                 type="monotone"
                 dataKey="kwh"
-                name="Interval Energy (kWh)"
-                stroke="#10b981"
+                name={t('energyAxis')}
+                stroke="#059669"
                 strokeWidth={2}
-                dot={false}
-                activeDot={{ r: 4 }}
+                fillOpacity={1}
+                fill="url(#kwhFill)"
+                activeDot={{ r: 4, fill: '#059669' }}
               />
-            </LineChart>
+            </AreaChart>
           </ResponsiveContainer>
         </div>
       )}
-    </div>
+    </Card>
   );
 };
