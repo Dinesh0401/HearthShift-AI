@@ -99,10 +99,16 @@ test.describe('HearthShift AI — Phase 4B Static Alpha UX, Manifest, Changelog 
       feedbackDialog.getByText(/never reads IndexedDB bills, interval CSVs, or consumer numbers/i)
     ).toBeVisible();
 
+    await expect(feedbackDialog.getByRole('button', { name: /Copy draft/i })).toBeDisabled();
+    await expect(feedbackDialog.getByRole('button', { name: /Download JSON/i })).toBeDisabled();
+    await feedbackDialog.locator('#feedback-usability-area').selectOption('overview');
+    await expect(feedbackDialog.getByRole('button', { name: /Copy draft/i })).toBeEnabled();
+
     await feedbackDialog
       .locator('#feedback-notes')
       .fill('<script>xss()</script> Clean overview makes threshold easy to see.');
     const previewText = await feedbackDialog.getByTestId('feedback-payload-preview').textContent();
+    expect(previewText).toContain('"usabilityArea": "overview"');
     expect(previewText).toContain('"householdBillsIncluded": 0');
     expect(previewText).toContain('"intervalReadingsIncluded": 0');
     expect(previewText).toContain('"consumerReferencesIncluded": 0');

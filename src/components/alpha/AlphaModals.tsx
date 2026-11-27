@@ -117,6 +117,14 @@ interface AlphaFeedbackModalProps {
 }
 
 type FeedbackCategory = 'usability' | 'tariff_bug' | 'region_request' | 'research_mv';
+type FeedbackArea =
+  | 'overview'
+  | 'bills'
+  | 'import_usage'
+  | 'simulator_recommendations'
+  | 'privacy'
+  | 'navigation'
+  | 'general';
 
 export const AlphaFeedbackModal: React.FC<AlphaFeedbackModalProps> = ({
   isOpen,
@@ -125,6 +133,7 @@ export const AlphaFeedbackModal: React.FC<AlphaFeedbackModalProps> = ({
 }) => {
   const { language, t } = useLanguage();
   const [category, setCategory] = useState<FeedbackCategory>('usability');
+  const [usabilityArea, setUsabilityArea] = useState<FeedbackArea | ''>('');
   const [rating, setRating] = useState<number | null>(null);
   const [notes, setNotes] = useState('');
   const [copied, setCopied] = useState(false);
@@ -149,6 +158,7 @@ export const AlphaFeedbackModal: React.FC<AlphaFeedbackModalProps> = ({
     uiLanguage: language,
     selectedTariffId: activeTariffId,
     category,
+    usabilityArea: category === 'usability' ? usabilityArea || null : null,
     experienceRating: rating,
     comments: sanitizedNotes,
     privacyGuarantees: {
@@ -161,6 +171,7 @@ export const AlphaFeedbackModal: React.FC<AlphaFeedbackModalProps> = ({
   };
 
   const payloadJson = JSON.stringify(scrubbedPayload, null, 2);
+  const canCreateDraft = category !== 'usability' || Boolean(usabilityArea);
 
   const handleCopyDraft = async () => {
     try {
@@ -266,6 +277,36 @@ export const AlphaFeedbackModal: React.FC<AlphaFeedbackModalProps> = ({
           </div>
         </div>
 
+        {category === 'usability' && (
+          <div>
+            <label htmlFor="feedback-usability-area" className="block text-xs font-medium text-zinc-700 mb-1">
+              {t('feedbackUsabilityAreaLabel')}
+            </label>
+            <select
+              id="feedback-usability-area"
+              value={usabilityArea}
+              onChange={(e) => setUsabilityArea(e.target.value as FeedbackArea | '')}
+              aria-required="true"
+              aria-describedby={!usabilityArea ? 'feedback-usability-area-hint' : undefined}
+              className="w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20"
+            >
+              <option value="">{t('feedbackUsabilityAreaPlaceholder')}</option>
+              <option value="overview">{t('feedbackAreaOverview')}</option>
+              <option value="bills">{t('feedbackAreaBills')}</option>
+              <option value="import_usage">{t('feedbackAreaImportUsage')}</option>
+              <option value="simulator_recommendations">{t('feedbackAreaSimulatorRecommendations')}</option>
+              <option value="privacy">{t('feedbackAreaPrivacy')}</option>
+              <option value="navigation">{t('feedbackAreaNavigation')}</option>
+              <option value="general">{t('feedbackAreaGeneral')}</option>
+            </select>
+            {!usabilityArea && (
+              <p id="feedback-usability-area-hint" className="mt-1 text-[11px] text-zinc-500">
+                {t('feedbackUsabilityAreaRequired')}
+              </p>
+            )}
+          </div>
+        )}
+
         <div>
           <label htmlFor="feedback-notes" className="block text-xs font-medium text-zinc-700 mb-1">
             Comments (never include account numbers or personal info)
@@ -305,7 +346,8 @@ export const AlphaFeedbackModal: React.FC<AlphaFeedbackModalProps> = ({
           <button
             type="button"
             onClick={handleCopyDraft}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[38px] rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium transition-colors"
+            disabled={!canCreateDraft}
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[38px] rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
             <span>{copied ? t('feedbackCopiedMsg') : t('feedbackCopyBtn')}</span>
@@ -314,13 +356,14 @@ export const AlphaFeedbackModal: React.FC<AlphaFeedbackModalProps> = ({
           <button
             type="button"
             onClick={handleDownloadDraft}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[38px] rounded-xl bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-800 text-xs font-medium transition-colors"
+            disabled={!canCreateDraft}
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[38px] rounded-xl bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-800 text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Download className="w-3.5 h-3.5" />
             <span>{t('feedbackDownloadBtn')}</span>
           </button>
 
-          {externalConsent && (
+          {externalConsent && canCreateDraft && (
             <div className="flex flex-wrap items-center gap-2 ml-auto">
               <a
                 href={mailtoUrl}
