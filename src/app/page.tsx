@@ -5,6 +5,8 @@ import type { StoredBillEntry } from '../lib/db';
 import type { CapabilityEvaluation } from '../core/capabilities/policy';
 import type { ComfortConstraint } from '../types/contracts';
 import { loadDashboardHouseholdSnapshot } from '../core/storage/household-preferences';
+import { DEFAULT_INITIAL_BELIEF } from '../core/recommendation/engine';
+import type { LatentPreferenceBelief } from '../core/optimization/tr-voi';
 import {
   SUPPORTED_TARIFF_CATALOG,
   getTariffPlanById,
@@ -73,6 +75,8 @@ export default function DashboardPage() {
   const [readingsSpanDays, setReadingsSpanDays] = useState(0);
   const [comfortConstraints, setComfortConstraints] = useState<ComfortConstraint[]>([]);
   const [evaluation, setEvaluation] = useState<CapabilityEvaluation | null>(null);
+  const [belief, setBelief] = useState<LatentPreferenceBelief>(DEFAULT_INITIAL_BELIEF);
+  const [askedQuestionIds, setAskedQuestionIds] = useState<string[]>([]);
   const [isLoadingState, setIsLoadingState] = useState(true);
   const [activeTariffId, setActiveTariffId] = useState<string>(TNPDCL_LT1A_2026_MAY10.id);
   const [isDemoMode, setIsDemoMode] = useState<boolean>(false);
@@ -136,6 +140,8 @@ export default function DashboardPage() {
     try {
       setIsDemoBusy(true);
       await loadSyntheticDemoHousehold();
+      setBelief(DEFAULT_INITIAL_BELIEF);
+      setAskedQuestionIds([]);
       setActiveTariffId(DEMO_TARIFF_ID);
       setIsDemoMode(true);
       handleStateUpdated();
@@ -150,6 +156,8 @@ export default function DashboardPage() {
     try {
       setIsDemoBusy(true);
       await clearDemoDataset();
+      setBelief(DEFAULT_INITIAL_BELIEF);
+      setAskedQuestionIds([]);
       setIsDemoMode(false);
       handleStateUpdated();
     } catch (err) {
@@ -329,6 +337,12 @@ export default function DashboardPage() {
                 readingsCount={readingsCount}
                 readingsSpanDays={readingsSpanDays}
                 comfortConstraints={comfortConstraints}
+                belief={belief}
+                askedQuestionIds={askedQuestionIds}
+                onBeliefUpdated={(nextBelief, nextAsked) => {
+                  setBelief(nextBelief);
+                  setAskedQuestionIds(nextAsked);
+                }}
                 isDemoMode={isDemoMode}
                 isLoading={isLoadingState}
                 isDemoBusy={isDemoBusy}
@@ -377,6 +391,12 @@ export default function DashboardPage() {
               <RecommendationFeed
                 latestUnitsKwh={latestUnits}
                 tariff={activeTariff}
+                belief={belief}
+                askedQuestionIds={askedQuestionIds}
+                onBeliefUpdated={(nextBelief, nextAsked) => {
+                  setBelief(nextBelief);
+                  setAskedQuestionIds(nextAsked);
+                }}
                 isDemoMode={isDemoMode}
                 refreshTrigger={refreshTrigger}
                 onActionLogged={handleStateUpdated}
@@ -386,7 +406,15 @@ export default function DashboardPage() {
 
             {activeTab === 'savings' && <SavingsLedger refreshTrigger={refreshTrigger} />}
 
-            {activeTab === 'privacy' && <PrivacyDataManager onDataPurged={handleStateUpdated} />}
+            {activeTab === 'privacy' && (
+              <PrivacyDataManager
+                onDataPurged={() => {
+                  setBelief(DEFAULT_INITIAL_BELIEF);
+                  setAskedQuestionIds([]);
+                  handleStateUpdated();
+                }}
+              />
+            )}
           </div>
 
           {/* Progressive Reference Footer inside Workspace (Always accessible, never blocks fold) */}
