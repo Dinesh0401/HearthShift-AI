@@ -33,6 +33,9 @@ import {
 interface RecommendationFeedProps {
   latestUnitsKwh: number;
   tariff?: TariffPlan;
+  belief?: LatentPreferenceBelief;
+  askedQuestionIds?: string[];
+  onBeliefUpdated?: (nextBelief: LatentPreferenceBelief, nextAskedIds: string[]) => void;
   isDemoMode?: boolean;
   refreshTrigger?: number;
   onActionLogged?: () => void;
@@ -42,6 +45,9 @@ interface RecommendationFeedProps {
 export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
   latestUnitsKwh,
   tariff = TNPDCL_LT1A_2026_MAY10,
+  belief: externalBelief,
+  askedQuestionIds: externalAskedIds,
+  onBeliefUpdated,
   isDemoMode = false,
   refreshTrigger = 0,
   onActionLogged,
@@ -49,8 +55,22 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
 }) => {
   const { t, language } = useLanguage();
 
-  const [belief, setBelief] = useState<LatentPreferenceBelief>(DEFAULT_INITIAL_BELIEF);
-  const [askedQuestionIds, setAskedQuestionIds] = useState<string[]>([]);
+  const [localBelief, setLocalBelief] = useState<LatentPreferenceBelief>(DEFAULT_INITIAL_BELIEF);
+  const [localAskedQuestionIds, setLocalAskedQuestionIds] = useState<string[]>([]);
+  const belief = externalBelief ?? localBelief;
+  const askedQuestionIds = externalAskedIds ?? localAskedQuestionIds;
+
+  const updateSharedBelief = (
+    nextBelief: LatentPreferenceBelief,
+    nextAskedIds: string[] = askedQuestionIds
+  ) => {
+    if (onBeliefUpdated) {
+      onBeliefUpdated(nextBelief, nextAskedIds);
+    } else {
+      setLocalBelief(nextBelief);
+      setLocalAskedQuestionIds(nextAskedIds);
+    }
+  };
   const [engineOutput, setEngineOutput] = useState<RecommendationEngineOutput | null>(null);
   const [comfortConstraints, setComfortConstraints] = useState<ComfortConstraint[]>([]);
   const [hasAdequateCoverage, setHasAdequateCoverage] = useState(false);
@@ -126,8 +146,7 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
     );
     const updatedAsked = [...askedQuestionIds, activeQuestion.id];
 
-    setBelief(updatedBelief);
-    setAskedQuestionIds(updatedAsked);
+    updateSharedBelief(updatedBelief, updatedAsked);
     setActiveQuestion(null);
 
     setFeedbackToast(t('feedbackRecorded'));
@@ -170,7 +189,7 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
             : rec.action.appliance_category === 'water_heating'
             ? 2
             : 3;
-        setBelief(updateBeliefWithFeedback(belief, featIdx, 1));
+        updateSharedBelief(updateBeliefWithFeedback(belief, featIdx, 1));
         setFeedbackToast(t('actionCompleted'));
         onActionLogged?.();
       } else if (response === 'impractical') {
@@ -182,7 +201,7 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
             : rec.action.appliance_category === 'water_heating'
             ? 2
             : 3;
-        setBelief(updateBeliefWithFeedback(belief, featIdx, -1));
+        updateSharedBelief(updateBeliefWithFeedback(belief, featIdx, -1));
         setFeedbackToast(t('feedbackRecorded'));
       } else {
         setFeedbackToast(t('feedbackRecorded'));

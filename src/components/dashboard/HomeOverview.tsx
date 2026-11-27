@@ -41,6 +41,9 @@ interface HomeOverviewProps {
   readingsCount: number;
   readingsSpanDays: number;
   comfortConstraints: ComfortConstraint[];
+  belief?: LatentPreferenceBelief;
+  askedQuestionIds?: string[];
+  onBeliefUpdated?: (nextBelief: LatentPreferenceBelief, nextAskedIds: string[]) => void;
   isDemoMode: boolean;
   isLoading: boolean;
   isDemoBusy: boolean;
@@ -86,6 +89,9 @@ export const HomeOverview: React.FC<HomeOverviewProps> = ({
   readingsCount,
   readingsSpanDays,
   comfortConstraints,
+  belief: externalBelief,
+  askedQuestionIds: externalAskedIds,
+  onBeliefUpdated,
   isDemoMode,
   isLoading,
   isDemoBusy,
@@ -94,8 +100,10 @@ export const HomeOverview: React.FC<HomeOverviewProps> = ({
   onActionLogged,
 }) => {
   const { t, language } = useLanguage();
-  const [belief, setBelief] = useState<LatentPreferenceBelief>(DEFAULT_INITIAL_BELIEF);
-  const [askedIds, setAskedIds] = useState<string[]>([]);
+  const [localBelief, setLocalBelief] = useState<LatentPreferenceBelief>(DEFAULT_INITIAL_BELIEF);
+  const [localAskedIds, setLocalAskedIds] = useState<string[]>([]);
+  const belief = externalBelief ?? localBelief;
+  const askedIds = externalAskedIds ?? localAskedIds;
   const [recOutput, setRecOutput] = useState<RecommendationEngineOutput | null>(null);
   const [activeQuestion, setActiveQuestion] = useState<AdaptiveQuestion | null>(null);
   const [toast, setToast] = useState<string | null>(null);
@@ -144,8 +152,14 @@ export const HomeOverview: React.FC<HomeOverviewProps> = ({
         : activeQuestion.category === 'water_heating'
         ? 2
         : 3;
-    setBelief((prev) => updateBeliefWithFeedback(prev, idx, val));
-    setAskedIds((prev) => [...prev, activeQuestion.id]);
+    const nextBelief = updateBeliefWithFeedback(belief, idx, val);
+    const nextAsked = [...askedIds, activeQuestion.id];
+    if (onBeliefUpdated) {
+      onBeliefUpdated(nextBelief, nextAsked);
+    } else {
+      setLocalBelief(nextBelief);
+      setLocalAskedIds(nextAsked);
+    }
     setActiveQuestion(null);
   };
 
