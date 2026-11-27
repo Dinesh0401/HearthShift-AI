@@ -40,6 +40,7 @@ interface HomeOverviewProps {
   billsCount: number;
   readingsCount: number;
   readingsSpanDays: number;
+  comfortConstraints: ComfortConstraint[];
   isDemoMode: boolean;
   isLoading: boolean;
   isDemoBusy: boolean;
@@ -84,6 +85,7 @@ export const HomeOverview: React.FC<HomeOverviewProps> = ({
   billsCount,
   readingsCount,
   readingsSpanDays,
+  comfortConstraints,
   isDemoMode,
   isLoading,
   isDemoBusy,
@@ -107,23 +109,6 @@ export const HomeOverview: React.FC<HomeOverviewProps> = ({
         return;
       }
       try {
-        await db.initialize();
-        const pref = await db.preferences.get('default_household');
-        const constraints =
-          pref?.comfort_constraints && pref.comfort_constraints.length > 0
-            ? pref.comfort_constraints
-            : readingsCount >= 168
-            ? [
-                {
-                  id: 'default_c',
-                  type: 'temperature_bound' as const,
-                  description: 'Default AC comfort bounds',
-                  flexibility: 'medium' as const,
-                  confidence: 1.0,
-                },
-              ]
-            : [];
-
         const out = generateHouseholdRecommendation({
           baselineKwh: latestBill.total_units_kwh,
           tariff,
@@ -133,7 +118,7 @@ export const HomeOverview: React.FC<HomeOverviewProps> = ({
             bills_count: billsCount,
             readings_count: readingsCount,
             readings_span_days: readingsSpanDays,
-            comfort_constraints: constraints,
+            comfort_constraints: comfortConstraints,
             active_tariff: tariff,
           },
         });
@@ -142,7 +127,7 @@ export const HomeOverview: React.FC<HomeOverviewProps> = ({
         console.error('Overview recommendation preview failed', err);
       }
     },
-    [latestBill, tariff, billsCount, readingsCount, readingsSpanDays]
+    [latestBill, tariff, billsCount, readingsCount, readingsSpanDays, comfortConstraints]
   );
 
   useEffect(() => {
