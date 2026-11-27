@@ -8,6 +8,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import Dexie from 'dexie';
 import { db } from '../../src/lib/db';
 import { evaluateCapabilityState } from '../../src/core/capabilities/policy';
 import { generateHouseholdRecommendation } from '../../src/core/recommendation/engine';
@@ -82,10 +83,10 @@ describe('Comfort Constraint Safety & No-Inference Policy', () => {
 
     let storedPref: HouseholdPreferences | undefined;
     vi.spyOn(db, 'initialize').mockResolvedValue(undefined);
-    vi.spyOn(db.preferences, 'get').mockImplementation(async () => storedPref);
-    vi.spyOn(db.preferences, 'put').mockImplementation(async (pref) => {
+    vi.spyOn(db.preferences, 'get').mockImplementation(() => Dexie.Promise.resolve(storedPref));
+    vi.spyOn(db.preferences, 'put').mockImplementation((pref) => {
       storedPref = pref;
-      return pref.id;
+      return Dexie.Promise.resolve(pref.id);
     });
 
     await expect(
@@ -151,16 +152,16 @@ describe('Comfort Constraint Safety & No-Inference Policy', () => {
       vi.spyOn(db, 'deleteAllUserData').mockImplementation(async () => {
         storedDemoPref = undefined;
       });
-      vi.spyOn(db, 'transaction').mockImplementation((async (...args: unknown[]) => {
+      vi.spyOn(db, 'transaction').mockImplementation(((...args: unknown[]) => {
         const callback = args[args.length - 1] as () => Promise<unknown>;
-        return callback();
+        return Dexie.Promise.resolve(callback());
       }) as typeof db.transaction);
-      vi.spyOn(db.bills, 'bulkAdd').mockResolvedValue(3);
-      vi.spyOn(db.readings, 'bulkAdd').mockResolvedValue(192);
-      vi.spyOn(db.savings, 'clear').mockResolvedValue(undefined);
-      vi.spyOn(db.preferences, 'put').mockImplementation(async (pref) => {
+      vi.spyOn(db.bills, 'bulkAdd').mockImplementation(() => Dexie.Promise.resolve(3));
+      vi.spyOn(db.readings, 'bulkAdd').mockImplementation(() => Dexie.Promise.resolve(192));
+      vi.spyOn(db.savings, 'clear').mockImplementation(() => Dexie.Promise.resolve(undefined));
+      vi.spyOn(db.preferences, 'put').mockImplementation((pref) => {
         storedDemoPref = pref;
-        return pref.id;
+        return Dexie.Promise.resolve(pref.id);
       });
 
       await loadSyntheticDemoHousehold();
