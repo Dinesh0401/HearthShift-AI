@@ -89,7 +89,11 @@ export const translations = {
     overviewImportUnlockCta: 'Import CSV readings',
     overviewNeedMoreDataTitle: 'Unlock tailored action ideas',
     overviewNeedMoreDataDesc:
-      'Add a bill and import at least 7 days of smart-meter readings to receive conservative comfort-checked suggestions.',
+      'Add a bill, import at least 7 days of smart-meter readings, and confirm your household comfort limits to receive comfort-checked suggestions.',
+    overviewNeedComfortTitle: 'Confirm comfort preferences to unlock suggestions',
+    overviewNeedComfortDesc:
+      'Your meter data is ready. HearthShift never assumes your comfort limits—confirm which adjustments feel practical for your household first.',
+    overviewSetComfortCta: 'Set comfort preferences',
     overviewFooterNote:
       'Model-based estimates using your active tariff. Not a utility receipt or guaranteed savings.',
     viewDetails: 'View details',
@@ -200,6 +204,26 @@ export const translations = {
     laundryShiftTou: 'Shift laundry from evening peak (19:00) to morning (07:00)',
     cliffAvoidedAlert: 'Threshold cliff avoided — subsidy protected',
     assumptionsTitle: 'How this is modeled',
+
+    // Comfort Preferences Input (Explicit Consent)
+    comfortSetupTitle: 'Confirm your comfort preferences',
+    comfortSetupSubtitle:
+      'HearthShift never assumes comfort tolerances from meter readings alone. Select only adjustments that are realistic for your home.',
+    comfortAcOption: 'Modest AC temperature adjustment (+0.5°C to +2°C) or 1h earlier shutoff',
+    comfortAcFlexibilityLabel: 'AC flexibility',
+    comfortFlexLow: 'Low (+0.5°C)',
+    comfortFlexMedium: 'Moderate (+1°C to +2°C)',
+    comfortFlexHigh: 'Flexible',
+    comfortWaterHeaterOption: 'Trim water heater timer duration by 15–20 minutes',
+    comfortLaundryOption: 'Shift washing machine cycle to morning hours',
+    comfortStandbyOption: 'Power down entertainment standby power overnight',
+    comfortConfirmBtn: 'Confirm comfort preferences',
+    comfortSavingBtn: 'Saving...',
+    comfortSelectPrompt: 'Select at least one option above before confirming.',
+    comfortActiveUserBadge: 'User-confirmed comfort limits',
+    comfortActiveSampleBadge: 'Sample comfort limits',
+    comfortClearBtn: 'Reset comfort limits',
+    comfortSavedToast: 'Comfort preferences saved on this device.',
 
     // Recommendations
     recommendationsTitle: 'Smart recommendations',
@@ -342,7 +366,11 @@ export const translations = {
     overviewImportUnlockCta: 'CSV பதிவேற்றுக',
     overviewNeedMoreDataTitle: 'தனிப்பயன் பரிந்துரைகளைப் பெறுங்கள்',
     overviewNeedMoreDataDesc:
-      'உங்கள் வீட்டிற்கு ஏற்ற பரிந்துரைகளைப் பெற பில் விவரத்துடன் 7+ நாட்கள் ஸ்மார்ட் மீட்டர் அளவீடுகளைப் பதிவேற்றுங்கள்.',
+      'உங்கள் வீட்டிற்கு ஏற்ற பரிந்துரைகளைப் பெற பில் விவரம், 7+ நாட்கள் ஸ்மார்ட் மீட்டர் அளவீடுகள் மற்றும் உங்கள் வசதி வரம்புகளை உறுதிப்படுத்தவும்.',
+    overviewNeedComfortTitle: 'பரிந்துரைகளைப் பெற வசதி வரம்புகளை உறுதிப்படுத்தவும்',
+    overviewNeedComfortDesc:
+      'உங்கள் மீட்டர் அளவீடுகள் தயாராக உள்ளன. HearthShift உங்கள் வசதி வரம்புகளைத் தானாக யூகிக்காது—எந்த மாற்றங்கள் ஏற்புடையவை என்பதை முதலில் உறுதிப்படுத்தவும்.',
+    overviewSetComfortCta: 'வசதி வரம்புகளை அமைக்கவும்',
     overviewFooterNote:
       'செயலில் உள்ள கட்டணத் திட்டத்தின் மாதிரி மதிப்பீடு மட்டுமே; உறுதியளிக்கப்பட்ட சேமிப்பு அல்ல.',
     viewDetails: 'விவரங்களைப் பார்',
@@ -453,6 +481,26 @@ export const translations = {
     laundryShiftTou: 'துவைப்பதை மாலையிலிருந்து (19:00) காலைக்கு (07:00) மாற்றுதல்',
     cliffAvoidedAlert: 'கட்டண எல்லை உயர்வு தவிர்க்கப்பட்டது — மானியம் பாதுகாக்கப்பட்டது',
     assumptionsTitle: 'கணக்கீட்டு அனுமானங்கள்',
+
+    // Comfort Preferences Input (Explicit Consent)
+    comfortSetupTitle: 'உங்கள் வசதி வரம்புகளை உறுதிப்படுத்தவும்',
+    comfortSetupSubtitle:
+      'மீட்டர் அளவீடுகளை மட்டும் வைத்து HearthShift உங்கள் வசதியைத் தானாக யூகிக்காது. உங்கள் வீட்டிற்குப் பொருத்தமானவற்றை மட்டும் தேர்ந்தெடுக்கவும்.',
+    comfortAcOption: 'ஏசி வெப்பநிலை சிறிய அளவு (+0.5°C முதல் +2°C) அல்லது 1 மணி முன் நிறுத்தம்',
+    comfortAcFlexibilityLabel: 'ஏசி நெகிழ்வுத்தன்மை',
+    comfortFlexLow: 'குறைவு (+0.5°C)',
+    comfortFlexMedium: 'மிதமானது (+1°C–2°C)',
+    comfortFlexHigh: 'எளிதானது',
+    comfortWaterHeaterOption: 'வாட்டர் ஹீட்டர் நேரத்தை 15–20 நிமிடங்கள் குறைத்தல்',
+    comfortLaundryOption: 'துணி துவைப்பதை காலை நேரத்திற்கு மாற்றுதல்',
+    comfortStandbyOption: 'இரவில் டிவி ஸ்டாண்ட்பை மின்சாரத்தை அணைத்தல்',
+    comfortConfirmBtn: 'வசதி வரம்புகளை உறுதிப்படுத்து',
+    comfortSavingBtn: 'சேமிக்கிறது...',
+    comfortSelectPrompt: 'உறுதிப்படுத்த குறைந்தது ஒரு விருப்பத்தையாவது தேர்ந்தெடுக்கவும்.',
+    comfortActiveUserBadge: 'பயனர் உறுதிப்படுத்திய வரம்புகள்',
+    comfortActiveSampleBadge: 'மாதிரி வசதி வரம்புகள்',
+    comfortClearBtn: 'வசதி வரம்புகளை மீட்டமை',
+    comfortSavedToast: 'உங்கள் வசதி வரம்புகள் இந்த சாதனத்தில் சேமிக்கப்பட்டன.',
 
     // Recommendations
     recommendationsTitle: 'சிறந்த பரிந்துரைகள்',
