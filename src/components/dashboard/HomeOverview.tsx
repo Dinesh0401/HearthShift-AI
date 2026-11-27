@@ -572,33 +572,52 @@ export const HomeOverview: React.FC<HomeOverviewProps> = ({
         </Card>
       )}
 
-      {(!recOutput || recOutput.capabilityGated) && (
-        <Card className="p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <h3 className="text-sm font-semibold text-zinc-900">{t('overviewNeedMoreDataTitle')}</h3>
-            <p className="text-xs text-zinc-500 leading-relaxed max-w-xl">
-              {t('overviewNeedMoreDataDesc')}
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-2 shrink-0">
-            <button
-              type="button"
-              onClick={() => onNavigate('import')}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[40px] rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium transition-colors"
-            >
-              <Upload className="w-3.5 h-3.5" />
-              <span>{t('overviewImportUnlockCta')}</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => onNavigate('simulator')}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[40px] rounded-xl border border-zinc-200 hover:bg-zinc-50 text-zinc-700 text-xs font-medium transition-colors"
-            >
-              <span>{t('overviewOpenSimulator')}</span>
-            </button>
-          </div>
-        </Card>
-      )}
+      {(!recOutput || recOutput.capabilityGated) && (() => {
+        const needsComfortOnly =
+          readingsCount >= 168 &&
+          readingsSpanDays >= 7 &&
+          comfortConstraints.length === 0;
+        return (
+          <Card className="p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <h3 className="text-sm font-semibold text-zinc-900">
+                {needsComfortOnly ? t('overviewNeedComfortTitle') : t('overviewNeedMoreDataTitle')}
+              </h3>
+              <p className="text-xs text-zinc-500 leading-relaxed max-w-xl">
+                {needsComfortOnly ? t('overviewNeedComfortDesc') : t('overviewNeedMoreDataDesc')}
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2 shrink-0">
+              {needsComfortOnly ? (
+                <button
+                  type="button"
+                  onClick={() => onNavigate('recommendations')}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[40px] rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium transition-colors"
+                >
+                  <span>{t('overviewSetComfortCta')}</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => onNavigate('import')}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[40px] rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium transition-colors"
+                >
+                  <Upload className="w-3.5 h-3.5" />
+                  <span>{t('overviewImportUnlockCta')}</span>
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={() => onNavigate('simulator')}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[40px] rounded-xl border border-zinc-200 hover:bg-zinc-50 text-zinc-700 text-xs font-medium transition-colors"
+              >
+                <span>{t('overviewOpenSimulator')}</span>
+              </button>
+            </div>
+          </Card>
+        );
+      })()}
 
       {/* Subtle Bottom Model Disclosure */}
       <p className="text-xs text-zinc-400 leading-relaxed">
