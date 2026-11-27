@@ -1,8 +1,10 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { db, type StoredBillEntry } from '../lib/db';
-import { evaluateCapabilityState, type CapabilityEvaluation } from '../core/capabilities/policy';
+import type { StoredBillEntry } from '../lib/db';
+import type { CapabilityEvaluation } from '../core/capabilities/policy';
+import type { ComfortConstraint } from '../types/contracts';
+import { loadDashboardHouseholdSnapshot } from '../core/storage/household-preferences';
 import {
   SUPPORTED_TARIFF_CATALOG,
   getTariffPlanById,
@@ -69,6 +71,7 @@ export default function DashboardPage() {
   const [billsCount, setBillsCount] = useState(0);
   const [readingsCount, setReadingsCount] = useState(0);
   const [readingsSpanDays, setReadingsSpanDays] = useState(0);
+  const [comfortConstraints, setComfortConstraints] = useState<ComfortConstraint[]>([]);
   const [evaluation, setEvaluation] = useState<CapabilityEvaluation | null>(null);
   const [isLoadingState, setIsLoadingState] = useState(true);
   const [activeTariffId, setActiveTariffId] = useState<string>(TNPDCL_LT1A_2026_MAY10.id);
@@ -97,52 +100,14 @@ export default function DashboardPage() {
 
   const refreshState = useCallback(async () => {
     try {
-      await db.initialize();
-      const bCount = await db.bills.count();
-      const rCount = await db.readings.count();
-
-      let spanDays = 0;
-      if (rCount > 0) {
-        const first = await db.readings.orderBy('timestamp').first();
-        const last = await db.readings.orderBy('timestamp').reverse().first();
-        if (first && last) {
-          const diffMs = new Date(last.timestamp).getTime() - new Date(first.timestamp).getTime();
-          spanDays = Math.max(0.1, diffMs / (1000 * 60 * 60 * 24));
-        }
-      }
-
-      const newestBill = (await db.bills.orderBy('billing_period_start').reverse().first()) ?? null;
-      setBillsCount(bCount);
-      setReadingsCount(rCount);
-      setReadingsSpanDays(spanDays);
-      setLatestBill(newestBill);
-      setLatestUnits(newestBill ? newestBill.total_units_kwh : 380);
-
-      const pref = await db.preferences.get('default_household');
-      const constraints =
-        pref?.comfort_constraints && pref.comfort_constraints.length > 0
-          ? pref.comfort_constraints
-          : rCount >= 168
-          ? [
-              {
-                id: 'default_c',
-                type: 'temperature_bound' as const,
-                description: 'Default AC comfort bounds',
-                flexibility: 'medium' as const,
-                confidence: 1.0,
-              },
-            ]
-          : [];
-
-      const evalResult = evaluateCapabilityState({
-        bills_count: bCount,
-        readings_count: rCount,
-        readings_span_days: spanDays,
-        comfort_constraints: constraints,
-        active_tariff: activeTariff,
-      });
-
-      setEvaluation(evalResult);
+      const snapshot = await loadDashboardHouseholdSnapshot(activeTariff);
+      setBillsCount(snapshot.billsCount);
+      setReadingsCount(snapshot.readingsCount);
+      setReadingsSpanDays(snapshot.readingsSpanDays);
+      setLatestBill(snapshot.latestBill);
+      setLatestUnits(snapshot.latestBill ? snapshot.latestBill.total_units_kwh : 380);
+      setComfortConstraints(snapshot.comfortConstraints);
+      setEvaluation(snapshot.evaluation);
       setIsDemoMode(isSyntheticDemoMode());
     } catch (err) {
       console.error('Failed to load dashboard state from IndexedDB', err);
@@ -363,6 +328,7 @@ export default function DashboardPage() {
                 billsCount={billsCount}
                 readingsCount={readingsCount}
                 readingsSpanDays={readingsSpanDays}
+                comfortConstraints={comfortConstraints}
                 isDemoMode={isDemoMode}
                 isLoading={isLoadingState}
                 isDemoBusy={isDemoBusy}
