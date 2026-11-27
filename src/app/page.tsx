@@ -377,7 +377,10 @@ export default function DashboardPage() {
               <RecommendationFeed
                 latestUnitsKwh={latestUnits}
                 tariff={activeTariff}
+                isDemoMode={isDemoMode}
+                refreshTrigger={refreshTrigger}
                 onActionLogged={handleStateUpdated}
+                onPreferencesUpdated={handleStateUpdated}
               />
             )}
 

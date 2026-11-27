@@ -14,7 +14,7 @@ import {
   type RecommendationEngineOutput,
 } from '../../core/recommendation/engine';
 import type { LatentPreferenceBelief } from '../../core/optimization/tr-voi';
-import type { AdaptiveQuestion, Recommendation } from '../../types/contracts';
+import type { AdaptiveQuestion, ComfortConstraint, Recommendation } from '../../types/contracts';
 import { useLanguage } from '../../locales/i18n';
 import { AdaptiveQueryModal } from './AdaptiveQueryModal';
 import { Card, MetricCard } from '../ui/Card';
