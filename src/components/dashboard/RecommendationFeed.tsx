@@ -11,8 +11,10 @@ import {
   type RecommendationEngineOutput,
 } from '../../core/recommendation/engine';
 import type { LatentPreferenceBelief } from '../../core/optimization/tr-voi';
-import type { Recommendation, AdaptiveQuestion } from '../../types/contracts';
+import { loadDashboardHouseholdSnapshot } from '../../core/storage/household-preferences';
+import type { AdaptiveQuestion, ComfortConstraint, Recommendation } from '../../types/contracts';
 import { AdaptiveQueryModal } from './AdaptiveQueryModal';
+import { ComfortPreferencesCard } from './ComfortPreferencesCard';
 import { useLanguage } from '../../locales/i18n';
 import { Card, SectionHeader } from '../ui/Card';
 import { Badge } from '../ui/Badge';
@@ -31,19 +33,27 @@ import {
 interface RecommendationFeedProps {
   latestUnitsKwh: number;
   tariff?: TariffPlan;
+  isDemoMode?: boolean;
+  refreshTrigger?: number;
   onActionLogged?: () => void;
+  onPreferencesUpdated?: () => void;
 }
 
 export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
   latestUnitsKwh,
   tariff = TNPDCL_LT1A_2026_MAY10,
+  isDemoMode = false,
+  refreshTrigger = 0,
   onActionLogged,
+  onPreferencesUpdated,
 }) => {
   const { t, language } = useLanguage();
 
   const [belief, setBelief] = useState<LatentPreferenceBelief>(DEFAULT_INITIAL_BELIEF);
   const [askedQuestionIds, setAskedQuestionIds] = useState<string[]>([]);
   const [engineOutput, setEngineOutput] = useState<RecommendationEngineOutput | null>(null);
+  const [comfortConstraints, setComfortConstraints] = useState<ComfortConstraint[]>([]);
+  const [hasAdequateCoverage, setHasAdequateCoverage] = useState(false);
   const [activeQuestion, setActiveQuestion] = useState<AdaptiveQuestion | null>(null);
   const [feedbackToast, setFeedbackToast] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -52,35 +62,12 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
     async (currentBelief: LatentPreferenceBelief, askedIds: string[]) => {
       try {
         setLoading(true);
-        await db.initialize();
-        const bCount = await db.bills.count();
-        const rCount = await db.readings.count();
+        const snapshot = await loadDashboardHouseholdSnapshot(tariff);
 
-        let spanDays = 0;
-        if (rCount > 0) {
-          const first = await db.readings.orderBy('timestamp').first();
-          const last = await db.readings.orderBy('timestamp').reverse().first();
-          if (first && last) {
-            const diffMs = new Date(last.timestamp).getTime() - new Date(first.timestamp).getTime();
-            spanDays = Math.max(0.1, diffMs / (1000 * 60 * 60 * 24));
-          }
-        }
-
-        const pref = await db.preferences.get('default_household');
-        const constraints =
-          pref?.comfort_constraints && pref.comfort_constraints.length > 0
-            ? pref.comfort_constraints
-            : rCount >= 168
-            ? [
-                {
-                  id: 'default_c',
-                  type: 'temperature_bound' as const,
-                  description: 'Default AC comfort bounds',
-                  flexibility: 'medium' as const,
-                  confidence: 1.0,
-                },
-              ]
-            : [];
+        setComfortConstraints(snapshot.comfortConstraints);
+        setHasAdequateCoverage(
+          snapshot.readingsSpanDays >= 7 && snapshot.readingsCount >= 168
+        );
 
         const output = generateHouseholdRecommendation({
           baselineKwh: latestUnitsKwh,
@@ -88,10 +75,10 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
           belief: currentBelief,
           askedQuestionIds: askedIds,
           capabilityInputs: {
-            bills_count: bCount,
-            readings_count: rCount,
-            readings_span_days: spanDays,
-            comfort_constraints: constraints,
+            bills_count: snapshot.billsCount,
+            readings_count: snapshot.readingsCount,
+            readings_span_days: snapshot.readingsSpanDays,
+            comfort_constraints: snapshot.comfortConstraints,
             active_tariff: tariff,
           },
         });
@@ -114,7 +101,14 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
 
   useEffect(() => {
     runEngine(belief, askedQuestionIds);
-  }, [runEngine, belief, askedQuestionIds]);
+  }, [runEngine, belief, askedQuestionIds, refreshTrigger]);
+
+  const handleComfortPreferencesChanged = () => {
+    setFeedbackToast(t('comfortSavedToast'));
+    setTimeout(() => setFeedbackToast(null), 3000);
+    runEngine(belief, askedQuestionIds);
+    onPreferencesUpdated?.();
+  };
 
   const handleAnswerQuestion = (responseVal: 1 | -1 | 0) => {
     if (!activeQuestion) return;
@@ -201,6 +195,11 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
   };
 
   const rec = engineOutput?.recommendation;
+  const isTariffActionable =
+    Boolean(tariff.is_time_dependent) || tariff.gross_tariff.type === 'tiered_slab';
+  const needsComfortInput =
+    hasAdequateCoverage && comfortConstraints.length === 0 && isTariffActionable;
+
   const effortLabel = rec
     ? rec.action.estimated_effort === 'minimal'
       ? language === 'ta'
@@ -220,7 +219,7 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
       {feedbackToast && (
         <div
           role="status"
-          className="p-3.5 bg-emerald-700 text-white text-xs font-medium rounded-xl flex items-center gap-2 animate-fadeIn"
+          className="p-3.5 bg-emerald-700 text-white text-xs font-medium rounded-xl flex items-center gap-2"
         >
           <Check className="w-4 h-4 shrink-0" />
           <span>{feedbackToast}</span>
@@ -241,12 +240,26 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
         action={<Badge variant="neutral">{tariff.name}</Badge>}
       />
 
+      {!loading && comfortConstraints.length > 0 && (
+        <ComfortPreferencesCard
+          comfortConstraints={comfortConstraints}
+          isDemoMode={isDemoMode}
+          onUpdated={handleComfortPreferencesChanged}
+        />
+      )}
+
       {loading ? (
         <Card className="p-6 space-y-4">
           <Skeleton className="h-6 w-2/3" />
           <Skeleton className="h-4 w-full" />
           <Skeleton className="h-12 w-40" />
         </Card>
+      ) : needsComfortInput ? (
+        <ComfortPreferencesCard
+          comfortConstraints={comfortConstraints}
+          isDemoMode={isDemoMode}
+          onUpdated={handleComfortPreferencesChanged}
+        />
       ) : engineOutput?.capabilityGated ? (
         <EmptyState
           icon={<ShieldAlert className="w-5 h-5 text-amber-600" />}
@@ -261,7 +274,7 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
         />
       ) : rec ? (
         <Card className="p-5 sm:p-6 space-y-5">
-          {/* Card Summary (Scannable in 3 Seconds) */}
+          {/* Card Summary */}
           <div className="flex flex-col md:flex-row md:items-start justify-between gap-5">
             <div className="space-y-2.5 min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
@@ -300,14 +313,13 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
             </div>
           </div>
 
-          {/* Expandable Details: Bounds, Rationale, Limitations & Feedback Controls */}
+          {/* Expandable Details */}
           <ExpandableDetails
             summary={t('viewDetails')}
             icon={<Lightbulb className="w-3.5 h-3.5 text-emerald-600" />}
             className="pt-2 border-t border-zinc-100"
           >
             <div className="space-y-4">
-              {/* Conservative Bound + Provenance Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="p-3.5 rounded-xl bg-zinc-50 border border-zinc-200/80">
                   <span className="text-xs font-medium text-zinc-500 block">
@@ -331,7 +343,6 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
                 </div>
               </div>
 
-              {/* Assumptions & Limitations */}
               {rec.assumptions.length > 0 && (
                 <div className="space-y-1.5 text-xs text-zinc-600">
                   <p className="font-semibold text-zinc-800">{t('assumptionsTitle')}</p>
@@ -343,7 +354,6 @@ export const RecommendationFeed: React.FC<RecommendationFeedProps> = ({
                 </div>
               )}
 
-              {/* Feedback Controls */}
               <div className="pt-3 border-t border-zinc-100 flex flex-wrap items-center justify-between gap-3">
                 <span className="text-xs text-zinc-500">
                   {language === 'ta'

@@ -118,6 +118,11 @@ test.describe('HearthShift AI — Phase 4A Alpha Security, Same-Origin Privacy, 
 
     await page.screenshot({ path: 'tests/e2e/screenshots/phase4a-demo-mode.png' });
 
+    // Confirm Synthetic Demo Mode explicitly labels sample comfort constraints
+    await page.getByRole('tab', { name: /Smart recommendations/i }).click();
+    await expect(page.getByText('Sample comfort limits')).toBeVisible();
+    await expect(page.getByText(/\[Synthetic sample\]/i).first()).toBeVisible();
+
     // Check historical schedules & May 10 policy boundary inside Bills tab
     await page.getByRole('tab', { name: /^Bills$/i }).click();
     const mayJunRow = page.getByRole('row', { name: /2026-05-01 → 2026-06-30/i });
@@ -185,6 +190,10 @@ test.describe('HearthShift AI — Phase 4A Alpha Security, Same-Origin Privacy, 
     await expect(page.getByText(/CSV Validation Preview/i)).toBeVisible();
     await page.getByRole('button', { name: /Confirm & Save 192 Readings/i }).click();
 
+    // Real user WITHOUT comfort constraints must remain gated in Meter readings active mode
+    await expect(page.getByText('Meter readings active').first()).toBeVisible();
+    await expect(page.getByText('Ready for recommendations')).toHaveCount(0);
+
     await page.getByRole('tab', { name: /^Simulator$/i }).click();
     await expect(page.getByText(/Threshold cliff avoided — subsidy protected/i)).toBeVisible();
     const geyserSwitch = page.getByRole('switch', { name: /Trim water heater duration/i });
@@ -192,7 +201,17 @@ test.describe('HearthShift AI — Phase 4A Alpha Security, Same-Origin Privacy, 
     await geyserSwitch.click();
     await expect(geyserSwitch).toHaveAttribute('aria-checked', 'true');
 
+    // Recommendations tab requires explicit user comfort confirmation before unlocking TR-VOI
     await page.getByRole('tab', { name: /Smart recommendations/i }).click();
+    await expect(page.getByText('Confirm your comfort preferences')).toBeVisible();
+    const confirmComfortBtn = page.getByRole('button', { name: 'Confirm comfort preferences' });
+    await expect(confirmComfortBtn).toBeDisabled();
+    await page.getByLabel(/Modest AC temperature adjustment/i).check();
+    await confirmComfortBtn.click();
+
+    await expect(page.getByText('User-confirmed comfort limits')).toBeVisible();
+    await expect(page.getByText('Ready for recommendations').first()).toBeVisible();
+
     const dialog = page.getByRole('dialog');
     const dialogVisible = await dialog.waitFor({ state: 'visible', timeout: 3500 }).then(
       () => true,

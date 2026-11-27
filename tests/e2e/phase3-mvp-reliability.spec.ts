@@ -87,11 +87,27 @@ test.describe('HearthShift AI — Phase 3.1 Production MVP Reliability & Parity 
     await expect(page.getByText(/CSV Validation Preview/i)).toBeVisible();
     await page.getByRole('button', { name: /Confirm & Save 192 Readings/i }).click();
 
-    await expect(page.getByText(/Ready for recommendations|Meter readings active/).first()).toBeVisible();
+    // Real user with >= 168 readings and NO comfort constraints MUST remain in Meter readings active mode
+    await expect(page.getByText('Meter readings active').first()).toBeVisible();
+    await expect(page.getByText('Ready for recommendations')).toHaveCount(0);
     await expect(page.getByText('Hourly usage curve')).toBeVisible();
 
-    // Recommendations Tab
-    await recsTab.click();
+    // Overview must prompt for genuine comfort preferences instead of inventing defaults
+    await overviewTab.click();
+    await expect(page.getByText('Confirm comfort preferences to unlock suggestions')).toBeVisible();
+    await page.getByRole('button', { name: /Set comfort preferences/i }).click();
+
+    // User explicitly confirms real household comfort limits on Smart recommendations tab
+    await expect(page.getByText('Confirm your comfort preferences')).toBeVisible();
+    const confirmComfortBtn = page.getByRole('button', { name: 'Confirm comfort preferences' });
+    await expect(confirmComfortBtn).toBeDisabled();
+    await page.getByLabel(/Modest AC temperature adjustment/i).check();
+    await page.getByLabel(/Trim water heater timer duration/i).check();
+    await expect(confirmComfortBtn).toBeEnabled();
+    await confirmComfortBtn.click();
+
+    await expect(page.getByText('User-confirmed comfort limits')).toBeVisible();
+    await expect(page.getByText('Ready for recommendations').first()).toBeVisible();
 
     const modalButton = page.getByRole('button', { name: /Yes, comfortable/i });
     try {
