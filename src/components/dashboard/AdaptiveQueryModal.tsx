@@ -29,51 +29,44 @@ export const AdaptiveQueryModal: React.FC<AdaptiveQueryModalProps> = ({
   }, [onClose]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/40 backdrop-blur-[2px] animate-fadeIn">
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby="adaptive-query-modal-title"
-        className="bg-white rounded-2xl shadow-xl border border-gray-200 max-w-md w-full overflow-hidden p-6 space-y-5"
+        className="bg-white rounded-2xl shadow-xl border border-zinc-200 max-w-md w-full p-6 space-y-5"
       >
-        {/* Header */}
-        <div className="flex items-start justify-between">
+        <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-blue-50 text-blue-600 rounded-xl border border-blue-100">
+            <div className="w-9 h-9 bg-zinc-100 text-zinc-700 rounded-xl flex items-center justify-center shrink-0">
               <HelpCircle className="w-5 h-5" />
             </div>
             <div>
-              <h3 id="adaptive-query-modal-title" className="text-base font-bold text-gray-900">
+              <h3 id="adaptive-query-modal-title" className="text-base font-semibold text-zinc-900">
                 {t('adaptiveQuestionTitle')}
               </h3>
-              <p className="text-xs text-gray-500 mt-0.5">EVSI Decision Gate Active</p>
+              <p className="text-xs text-zinc-500 mt-0.5">{t('adaptiveQuestionSubtitle')}</p>
             </div>
           </div>
           <button
             type="button"
             onClick={onClose}
             aria-label="Close question modal"
-            className="text-gray-400 hover:text-gray-600 p-1 rounded-lg"
+            className="text-zinc-400 hover:text-zinc-700 p-1.5 rounded-lg hover:bg-zinc-100 transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Question Text */}
-        <div className="p-4 bg-blue-50/60 rounded-xl border border-blue-100 text-sm font-semibold text-gray-900 leading-relaxed">
+        <div className="p-4 bg-zinc-50 rounded-xl border border-zinc-200/80 text-sm font-medium text-zinc-900 leading-relaxed">
           {question.text[language] ?? question.text.en}
         </div>
 
-        <p className="text-xs text-gray-600 leading-normal">
-          {t('adaptiveQuestionSubtitle')}
-        </p>
-
-        {/* Action Buttons */}
-        <div className="space-y-2 pt-1">
+        <div className="space-y-2">
           <button
             type="button"
             onClick={() => onAnswer(1)}
-            className="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-2 shadow-sm transition-colors"
+            className="w-full min-h-[44px] py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs sm:text-sm font-medium flex items-center justify-center gap-2 transition-colors"
           >
             <Check className="w-4 h-4" />
             {t('btnFlexible')}
@@ -82,25 +75,24 @@ export const AdaptiveQueryModal: React.FC<AdaptiveQueryModalProps> = ({
           <button
             type="button"
             onClick={() => onAnswer(-1)}
-            className="w-full py-2.5 px-4 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-colors"
+            className="w-full min-h-[44px] py-2.5 px-4 bg-white hover:bg-zinc-50 border border-zinc-200 text-zinc-800 rounded-xl text-xs sm:text-sm font-medium flex items-center justify-center gap-2 transition-colors"
           >
-            <X className="w-4 h-4 text-red-500" />
+            <X className="w-4 h-4 text-zinc-500" />
             {t('btnSensitive')}
           </button>
 
           <button
             type="button"
             onClick={() => onAnswer(0)}
-            className="w-full py-2 px-4 text-gray-500 hover:text-gray-700 text-xs font-medium text-center transition-colors"
+            className="w-full min-h-[40px] py-2 px-4 text-zinc-500 hover:text-zinc-800 text-xs font-medium text-center transition-colors"
           >
             {t('btnSkip')}
           </button>
         </div>
 
-        {/* Privacy Invariant Footer */}
-        <div className="pt-2 border-t border-gray-100 flex items-center gap-2 text-[10px] text-gray-500">
-          <Shield className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
-          <span>Answers stay 100% on your device in IndexedDB. Zero cloud transmission.</span>
+        <div className="pt-3 border-t border-zinc-100 flex items-center gap-2 text-xs text-zinc-500">
+          <Shield className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+          <span>{t('offlineStatus')} · {t('privacyBadge')}</span>
         </div>
       </div>
     </div>

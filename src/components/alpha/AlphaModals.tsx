@@ -1,9 +1,20 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { X, Copy, Download, Check, ExternalLink, Mail, FileText, MessageSquarePlus, ShieldCheck } from 'lucide-react';
+import {
+  X,
+  Copy,
+  Download,
+  Check,
+  ExternalLink,
+  Mail,
+  FileText,
+  MessageSquarePlus,
+  ShieldCheck,
+} from 'lucide-react';
 import { sanitizePlainTextInput } from '../../core/ingestion/manual-bill';
 import { useLanguage } from '../../locales/i18n';
+import { Badge } from '../ui/Badge';
 
 interface ChangelogModalProps {
   isOpen: boolean;
@@ -26,72 +37,70 @@ export const ChangelogModal: React.FC<ChangelogModalProps> = ({ isOpen, onClose 
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/40 backdrop-blur-[2px] p-4 animate-fadeIn"
       role="dialog"
       aria-modal="true"
       aria-labelledby="changelog-modal-title"
     >
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-2xl max-w-xl w-full max-h-[85vh] overflow-y-auto p-6 space-y-5">
-        <div className="flex items-start justify-between gap-4 border-b border-gray-100 pb-4">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-emerald-100 text-emerald-700">
+      <div className="bg-white rounded-2xl border border-zinc-200 shadow-xl max-w-xl w-full max-h-[85vh] overflow-y-auto p-6 space-y-5">
+        <div className="flex items-start justify-between gap-4 border-b border-zinc-100 pb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
               <FileText className="w-5 h-5" />
             </div>
             <div>
-              <h2 id="changelog-modal-title" className="text-base font-bold text-gray-900">
+              <h2 id="changelog-modal-title" className="text-base font-semibold text-zinc-900">
                 {t('changelogTitle')}
               </h2>
-              <p className="text-xs text-gray-500 mt-0.5">{t('changelogSubtitle')}</p>
+              <p className="text-xs text-zinc-500 mt-0.5">{t('changelogSubtitle')}</p>
             </div>
           </div>
           <button
             type="button"
             onClick={onClose}
             aria-label={t('closeModalBtn')}
-            className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-800 transition-colors"
+            className="p-1.5 rounded-lg text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        <div className="space-y-4 text-xs text-gray-700 leading-relaxed">
-          <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200">
-            <div className="flex items-center justify-between gap-2 mb-2">
-              <span className="font-bold text-emerald-950">v0.1.0-alpha (Phase 4A / 4B Candidate)</span>
-              <span className="font-mono text-[11px] px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">
-                2026-11-25
-              </span>
+        <div className="space-y-4 text-xs text-zinc-700 leading-relaxed">
+          <div className="p-4 rounded-xl bg-zinc-50 border border-zinc-200/80 space-y-2">
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-semibold text-zinc-900">v0.1.0-alpha</span>
+              <Badge variant="emerald">2026-11-26</Badge>
             </div>
-            <ul className="list-disc pl-4 space-y-1 text-emerald-900">
-              <li>Integer-paise TNPDCL LT-1A (May 2026, 2025–2026, 2024–2025) &amp; generic Flat / TOU tariff selector.</li>
-              <li>TR-VOI chance-constrained advisor with multi-tariff exact piecewise moments &amp; Python parity verification.</li>
-              <li>Progressive capability gating (<code>BASIC</code> / <code>INTERVAL</code> / <code>OPTIMIZATION_ELIGIBLE</code>) &amp; bounded 25 MB CSV ingestion.</li>
-              <li>Safe Synthetic Demo Mode (3 bills, 192h hourly data, 0 fake verified savings) &amp; 4-tier provenance ledger.</li>
-              <li>Static Next.js export compatibility (<code>out/</code>), strict CSP headers, and bilingual English / Tamil UI.</li>
+            <ul className="list-disc pl-4 space-y-1 text-zinc-600">
+              <li>Integer-paise TNPDCL LT-1A (May 2026, 2025–2026, 2024–2025) and Flat / TOU schedules.</li>
+              <li>TR-VOI comfort-bounded advisor with Python cross-language verification.</li>
+              <li>Progressive gating (Bills only / Meter readings active / Ready for recommendations) and bounded 25 MB CSV import.</li>
+              <li>Complete atomic export of all 10 IndexedDB tables and all interval readings.</li>
+              <li>Clean consumer SaaS interface with bilingual English / Tamil support.</li>
             </ul>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200 space-y-1.5">
-            <p className="font-bold text-amber-950">Explicitly Not Implemented Yet</p>
+          <div className="p-4 rounded-xl bg-amber-50/70 border border-amber-200 space-y-1.5">
+            <p className="font-semibold text-amber-950">Explicitly Not Implemented Yet</p>
             <ul className="list-disc pl-4 space-y-1 text-amber-900">
               <li>
-                <strong>No Offline Service Worker Caching:</strong> <code>manifest.json</code> provides app metadata only; opening or reloading requires network access to the host (open sessions compute locally in IndexedDB).
+                <strong>No Offline Service Worker Caching:</strong> <code>manifest.json</code> provides app metadata only; opening or reloading requires network access to the host.
               </li>
               <li>
                 <strong>No IPMVP Option C / ASHRAE 14 Certification:</strong> Modeled and user-reported figures are not calibrated M&amp;V baselines.
               </li>
               <li>
-                <strong>No Human Field Study Results Yet:</strong> Stage 1 (N = 5–10) and Stage 2 RCT (N = 152–160) are pre-pilot protocols only.
+                <strong>No Human Field Study Results Yet:</strong> Pre-pilot research materials are prepared; participant sessions have not started.
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="flex justify-end pt-2 border-t border-gray-100">
+        <div className="flex justify-end pt-2 border-t border-zinc-100">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition-colors"
+            className="px-4 py-2 min-h-[38px] rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-medium transition-colors"
           >
             {t('closeModalBtn')}
           </button>
@@ -132,7 +141,6 @@ export const AlphaFeedbackModal: React.FC<AlphaFeedbackModalProps> = ({
 
   if (!isOpen) return null;
 
-  // Strictly builds feedback payload from form state only — NEVER accesses IndexedDB (`db`).
   const sanitizedNotes = sanitizePlainTextInput(notes, 1000);
   const scrubbedPayload = {
     schema: 'hearthshift_alpha_feedback_v1',
@@ -185,51 +193,49 @@ export const AlphaFeedbackModal: React.FC<AlphaFeedbackModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/40 backdrop-blur-[2px] p-4 animate-fadeIn"
       role="dialog"
       aria-modal="true"
       aria-labelledby="feedback-modal-title"
     >
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-2xl max-w-xl w-full max-h-[90vh] overflow-y-auto p-6 space-y-4">
-        <div className="flex items-start justify-between gap-4 border-b border-gray-100 pb-3.5">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-blue-100 text-blue-700">
+      <div className="bg-white rounded-2xl border border-zinc-200 shadow-xl max-w-xl w-full max-h-[90vh] overflow-y-auto p-6 space-y-4">
+        <div className="flex items-start justify-between gap-4 border-b border-zinc-100 pb-3.5">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
               <MessageSquarePlus className="w-5 h-5" />
             </div>
             <div>
-              <h2 id="feedback-modal-title" className="text-base font-bold text-gray-900">
+              <h2 id="feedback-modal-title" className="text-base font-semibold text-zinc-900">
                 {t('feedbackModalTitle')}
               </h2>
-              <p className="text-[11px] text-gray-500 mt-0.5">v0.1.0-alpha · Opt-In Draft Builder</p>
+              <p className="text-xs text-zinc-500 mt-0.5">v0.1.0-alpha · Opt-in draft builder</p>
             </div>
           </div>
           <button
             type="button"
             onClick={onClose}
             aria-label={t('closeModalBtn')}
-            className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-800 transition-colors"
+            className="p-1.5 rounded-lg text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Strict Zero-Telemetry Privacy Notice */}
-        <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 flex items-start gap-2.5 text-xs text-emerald-950">
+        <div className="p-3.5 rounded-xl bg-emerald-50/70 border border-emerald-200 flex items-start gap-2.5 text-xs text-emerald-950">
           <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
           <p className="leading-relaxed">{t('feedbackPrivacyBanner')}</p>
         </div>
 
-        {/* Category & Optional Rating */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label htmlFor="feedback-category" className="block text-xs font-semibold text-gray-700 mb-1">
+            <label htmlFor="feedback-category" className="block text-xs font-medium text-zinc-700 mb-1">
               {t('feedbackCategoryLabel')}
             </label>
             <select
               id="feedback-category"
               value={category}
               onChange={(e) => setCategory(e.target.value as FeedbackCategory)}
-              className="w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-xs text-gray-900 focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20"
             >
               <option value="usability">Usability &amp; Interface</option>
               <option value="tariff_bug">Tariff / Calculation Discrepancy</option>
@@ -239,7 +245,7 @@ export const AlphaFeedbackModal: React.FC<AlphaFeedbackModalProps> = ({
           </div>
 
           <div>
-            <span className="block text-xs font-semibold text-gray-700 mb-1">Clarity Rating (Optional)</span>
+            <span className="block text-xs font-medium text-zinc-700 mb-1">Clarity rating (optional)</span>
             <div className="flex items-center gap-1.5" role="group" aria-label="Experience rating">
               {[1, 2, 3, 4, 5].map((val) => (
                 <button
@@ -247,10 +253,10 @@ export const AlphaFeedbackModal: React.FC<AlphaFeedbackModalProps> = ({
                   type="button"
                   aria-pressed={rating === val}
                   onClick={() => setRating(rating === val ? null : val)}
-                  className={`flex-1 py-2 rounded-lg border text-xs font-bold transition-colors ${
+                  className={`flex-1 py-2 rounded-lg border text-xs font-semibold transition-colors ${
                     rating === val
-                      ? 'bg-blue-600 border-blue-600 text-white'
-                      : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'
+                      ? 'bg-emerald-600 border-emerald-600 text-white'
+                      : 'bg-white border-zinc-200 text-zinc-700 hover:bg-zinc-50'
                   }`}
                 >
                   {val}
@@ -260,10 +266,9 @@ export const AlphaFeedbackModal: React.FC<AlphaFeedbackModalProps> = ({
           </div>
         </div>
 
-        {/* Sanitized Comments */}
         <div>
-          <label htmlFor="feedback-notes" className="block text-xs font-semibold text-gray-700 mb-1">
-            Comments (Do not paste account numbers or personal info)
+          <label htmlFor="feedback-notes" className="block text-xs font-medium text-zinc-700 mb-1">
+            Comments (never include account numbers or personal info)
           </label>
           <textarea
             id="feedback-notes"
@@ -272,38 +277,35 @@ export const AlphaFeedbackModal: React.FC<AlphaFeedbackModalProps> = ({
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder={t('feedbackNotesPlaceholder')}
-            className="w-full rounded-xl border border-gray-300 bg-white p-2.5 text-xs text-gray-900 focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-xl border border-zinc-200 bg-white p-2.5 text-xs text-zinc-900 focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20"
           />
         </div>
 
-        {/* Live Payload Inspection */}
         <div>
-          <p className="text-[11px] font-semibold text-gray-700 mb-1">{t('feedbackPreviewLabel')}</p>
+          <p className="text-[11px] font-medium text-zinc-600 mb-1">{t('feedbackPreviewLabel')}</p>
           <pre
             data-testid="feedback-payload-preview"
-            className="p-3 rounded-xl bg-slate-900 text-slate-100 text-[11px] font-mono overflow-x-auto max-h-40"
+            className="p-3 rounded-xl bg-zinc-900 text-zinc-100 text-[11px] font-mono overflow-x-auto max-h-40"
           >
             {payloadJson}
           </pre>
         </div>
 
-        {/* Explicit Consent Gate for External Draft Links */}
-        <label className="flex items-start gap-2.5 p-2.5 rounded-xl border border-slate-200 bg-slate-50 text-xs text-slate-700 cursor-pointer">
+        <label className="flex items-start gap-2.5 p-3 rounded-xl border border-zinc-200 bg-zinc-50 text-xs text-zinc-700 cursor-pointer">
           <input
             type="checkbox"
             checked={externalConsent}
             onChange={(e) => setExternalConsent(e.target.checked)}
-            className="mt-0.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            className="mt-0.5 rounded border-zinc-300 text-emerald-600 focus:ring-emerald-600"
           />
           <span className="leading-relaxed">{t('feedbackConsentLabel')}</span>
         </label>
 
-        {/* Local & Consent-Gated External Actions */}
         <div className="flex flex-wrap items-center gap-2 pt-1">
           <button
             type="button"
             onClick={handleCopyDraft}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold transition-colors"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[38px] rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium transition-colors"
           >
             {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
             <span>{copied ? t('feedbackCopiedMsg') : t('feedbackCopyBtn')}</span>
@@ -312,7 +314,7 @@ export const AlphaFeedbackModal: React.FC<AlphaFeedbackModalProps> = ({
           <button
             type="button"
             onClick={handleDownloadDraft}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-semibold transition-colors"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[38px] rounded-xl bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-800 text-xs font-medium transition-colors"
           >
             <Download className="w-3.5 h-3.5" />
             <span>{t('feedbackDownloadBtn')}</span>
@@ -322,7 +324,7 @@ export const AlphaFeedbackModal: React.FC<AlphaFeedbackModalProps> = ({
             <div className="flex flex-wrap items-center gap-2 ml-auto">
               <a
                 href={mailtoUrl}
-                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-gray-300 hover:bg-gray-50 text-gray-800 text-xs font-semibold transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-zinc-200 hover:bg-zinc-50 text-zinc-800 text-xs font-medium transition-colors"
               >
                 <Mail className="w-3.5 h-3.5" />
                 <span>{t('feedbackMailtoBtn')}</span>
@@ -332,7 +334,7 @@ export const AlphaFeedbackModal: React.FC<AlphaFeedbackModalProps> = ({
                 href={githubIssueUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-gray-300 hover:bg-gray-50 text-gray-800 text-xs font-semibold transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-zinc-200 hover:bg-zinc-50 text-zinc-800 text-xs font-medium transition-colors"
               >
                 <span>{t('feedbackGithubBtn')}</span>
                 <ExternalLink className="w-3.5 h-3.5" />
@@ -341,7 +343,7 @@ export const AlphaFeedbackModal: React.FC<AlphaFeedbackModalProps> = ({
           )}
         </div>
 
-        <p className="text-[11px] text-gray-500 border-t border-gray-100 pt-2.5 leading-relaxed">
+        <p className="text-[11px] text-zinc-500 border-t border-zinc-100 pt-2.5 leading-relaxed">
           {t('feedbackExternalLabel')}
         </p>
       </div>

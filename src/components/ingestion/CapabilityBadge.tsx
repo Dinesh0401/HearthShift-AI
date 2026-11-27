@@ -2,6 +2,11 @@
 
 import React from 'react';
 import type { SystemCapabilityMode } from '../../core/capabilities/policy';
+import { useLanguage } from '../../locales/i18n';
+import { Receipt, Activity, CheckCircle2 } from 'lucide-react';
+import { Badge, type BadgeVariant } from '../ui/Badge';
+import { Card } from '../ui/Card';
+import { ExpandableDetails } from '../ui/Disclosure';
 
 interface CapabilityBadgeProps {
   mode: SystemCapabilityMode;
@@ -16,71 +21,63 @@ export const CapabilityBadge: React.FC<CapabilityBadgeProps> = ({
   nextStepGuidance,
   className = '',
 }) => {
-  const config = {
+  const { t } = useLanguage();
+
+  const meta: Record<
+    SystemCapabilityMode,
+    { label: string; desc: string; variant: BadgeVariant; icon: React.ReactNode }
+  > = {
     BASIC: {
-      label: 'BASIC MODE',
-      tamilLabel: 'அடிப்படை முறைமை',
-      colorBg: 'bg-amber-100 dark:bg-amber-950/40',
-      colorText: 'text-amber-800 dark:text-amber-300',
-      colorBorder: 'border-amber-300 dark:border-amber-800',
-      icon: '📊',
-      description: 'Monthly utility bills only. Slab tracking active. Hourly load-shifting is strictly disabled.',
+      label: t('modeBasicLabel'),
+      desc: t('modeBasicDesc'),
+      variant: 'amber',
+      icon: <Receipt className="w-4 h-4 text-amber-600" />,
     },
     INTERVAL: {
-      label: 'INTERVAL MODE',
-      tamilLabel: 'கால இடைவெளி முறைமை',
-      colorBg: 'bg-blue-100 dark:bg-blue-950/40',
-      colorText: 'text-blue-800 dark:text-blue-300',
-      colorBorder: 'border-blue-300 dark:border-blue-800',
-      icon: '📈',
-      description: 'Interval smart-meter data validated. Time-series charts & night standby baseline unlocked.',
+      label: t('modeIntervalLabel'),
+      desc: t('modeIntervalDesc'),
+      variant: 'blue',
+      icon: <Activity className="w-4 h-4 text-sky-600" />,
     },
     OPTIMIZATION_ELIGIBLE: {
-      label: 'OPTIMIZATION ELIGIBLE',
-      tamilLabel: 'மேம்படுத்தல் தயார்',
-      colorBg: 'bg-emerald-100 dark:bg-emerald-950/40',
-      colorText: 'text-emerald-800 dark:text-emerald-300',
-      colorBorder: 'border-emerald-300 dark:border-emerald-800',
-      icon: '⚡',
-      description: '7+ days of interval data and comfort constraints confirmed. SPARE-HEM decision assistant active.',
+      label: t('modeReadyLabel'),
+      desc: t('modeReadyDesc'),
+      variant: 'emerald',
+      icon: <CheckCircle2 className="w-4 h-4 text-emerald-600" />,
     },
-  }[mode];
+  };
+
+  const current = meta[mode];
 
   return (
-    <div
-      className={`inline-flex flex-col rounded-xl border p-4 transition-all ${config.colorBg} ${config.colorBorder} ${className}`}
-      role="status"
-      aria-live="polite"
-    >
-      <div className="flex items-center gap-2">
-        <span className="text-xl" aria-hidden="true">{config.icon}</span>
-        <div>
-          <span className={`text-xs font-bold tracking-wider uppercase ${config.colorText}`}>
-            {config.label}
-          </span>
-          <span className="ml-2 text-xs opacity-75">
-            ({config.tamilLabel})
-          </span>
+    <Card className={`p-4 ${className}`} aria-live="polite">
+      <div className="space-y-2">
+        <div className="flex items-center gap-2 text-zinc-500">
+          <span className="shrink-0">{current.icon}</span>
+          <span className="text-[11px] font-medium">{t('capabilityStatus')}</span>
         </div>
+
+        <Badge variant={current.variant} dot className="w-fit">
+          {current.label}
+        </Badge>
       </div>
 
-      <p className="mt-2 text-xs text-gray-700 dark:text-gray-300 leading-relaxed">
-        {config.description}
-      </p>
+      <p className="mt-2.5 text-xs text-zinc-600 leading-relaxed">{current.desc}</p>
 
-      {reasons.length > 0 && (
-        <ul className="mt-2 list-disc list-inside text-xs text-gray-600 dark:text-gray-400 space-y-0.5">
-          {reasons.map((r, i) => (
-            <li key={i}>{r}</li>
-          ))}
-        </ul>
+      {(reasons.length > 0 || nextStepGuidance) && (
+        <ExpandableDetails summary={t('viewDetails')} className="mt-2.5">
+          {reasons.length > 0 && (
+            <ul className="list-disc pl-4 space-y-1 text-xs text-zinc-600">
+              {reasons.map((r, idx) => (
+                <li key={idx}>{r}</li>
+              ))}
+            </ul>
+          )}
+          {nextStepGuidance && (
+            <p className="mt-2 text-xs font-medium text-zinc-800">{nextStepGuidance}</p>
+          )}
+        </ExpandableDetails>
       )}
-
-      {nextStepGuidance && (
-        <div className="mt-2 pt-2 border-t border-dashed border-gray-300 dark:border-gray-700 text-xs font-medium text-gray-800 dark:text-gray-200">
-          💡 Next step: {nextStepGuidance}
-        </div>
-      )}
-    </div>
+    </Card>
   );
 };

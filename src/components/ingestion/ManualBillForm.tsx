@@ -1,9 +1,18 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { validateManualBill, saveManualBill, type ManualBillInput } from '../../core/ingestion/manual-bill';
-import { SUPPORTED_TARIFF_CATALOG, TNPDCL_LT1A_2026_MAY10 } from '../../core/tariff/tariffs/tnpdcl-lt1a';
+import {
+  validateManualBill,
+  saveManualBill,
+  type ManualBillInput,
+} from '../../core/ingestion/manual-bill';
+import {
+  SUPPORTED_TARIFF_CATALOG,
+  TNPDCL_LT1A_2026_MAY10,
+} from '../../core/tariff/tariffs/tnpdcl-lt1a';
 import { useLanguage } from '../../locales/i18n';
+import { Card } from '../ui/Card';
+import { Check, AlertTriangle } from 'lucide-react';
 
 interface ManualBillFormProps {
   activeTariffId?: string;
@@ -11,12 +20,15 @@ interface ManualBillFormProps {
   className?: string;
 }
 
+const inputBaseClass =
+  'w-full rounded-xl border border-zinc-200 bg-white px-3 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 transition-colors';
+
 export const ManualBillForm: React.FC<ManualBillFormProps> = ({
   activeTariffId,
   onSuccess,
   className = '',
 }) => {
-  const { language } = useLanguage();
+  const { t, language } = useLanguage();
   const [hasEditedTariff, setHasEditedTariff] = useState(false);
 
   const [formData, setFormData] = useState<ManualBillInput>({
@@ -52,7 +64,6 @@ export const ManualBillForm: React.FC<ManualBillFormProps> = ({
       ...prev,
       [name]: type === 'number' ? (value === '' ? undefined : parseFloat(value)) : value,
     }));
-    // Clear field-specific error on change
     if (errors[name]) {
       setErrors((prev) => {
         const copy = { ...prev };
@@ -82,7 +93,7 @@ export const ManualBillForm: React.FC<ManualBillFormProps> = ({
     try {
       setIsSubmitting(true);
       const newId = await saveManualBill(result.bill_entry);
-      setSuccessMessage('Electricity bill successfully saved locally in IndexedDB.');
+      setSuccessMessage(t('billSavedSuccess'));
       if (onSuccess) {
         onSuccess(newId);
       }
@@ -94,201 +105,215 @@ export const ManualBillForm: React.FC<ManualBillFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className={`space-y-4 rounded-xl border border-gray-200 dark:border-gray-800 p-6 bg-white dark:bg-gray-900 shadow-sm ${className}`}>
-      <div className="border-b border-gray-200 dark:border-gray-800 pb-3">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-          Manual Electricity Bill Entry
-        </h3>
-        <p className="text-xs text-gray-500 dark:text-gray-400">
-          மின்சார கட்டண உள்ளீடு · Enter historical utility bills. All data is processed and stored on-device only.
-        </p>
-      </div>
-
-      {successMessage && (
-        <div role="status" className="p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 text-sm">
-          ✓ {successMessage}
-        </div>
-      )}
-
-      {errors.form && (
-        <div role="alert" className="p-3 rounded-lg bg-red-50 dark:bg-red-950/40 text-red-800 dark:text-red-300 text-sm">
-          ⚠️ {errors.form}
-        </div>
-      )}
-
-      {/* Date Range Fields */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label htmlFor="billing_period_start" className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Billing Period Start (தொடக்க தேதி) *
-          </label>
-          <input
-            id="billing_period_start"
-            name="billing_period_start"
-            type="date"
-            value={formData.billing_period_start}
-            onChange={handleInputChange}
-            aria-invalid={Boolean(errors.billing_period_start)}
-            aria-describedby={errors.billing_period_start ? 'billing_period_start_error' : undefined}
-            className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 p-2.5 text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-emerald-500"
-            required
-          />
-          {errors.billing_period_start && (
-            <p id="billing_period_start_error" role="alert" className="mt-1 text-xs text-red-600 dark:text-red-400">
-              {errors.billing_period_start}
-            </p>
-          )}
+    <Card className={`p-5 sm:p-6 ${className}`}>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="border-b border-zinc-100 pb-3">
+          <h3 className="text-base font-semibold text-zinc-900">{t('addBillTitle')}</h3>
+          <p className="text-xs text-zinc-500 mt-0.5 leading-relaxed">{t('addBillSubtitle')}</p>
         </div>
 
-        <div>
-          <label htmlFor="billing_period_end" className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Billing Period End (முடிவு தேதி) *
-          </label>
-          <input
-            id="billing_period_end"
-            name="billing_period_end"
-            type="date"
-            value={formData.billing_period_end}
-            onChange={handleInputChange}
-            aria-invalid={Boolean(errors.billing_period_end)}
-            aria-describedby={errors.billing_period_end ? 'billing_period_end_error' : undefined}
-            className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 p-2.5 text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-emerald-500"
-            required
-          />
-          {errors.billing_period_end && (
-            <p id="billing_period_end_error" role="alert" className="mt-1 text-xs text-red-600 dark:text-red-400">
-              {errors.billing_period_end}
-            </p>
-          )}
-        </div>
-      </div>
-
-      {/* Consumption & Tariff Selection */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label htmlFor="total_units_kwh" className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Electricity Consumption in Units / kWh (பயன்பாடு) *
-          </label>
-          <input
-            id="total_units_kwh"
-            name="total_units_kwh"
-            type="number"
-            min="0"
-            step="0.1"
-            value={formData.total_units_kwh || ''}
-            onChange={handleInputChange}
-            placeholder="e.g. 450"
-            aria-invalid={Boolean(errors.total_units_kwh)}
-            aria-describedby={errors.total_units_kwh ? 'total_units_kwh_error' : undefined}
-            className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 p-2.5 text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-emerald-500"
-            required
-          />
-          {errors.total_units_kwh && (
-            <p id="total_units_kwh_error" role="alert" className="mt-1 text-xs text-red-600 dark:text-red-400">
-              {errors.total_units_kwh}
-            </p>
-          )}
-        </div>
-
-        <div>
-          <label htmlFor="tariff_id" className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Applicable Tariff Plan (மின் கட்டண திட்டம்) *
-          </label>
-          <select
-            id="tariff_id"
-            name="tariff_id"
-            value={formData.tariff_id}
-            onChange={handleInputChange}
-            aria-invalid={Boolean(errors.tariff_id)}
-            aria-describedby={errors.tariff_id ? 'tariff_id_error' : undefined}
-            className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 p-2.5 text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-emerald-500"
+        {successMessage && (
+          <div
+            role="status"
+            className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-medium flex items-center gap-2"
           >
-            {SUPPORTED_TARIFF_CATALOG.map((entry) => (
-              <option key={entry.plan.id} value={entry.plan.id}>
-                {entry.regionLabel[language] ?? entry.regionLabel.en}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
+            <Check className="w-4 h-4 shrink-0 text-emerald-600" />
+            <span>{successMessage}</span>
+          </div>
+        )}
 
-      {/* Optional Actual Amount & Local Reference */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label htmlFor="total_amount" className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Actual Billed Amount (உண்மை கட்டணம் - விருப்பத்தேர்வு)
-          </label>
-          <div className="relative">
-            <span className="absolute left-3 top-2.5 text-sm text-gray-500">₹</span>
+        {errors.form && (
+          <div
+            role="alert"
+            className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-medium flex items-center gap-2"
+          >
+            <AlertTriangle className="w-4 h-4 shrink-0 text-rose-600" />
+            <span>{errors.form}</span>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label
+              htmlFor="billing_period_start"
+              className="block text-xs font-medium text-zinc-700 mb-1"
+            >
+              {t('periodStart')} *
+            </label>
             <input
-              id="total_amount"
-              name="total_amount"
+              id="billing_period_start"
+              name="billing_period_start"
+              type="date"
+              value={formData.billing_period_start}
+              onChange={handleInputChange}
+              aria-invalid={Boolean(errors.billing_period_start)}
+              aria-describedby={errors.billing_period_start ? 'billing_period_start_error' : undefined}
+              className={inputBaseClass}
+              required
+            />
+            {errors.billing_period_start && (
+              <p id="billing_period_start_error" role="alert" className="mt-1 text-xs text-rose-600">
+                {errors.billing_period_start}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label
+              htmlFor="billing_period_end"
+              className="block text-xs font-medium text-zinc-700 mb-1"
+            >
+              {t('periodEnd')} *
+            </label>
+            <input
+              id="billing_period_end"
+              name="billing_period_end"
+              type="date"
+              value={formData.billing_period_end}
+              onChange={handleInputChange}
+              aria-invalid={Boolean(errors.billing_period_end)}
+              aria-describedby={errors.billing_period_end ? 'billing_period_end_error' : undefined}
+              className={inputBaseClass}
+              required
+            />
+            {errors.billing_period_end && (
+              <p id="billing_period_end_error" role="alert" className="mt-1 text-xs text-rose-600">
+                {errors.billing_period_end}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label
+              htmlFor="total_units_kwh"
+              className="block text-xs font-medium text-zinc-700 mb-1"
+            >
+              {t('unitsBilled')} *
+            </label>
+            <input
+              id="total_units_kwh"
+              name="total_units_kwh"
               type="number"
               min="0"
-              step="0.01"
-              value={formData.total_amount ?? ''}
+              step="0.1"
+              value={formData.total_units_kwh || ''}
               onChange={handleInputChange}
-              placeholder="e.g. 1725.00"
-              aria-invalid={Boolean(errors.total_amount)}
-              aria-describedby={errors.total_amount ? 'total_amount_error' : undefined}
-              className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 pl-8 p-2.5 text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-emerald-500"
+              placeholder="450"
+              aria-invalid={Boolean(errors.total_units_kwh)}
+              aria-describedby={errors.total_units_kwh ? 'total_units_kwh_error' : undefined}
+              className={`${inputBaseClass} tabular-nums`}
+              required
+            />
+            {errors.total_units_kwh && (
+              <p id="total_units_kwh_error" role="alert" className="mt-1 text-xs text-rose-600">
+                {errors.total_units_kwh}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label htmlFor="tariff_id" className="block text-xs font-medium text-zinc-700 mb-1">
+              {t('tariffSelection')} *
+            </label>
+            <select
+              id="tariff_id"
+              name="tariff_id"
+              value={formData.tariff_id}
+              onChange={handleInputChange}
+              aria-invalid={Boolean(errors.tariff_id)}
+              aria-describedby={errors.tariff_id ? 'tariff_id_error' : undefined}
+              className={inputBaseClass}
+            >
+              {SUPPORTED_TARIFF_CATALOG.map((entry) => (
+                <option key={entry.plan.id} value={entry.plan.id}>
+                  {entry.regionLabel[language] ?? entry.regionLabel.en}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label htmlFor="total_amount" className="block text-xs font-medium text-zinc-700 mb-1">
+              {t('amountBilled')}
+            </label>
+            <div className="relative">
+              <span className="absolute left-3 top-2.5 text-sm text-zinc-400">₹</span>
+              <input
+                id="total_amount"
+                name="total_amount"
+                type="number"
+                min="0"
+                step="0.01"
+                value={formData.total_amount ?? ''}
+                onChange={handleInputChange}
+                placeholder="1725.00"
+                aria-invalid={Boolean(errors.total_amount)}
+                aria-describedby={errors.total_amount ? 'total_amount_error' : undefined}
+                className={`${inputBaseClass} pl-7 tabular-nums`}
+              />
+            </div>
+            {errors.total_amount && (
+              <p id="total_amount_error" role="alert" className="mt-1 text-xs text-rose-600">
+                {errors.total_amount}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label
+              htmlFor="bill_reference_no"
+              className="block text-xs font-medium text-zinc-700 mb-1"
+            >
+              {t('billReferenceLabel')}
+            </label>
+            <input
+              id="bill_reference_no"
+              name="bill_reference_no"
+              type="text"
+              value={formData.bill_reference_no}
+              onChange={handleInputChange}
+              placeholder={t('billReferencePlaceholder')}
+              className={inputBaseClass}
             />
           </div>
-          {errors.total_amount && (
-            <p id="total_amount_error" role="alert" className="mt-1 text-xs text-red-600 dark:text-red-400">
-              {errors.total_amount}
-            </p>
-          )}
         </div>
 
-        <div>
-          <label htmlFor="bill_reference_no" className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Local Bill / Consumer Reference (உள்ளூர் குறிப்பு எண்)
-          </label>
-          <input
-            id="bill_reference_no"
-            name="bill_reference_no"
-            type="text"
-            value={formData.bill_reference_no}
-            onChange={handleInputChange}
-            placeholder="e.g. CA-04-129-8472 (kept private on device)"
-            className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 p-2.5 text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-emerald-500"
-          />
-        </div>
-      </div>
-
-      {/* Warnings & Tariff Verification Box */}
-      {calculatedAmount !== undefined && (
-        <div className="rounded-lg bg-gray-50 dark:bg-gray-800/60 p-3 text-xs space-y-1">
-          <div className="flex justify-between font-medium text-gray-900 dark:text-gray-100">
-            <span>Modeled Statutory Tariff Charge:</span>
-            <span>₹{calculatedAmount.toFixed(2)}</span>
+        {calculatedAmount !== undefined && (
+          <div className="rounded-xl bg-zinc-50 border border-zinc-200/80 p-3.5 text-xs space-y-1.5">
+            <div className="flex justify-between font-medium text-zinc-900">
+              <span>{t('overviewModelEstimate')}</span>
+              <span className="font-semibold tabular-nums">₹{calculatedAmount.toFixed(2)}</span>
+            </div>
+            {warnings.map((w, idx) => (
+              <p key={idx} className="text-amber-700 flex items-start gap-1.5">
+                <AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                <span>{w}</span>
+              </p>
+            ))}
           </div>
-          {warnings.map((w, idx) => (
-            <p key={idx} className="text-amber-700 dark:text-amber-400">
-              ⚠️ {w}
-            </p>
-          ))}
-        </div>
-      )}
+        )}
 
-      {/* Actions */}
-      <div className="flex items-center justify-end gap-3 pt-2">
-        <button
-          type="button"
-          onClick={handleValidatePreview}
-          className="px-4 py-2 text-xs font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 rounded-lg transition-colors"
-        >
-          Verify Calculation (சரிபார்)
-        </button>
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="px-5 py-2 text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 rounded-lg shadow-sm transition-colors"
-        >
-          {isSubmitting ? 'Saving Locally...' : 'Save Bill Locally (சேமி)'}
-        </button>
-      </div>
-    </form>
+        <div className="flex flex-wrap items-center justify-end gap-2.5 pt-2">
+          <button
+            type="button"
+            onClick={handleValidatePreview}
+            className="px-4 py-2 min-h-[40px] text-xs font-medium text-zinc-700 bg-white border border-zinc-200 hover:bg-zinc-50 rounded-xl transition-colors"
+          >
+            {t('verifyBillBtn')}
+          </button>
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="px-4 py-2 min-h-[40px] text-xs font-medium text-white bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 rounded-xl transition-colors"
+          >
+            {isSubmitting ? t('savingBillBtn') : t('saveBillBtn')}
+          </button>
+        </div>
+      </form>
+    </Card>
   );
 };

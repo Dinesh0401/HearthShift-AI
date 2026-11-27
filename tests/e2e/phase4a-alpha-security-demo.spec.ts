@@ -11,12 +11,9 @@ test.describe('HearthShift AI — Phase 4A Alpha Security, Same-Origin Privacy, 
     }
   });
 
-  test('verifies CSP & security headers, zero same-origin/external telemetry payloads, supported tariff switching, Safe Demo Mode, 10-step real-user flow, and mobile accessibility', async ({
+  test('verifies CSP & security headers, zero same-origin/external telemetry payloads, supported tariff switching, clean Home Overview & Demo Mode, 10-step real-user flow, and mobile accessibility', async ({
     page,
   }) => {
-    // ══════════════════════════════════════════════════════════
-    // 1. Capture ALL Requests (External + Same-Origin) & CSP Events
-    // ══════════════════════════════════════════════════════════
     const externalRequests: string[] = [];
     const sameOriginMutationsOrBodies: { url: string; method: string; postData: string | null }[] = [];
     const sameOriginSensitiveQueries: string[] = [];
@@ -80,9 +77,7 @@ test.describe('HearthShift AI — Phase 4A Alpha Security, Same-Origin Privacy, 
       });
     });
 
-    // ══════════════════════════════════════════════════════════
-    // 2. Load App & Inspect Security Headers (CSP, XFO, XCTO, Referrer)
-    // ══════════════════════════════════════════════════════════
+    // 1. Load App & Inspect Security Headers
     const response = await page.goto('/');
     expect(response).not.toBeNull();
     const headers = response!.headers();
@@ -95,25 +90,41 @@ test.describe('HearthShift AI — Phase 4A Alpha Security, Same-Origin Privacy, 
     expect(headers['x-content-type-options']).toBe('nosniff');
     expect(headers['referrer-policy']).toBe('no-referrer');
 
-    // Verify Alpha Limitations Disclosure is accessible
-    const alphaSummary = page.getByText(/Experimental Research Alpha — Advisory Models Only/i);
-    await expect(alphaSummary).toBeVisible();
-    await alphaSummary.click();
-    await expect(
-      page.getByText(/not utility-certified billing statements, guaranteed physical savings, or IPMVP Option C verified outcomes/i)
-    ).toBeVisible();
+    // Expandable Research Alpha Scope Disclosure
+    const alphaToggle = page.getByRole('button', { name: /Research alpha scope & model limits/i });
+    await expect(alphaToggle).toBeVisible();
+    await alphaToggle.click();
+    await expect(page.getByText(/provides advisory modeled estimates—not utility-certified bills/i)).toBeVisible();
 
-    // ══════════════════════════════════════════════════════════
-    // 3. Safe Demo Mode Regression Test (Synthetic Data, Zero Fake Verified Savings)
-    // ══════════════════════════════════════════════════════════
-    await page.getByRole('button', { name: /Load Safe Demo Dataset/i }).click();
+    // 2. Load Sample Dataset & Verify Scannable Home Overview
+    await page.getByRole('button', { name: /Try sample data/i }).first().click();
 
-    // Verify persistent synthetic demo banner
-    await expect(
-      page.getByText(/SYNTHETIC DEMO MODE — Simulated Sample Household/i)
-    ).toBeVisible();
+    await expect(page.getByText('Sample household data active')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Home overview' })).toBeVisible();
+    await expect(page.getByText('May – June 2026')).toBeVisible();
+    await expect(page.getByText('508', { exact: true }).first()).toBeVisible();
+    await expect(page.getByText('₹2,107').first()).toBeVisible();
+    await expect(page.getByText('8 kWh over 500 kWh threshold').first()).toBeVisible();
+    await expect(page.getByText('Ready for recommendations').first()).toBeVisible();
+    await expect(page.getByText('Suggested action').first()).toBeVisible();
 
-    // Verify 3 synthetic bills rendered with historically accurate schedules & boundary disclosure
+    // If comfort check triggers before displaying action savings, answer it cleanly on Overview
+    const answerOnOverviewBtn = page.getByRole('button', { name: /View recommendation/i });
+    if (await answerOnOverviewBtn.isVisible().catch(() => false)) {
+      await answerOnOverviewBtn.click();
+      await page.getByRole('button', { name: /Yes, comfortable/i }).click();
+    }
+    await expect(page.getByText('Estimated savings').first()).toBeVisible();
+
+    await page.screenshot({ path: 'tests/e2e/screenshots/phase4a-demo-mode.png' });
+
+    // Confirm Synthetic Demo Mode explicitly labels sample comfort constraints
+    await page.getByRole('tab', { name: /Smart recommendations/i }).click();
+    await expect(page.getByText('Sample comfort limits')).toBeVisible();
+    await expect(page.getByText(/\[Synthetic sample\]/i).first()).toBeVisible();
+
+    // Check historical schedules & May 10 policy boundary inside Bills tab
+    await page.getByRole('tab', { name: /^Bills$/i }).click();
     const mayJunRow = page.getByRole('row', { name: /2026-05-01 → 2026-06-30/i });
     await expect(mayJunRow).toContainText('508 kWh');
     await expect(mayJunRow).toContainText('in-tnpdcl-lt1a-may2026');
@@ -132,58 +143,40 @@ test.describe('HearthShift AI — Phase 4A Alpha Security, Same-Origin Privacy, 
     await expect(janFebRow).toContainText('₹1458.50');
     await expect(janFebRow).not.toContainText(/Crosses May 10, 2026/i);
 
-    // Modern counterfactuals remain on May 2026 schedule distinct from Jan–Apr historical receipts
     await expect(page.locator('#region-tariff-selector')).toHaveValue('in-tnpdcl-lt1a-may2026');
 
-    // Verify capability mode reached OPTIMIZATION ELIGIBLE from 192h demo dataset
-    await expect(page.getByText('OPTIMIZATION ELIGIBLE').first()).toBeVisible();
-
-    // Verify Savings Ledger remains strictly empty (0 fake savings!)
-    await page.getByRole('tab', { name: /Savings Ledger/i }).click();
-    await expect(page.getByText(/Logged Efficiency Actions/i)).toBeVisible();
-    await expect(page.getByText('No completed actions logged yet.', { exact: false })).toBeVisible();
+    // Verify Savings Ledger stays strictly empty in sample mode
+    await page.getByRole('tab', { name: /Savings ledger/i }).click();
+    await expect(page.getByText('No actions logged yet.')).toBeVisible();
     await expect(page.getByText('₹0.00').first()).toBeVisible();
 
-    await page.screenshot({ path: 'tests/e2e/screenshots/phase4a-demo-mode.png' });
+    // Exit & Clear Sample Data
+    await page.getByRole('button', { name: /Exit sample data/i }).click();
+    await expect(page.getByText('Sample household data active')).toHaveCount(0);
 
-    // Exit & Clear Demo Data cleanly
-    await page.getByRole('button', { name: /Exit & Clear Demo Data/i }).click();
-    await expect(
-      page.getByText(/SYNTHETIC DEMO MODE — Simulated Sample Household/i)
-    ).toHaveCount(0);
-
-    // ══════════════════════════════════════════════════════════
-    // 4. Supported Tariff Region Switching (Gate D Steps 1-2)
-    // ══════════════════════════════════════════════════════════
-    await page.getByRole('tab', { name: /Bills & Slab Analysis/i }).click();
+    // 3. Supported Tariff Switching
+    await page.getByRole('tab', { name: /^Bills$/i }).click();
     const regionSelector = page.locator('#region-tariff-selector');
 
-    // Switch to Generic Flat Tariff -> verifies no cliff UI shown
     await regionSelector.selectOption('generic-flat-inr');
-    await expect(page.getByText(/Flat Rate Reference Tariff — No Subsidy Cliff/i)).toBeVisible();
+    await expect(page.getByText(/Flat rate reference tariff/i)).toBeVisible();
 
-    // Switch to Pilot TOU Tariff -> verifies TOU time bands rendered
     await regionSelector.selectOption('generic-tou-inr');
-    await expect(page.getByText(/Time-of-Use \(TOU\) Tariff — No Subsidy Cliff/i)).toBeVisible();
+    await expect(page.getByText(/Time-of-Use \(TOU\) tariff/i).first()).toBeVisible();
     await expect(page.getByText('Night Off-Peak').first()).toBeVisible();
 
-    // Switch back to TNPDCL May 2026 Scheme
     await regionSelector.selectOption('in-tnpdcl-lt1a-may2026');
-    await expect(page.getByText(/TNPDCL LT-1A Domestic \(May 10, 2026/i).first()).toBeVisible();
+    await expect(page.getByText(/TNPDCL LT-1A Domestic/i).first()).toBeVisible();
 
-    // ══════════════════════════════════════════════════════════
-    // 5. Real-User Workflow Without Shortcuts (Steps 3-10)
-    // ══════════════════════════════════════════════════════════
-    // Step 3-4: Enter Manual Bill near cliff (512 kWh)
+    // 4. Real-User End-to-End Flow
     await page.locator('input[name="billing_period_start"]').fill('2026-05-01');
     await page.locator('input[name="billing_period_end"]').fill('2026-06-30');
     await page.locator('input[name="total_units_kwh"]').fill('512');
     await page.locator('input[name="bill_reference_no"]').fill('CA-04-ALPHA-99');
-    await page.getByRole('button', { name: /Save Bill Locally/i }).click();
+    await page.getByRole('button', { name: /^Save bill$/i }).click();
     await expect(page.getByRole('cell', { name: '512 kWh' })).toBeVisible();
 
-    // Step 3b: Upload 8-day hourly CSV (keyboard/file input) & verify 25MB/limit metadata visible
-    await page.getByRole('tab', { name: /Smart Meter CSV Import/i }).click();
+    await page.getByRole('tab', { name: /Import CSV/i }).click();
     let hourlyCsv = 'timestamp,kwh\n';
     const baseTs = new Date('2026-05-01T00:00:00Z').getTime();
     for (let h = 0; h < 192; h++) {
@@ -197,61 +190,92 @@ test.describe('HearthShift AI — Phase 4A Alpha Security, Same-Origin Privacy, 
     await expect(page.getByText(/CSV Validation Preview/i)).toBeVisible();
     await page.getByRole('button', { name: /Confirm & Save 192 Readings/i }).click();
 
-    // Step 5: Scenario Simulator with ARIA switch assertions
-    await page.getByRole('tab', { name: /Scenario Simulator/i }).click();
-    await expect(page.getByText(/₹478\.40 TARIFF CLIFF JUMP AVOIDED!/i)).toBeVisible();
+    // Real user WITHOUT comfort constraints must remain gated in Meter readings active mode
+    await expect(page.getByText('Meter readings active').first()).toBeVisible();
+    await expect(page.getByText('Ready for recommendations')).toHaveCount(0);
+
+    await page.getByRole('tab', { name: /^Simulator$/i }).click();
+    await expect(page.getByText(/Threshold cliff avoided — subsidy protected/i)).toBeVisible();
     const geyserSwitch = page.getByRole('switch', { name: /Trim water heater duration/i });
     await expect(geyserSwitch).toHaveAttribute('aria-checked', 'false');
     await geyserSwitch.click();
     await expect(geyserSwitch).toHaveAttribute('aria-checked', 'true');
 
-    // Step 6-8: Recommendation, EVSI Dialog Modal, Uncertainty/Assumptions & Feedback
-    await page.getByRole('tab', { name: /Smart Recommendations/i }).click();
+    // Recommendations tab requires explicit user comfort confirmation before unlocking TR-VOI
+    await page.getByRole('tab', { name: /Smart recommendations/i }).click();
+    await expect(page.getByText('Confirm your comfort preferences')).toBeVisible();
+    const confirmComfortBtn = page.getByRole('button', { name: 'Confirm comfort preferences' });
+    await expect(confirmComfortBtn).toBeDisabled();
+    await page.getByLabel(/Modest AC temperature adjustment/i).check();
+    await confirmComfortBtn.click();
+
+    await expect(page.getByText('User-confirmed comfort limits')).toBeVisible();
+    await expect(page.getByText('Ready for recommendations').first()).toBeVisible();
+
     const dialog = page.getByRole('dialog');
     const dialogVisible = await dialog.waitFor({ state: 'visible', timeout: 3500 }).then(
       () => true,
       () => false
     );
     if (dialogVisible) {
-      await expect(page.getByText('EVSI Decision Gate Active')).toBeVisible();
-      await page.getByRole('button', { name: /Yes \/ Comfortable/i }).click();
+      await expect(page.getByText(/Quick comfort check/i)).toBeVisible();
+      await page.getByRole('button', { name: /Yes, comfortable/i }).click();
     }
-    await expect(page.getByText('Modeled Estimate', { exact: true }).first()).toBeVisible();
-    await expect(page.getByText('95% Modeled Comfort Bound')).toBeVisible();
-    await expect(page.getByText('Conservative Model Lower Bound (5th %ile)')).toBeVisible();
-    await page.getByRole('button', { name: /Tried It!/i }).click();
+    await expect(page.getByText('Model-based estimate', { exact: true }).first()).toBeVisible();
+    await expect(page.getByText('95% comfort bound').first()).toBeVisible();
+    await page.locator('#panel-recommendations').getByRole('button', { name: /View details/i }).click();
+    await expect(page.getByText('Conservative estimate')).toBeVisible();
+    await page.getByRole('button', { name: /Mark as tried/i }).click();
 
-    // Step 9: Savings Ledger records unverified user_reported item cleanly
-    await page.getByRole('tab', { name: /Savings Ledger/i }).click();
-    await expect(page.getByText('🔵 User Reported').first()).toBeVisible();
-    await expect(page.getByText(/not yet IPMVP Option C certified/i)).toBeVisible();
+    await page.getByRole('tab', { name: /Savings ledger/i }).click();
+    await expect(page.getByText('User Reported').first()).toBeVisible();
+    await page.locator('#panel-savings').getByRole('button', { name: /View details/i }).click();
+    await expect(page.getByText(/not verified causal savings/i)).toBeVisible();
 
-    // ══════════════════════════════════════════════════════════
-    // 6. Mobile Viewport & Accessibility Verification (375x667)
-    // ══════════════════════════════════════════════════════════
+    // 5. Mobile Viewport & Tamil Accessibility Check (375x667)
+    await page.getByRole('tab', { name: /^Overview$/i }).click();
     await page.setViewportSize({ width: 375, height: 667 });
     await expect(page.locator('#region-tariff-selector')).toBeVisible();
     await expect(page.getByRole('tablist')).toBeVisible();
 
-    // Test Tamil mobile rendering & screenshot
     await page.getByLabel('Toggle language between English and Tamil').click();
-    await expect(page.getByText('சேமிப்பு விவரப் பதிவேடு').first()).toBeVisible();
+    await expect(page.getByText('வீட்டு மின்சார சுருக்கம்').first()).toBeVisible();
+    await expect(page.getByText('512', { exact: true }).first()).toBeVisible();
+    const mobileTaOverflow = await page.evaluate(() => {
+      const w = window.innerWidth;
+      const offenders = [...document.querySelectorAll('*')]
+        .filter((el) => {
+          const scrollParent = el.closest('.overflow-x-auto');
+          if (scrollParent && scrollParent !== el) return false;
+          const rect = el.getBoundingClientRect();
+          return rect.width > 0 && rect.right > w + 1;
+        })
+        .slice(0, 8)
+        .map((el) => ({
+          tag: el.tagName,
+          id: el.id,
+          cls: typeof el.className === 'string' ? el.className.slice(0, 60) : '',
+          right: Math.round(el.getBoundingClientRect().right),
+          scrollW: el.scrollWidth,
+          txt: (el.textContent || '').trim().slice(0, 40),
+        }));
+      return { docScrollW: document.documentElement.scrollWidth, w, offenders };
+    });
+    expect(mobileTaOverflow.offenders).toEqual([]);
+    expect(mobileTaOverflow.docScrollW).toBeLessThanOrEqual(mobileTaOverflow.w);
     await page.screenshot({ path: 'tests/e2e/screenshots/phase4a-mobile-a11y.png' });
 
-    // Switch back to English and desktop viewport
     await page.getByLabel('Toggle language between English and Tamil').click();
     await page.setViewportSize({ width: 1280, height: 800 });
 
-    // ══════════════════════════════════════════════════════════
-    // 7. Browser Storage Limitations, Export & Purge (Step 10)
-    // ══════════════════════════════════════════════════════════
-    await page.getByRole('tab', { name: /Privacy & Storage/i }).click();
-    await expect(page.getByText('Browser Storage Limitations & Device Risks')).toBeVisible();
-    await expect(page.getByText(/stored unencrypted at rest/i)).toBeVisible();
+    // 6. Complete JSON Export (192 readings, all 10 tables) & Purge
+    await page.getByRole('tab', { name: /Privacy & data/i }).click();
+    await expect(page.getByText('Browser storage limits & security notes')).toBeVisible();
+    await expect(page.getByText(/unencrypted at rest/i)).toBeVisible();
 
     const [download] = await Promise.all([
       page.waitForEvent('download'),
-      page.getByRole('button', { name: 'Export All Data (JSON)' }).click(),
+      page.getByRole('button', { name: 'Export all data (JSON)' }).click(),
     ]);
     expect(download.suggestedFilename()).toContain('hearthshift_backup_');
 
@@ -279,15 +303,11 @@ test.describe('HearthShift AI — Phase 4A Alpha Security, Same-Origin Privacy, 
     }
     expect(exportedBackup.savings.length).toBeGreaterThanOrEqual(1);
 
-    await page.getByRole('button', { name: 'Delete All My Data' }).click();
-    await page.getByRole('button', { name: 'Yes, Delete Everything' }).click();
-    await expect(
-      page.getByText('All household data was permanently wiped from IndexedDB.')
-    ).toBeVisible();
+    await page.getByRole('button', { name: 'Delete all data' }).click();
+    await page.getByRole('button', { name: 'Yes, delete everything' }).click();
+    await expect(page.getByText('All household data was permanently wiped from IndexedDB.')).toBeVisible();
 
-    // ══════════════════════════════════════════════════════════
-    // 8. Final Privacy & Security Assertions (Zero Leaks, Zero CSP Errors)
-    // ══════════════════════════════════════════════════════════
+    // 7. Zero Telemetry / Zero CSP Errors
     const docCookie = await page.evaluate(() => document.cookie);
     const runtimeCsp = await page.evaluate(
       () => (window as unknown as { __cspViolations?: string[] }).__cspViolations ?? []
@@ -302,4 +322,3 @@ test.describe('HearthShift AI — Phase 4A Alpha Security, Same-Origin Privacy, 
     expect(consoleCspErrors).toEqual([]);
   });
 });
-

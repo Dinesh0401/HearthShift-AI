@@ -180,7 +180,8 @@ export async function loadSyntheticDemoHousehold(): Promise<void> {
           {
             id: 'demo_ac_comfort',
             type: 'temperature_bound',
-            description: 'Maintain bedroom AC comfort bounds (23°C–25°C overnight)',
+            description:
+              '[Synthetic sample] Maintain bedroom AC comfort bounds (23°C–25°C overnight)',
             appliance_category: 'cooling',
             time_window: { start_hour: 22, end_hour: 6 },
             flexibility: 'medium',
@@ -189,7 +190,8 @@ export async function loadSyntheticDemoHousehold(): Promise<void> {
           {
             id: 'demo_geyser_schedule',
             type: 'schedule_flexible',
-            description: 'Morning geyser timer adjustable within 15–20 minutes',
+            description:
+              '[Synthetic sample] Morning geyser timer adjustable within 15–20 minutes',
             appliance_category: 'water_heating',
             time_window: { start_hour: 6, end_hour: 9 },
             flexibility: 'medium',
